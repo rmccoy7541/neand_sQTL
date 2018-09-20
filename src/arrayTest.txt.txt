@@ -1,0 +1,19 @@
+#!/bin/bash
+
+#SBATCH --partition=debug
+#SBATCH --job-name=arrayJob
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1 
+#SBATCH --cpus-per-task=1 
+#SBATCH --mail-type=end 
+#SBATCH --mail-user=aseyedi2@jhu.edu
+#SBATCH --array=1-22
+
+######################
+# Begin work section #
+######################
+
+# Print this sub-job's task ID
+echo My SLURM_ARRAY_TASK_ID: $SLURM_ARRAY_TASK_ID
+wait 30
+
