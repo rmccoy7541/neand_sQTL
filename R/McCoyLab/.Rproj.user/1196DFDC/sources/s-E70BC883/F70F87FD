@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1537395336953.000,
+    "dirty" : true,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "F70F87FD",
+    "lastKnownWriteTime" : 1537400544,
+    "last_content_update" : 1537404128060,
+    "path" : "D:/Dropbox/Dropbox/Grad school/McCoy Lab/R/McCoyLab/remColumns.R",
+    "project_path" : "remColumns.R",
+    "properties" : {
+        "cursorPosition" : "4,13",
+        "scrollLine" : "0",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
