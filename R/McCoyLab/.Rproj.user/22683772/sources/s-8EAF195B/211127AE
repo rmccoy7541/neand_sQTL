@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1536794980101.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3832130414",
+    "id" : "211127AE",
+    "lastKnownWriteTime" : 1536946825,
+    "last_content_update" : 1536946825015,
+    "path" : "~/Dropbox/Grad school/McCoy Lab/R/McCoyLab/NEjoin.R",
+    "project_path" : "NEjoin.R",
+    "properties" : {
+        "cursorPosition" : "20,2",
+        "scrollLine" : "4",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
