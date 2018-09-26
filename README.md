@@ -1,7 +1,6 @@
 # neander/thal-sqtl
 
 ## Introduction
-
 This is my (Arta Seyedian) first project with Dr. Rajiv McCoy's group. Today is 9/26/2018 and I am applying principles of documentation and organziation to this project repository. Most of the work I have done so far 
 has been without this method of organization so please forgive me if it's a bit hard to go through these directories and files and fully understand what I have been going for here.
 
@@ -10,7 +9,6 @@ These sQTLs basically determine mRNA transcript splicing patterns, which lead to
 such as height or... height [2].
 
 ## As of 9/26/2018
-
 I'm still at the beginning stages of the project. No serious analysis has taken place just yet; however, I have matched the neandertal SNP positions with the human rsIDs from the 1k data. The next step would be to match
 these neanderthal rsID data with known sQTLs sequenced by altrans as a proof of concept, before we move onto using LeafCutter on GTEx data to create a full map of human sQTL data to match against the neanderthal rsIDs.
 
