@@ -1,4 +1,0 @@
-0fpqRklJhSqcgBvMPqHiGjSbN API Key
-EoFU9mFFZwnlLDi35SthSF3OiogGseglPXhvp2AbhtJRS2NZ6w API Secret
-1085369100-Zkfb8jvynLBtppb19whvDfU85dtg0tp5YvzvtPN Access Token
-5WSEwmcYA7Zp0Dx19CpV0adSGL8W0WyxZc8NzZcGQIfq4 Access Token Secret

@@ -1,2 +1,0 @@
-awk -F : '/pete/ { print $4 }' /etc/passwd
-awk -F: '/pete/ { print $1, $NF }' /etc/passwd

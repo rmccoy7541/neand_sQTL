@@ -1,8 +1,0 @@
-library(data.table)
-library(dplyr)
-
-f1 <- fread("/home/arta/Dropbox/Grad school/McCoy Lab/NE_rsID/tag_snps.neand.EAS.rsid.txt") %>%
-  setnames(., c("column_a", "shared_column"))
-f2 <- fread("/home/arta/Dropbox/Grad school/McCoy Lab/NE_rsID/HeartLeftVentricle.Altrans.bestPerLink") %>%
-  setnames(., c("column_b", "shared_column"))
-merge_data <- merge(f1, f2, "shared_column")
