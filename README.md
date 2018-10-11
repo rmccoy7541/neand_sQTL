@@ -23,7 +23,6 @@ I wrote some code in /scratch that merges one altrans tissue sQTL file with one 
 I'm still at the beginning stages of the project. No serious analysis has taken place just yet; however, I have matched the neandertal SNP positions with the human rsIDs from the 1k data. The next step would be to match
 these neanderthal rsID data with known sQTLs sequenced by altrans as a proof of concept, before we move onto using LeafCutter on GTEx data to create a full map of human sQTL data to match against the neanderthal rsIDs.
 
-========================================================================================================================================
 	
 ## Bibliography
 
