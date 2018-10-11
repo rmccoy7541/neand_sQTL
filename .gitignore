@@ -36,6 +36,13 @@
 ehthumbs.db
 Thumbs.db
 
-# Files that exceed 100MB push limit #
-######################################
-find ./* -size +100M | cat >> .gitignore
+# Files that exceed 100MB pus
+./data/9-26-18/altrans/SkinSunExposedLowerleg.Altrans.bestPerLink
+./data/9-26-18/altrans/MuscleSkeletal.Altrans.bestPerLink
+./data/9-26-18/altrans/Thyroid.Altrans.bestPerLink
+./data/9-26-18/altrans/WholeBlood.Altrans.bestPerLink
+./data/9-26-18/altrans/NerveTibial.Altrans.bestPerLink
+./data/9-26-18/altrans/HeartLeftVentricle.Altrans.bestPerLink
+./data/9-26-18/altrans/Lung.Altrans.bestPerLink
+./data/9-26-18/altrans/AdiposeSubcutaneous.Altrans.bestPerLink
+./data/9-26-18/altrans/ArteryTibial.Altrans.bestPerLink
