@@ -36,7 +36,8 @@
 ehthumbs.db
 Thumbs.db
 
-# Files that exceed 100MB pus
+# Files that exceed 100MB #
+###########################
 ./data/9-26-18/altrans/SkinSunExposedLowerleg.Altrans.bestPerLink
 ./data/9-26-18/altrans/MuscleSkeletal.Altrans.bestPerLink
 ./data/9-26-18/altrans/Thyroid.Altrans.bestPerLink
