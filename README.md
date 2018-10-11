@@ -8,7 +8,7 @@ The crux of this project is to find sQTLs (splicing quantitative trait loci) amo
 These sQTLs basically determine mRNA transcript splicing patterns, which lead to different proportions of mRNA isoforms which leads to differential protein expression, which impacts the expression of quantitative traits,
 such as height [2].
 
-Progress
+Updates
 ----------------------------------------------------------------------------------------------------------------------------------------
 ### As of 10/11/2018
 The repo was cloned directly onto MARCC and reorganized the data files and purged some useless stuff, including some pre-concatenated output files. Best thing I did was find a bash command that finds and appends to the gitignore file all files greater than 100MB, so I can now host this project directly on MARCC and update it through MARCC without overcomplicating getting stuck accidentally committing a massive file.
