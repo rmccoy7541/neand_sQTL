@@ -1,7 +1,7 @@
 ﻿# neanderthal-sqtl
 
 ## Introduction
-This is my (Arta Seyedian) first project with Dr. Rajiv McCoy's group. Today is 9/26/2018 and I am applying principles of documentation and organziation to this project repository. Most of the work I have done so far 
+This is my (Arta Seyedian) first project with Dr. Rajiv McCoy's group. Today is 9/26/2018 and I am applying the general guidelines for documentation and organziation to this project repository. Most of the work I have done so far 
 has been without this method of organization so please forgive me if it's a bit hard to go through these directories and files and fully understand what I have been going for here.
 
 The crux of this project is to find sQTLs (splicing quantitative trait loci) among the DNA modern humans have inherited from neanderthals as a result of interbreeding that took place between 100,000 - 40,000 years ago [1]. 
