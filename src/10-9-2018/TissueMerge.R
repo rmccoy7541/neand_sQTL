@@ -12,7 +12,8 @@ args = commandArgs(trailingOnly=TRUE)
 f1 <- fread(args[1])
 f2 <- fread(args[2], fill=TRUE)
 f2 <- f2[Num != 'PosID' | PosID != 'rsID']
-f1 <- f1[,-c(2,3)]
+#Next line removes ensembl IDs - removed that on 10/15/2018
+#f1 <- f1[,-c(2,3)]
 f2 <- f2[,-c("Num")]
 colnames(f1)[colnames(f1)=="Variation"] <- "rsID"
 

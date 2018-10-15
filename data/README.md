@@ -1,5 +1,9 @@
 # data
 
+## 10-15-2018
+	Fixed the TissueMerge.R code to allow for the ensembl IDs to be part of the final merge table. Ran the script again and 
+generated output files.
+
 ## 10-11-2018
 	Cloned the repo onto MARCC and created a gitignore that will hopefully prevent all of these dang >100MB data files from being committed and pushed to github.
 
