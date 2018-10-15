@@ -47,6 +47,7 @@ Thumbs.db
 /data/9-26-18/altrans/Lung.Altrans.bestPerLink
 /data/9-26-18/altrans/AdiposeSubcutaneous.Altrans.bestPerLink
 /data/9-26-18/altrans/ArteryTibial.Altrans.bestPerLink
+<<<<<<< HEAD
 #/data/9-26-18/altrans/SkinSunExposedLowerleg.Altrans.bestPerLink
 #/data/9-26-18/altrans/MuscleSkeletal.Altrans.bestPerLink
 #/data/9-26-18/altrans/Thyroid.Altrans.bestPerLink
@@ -65,3 +66,5 @@ Thumbs.db
 /data/9-26-18/altrans/Lung.Altrans.bestPerLink
 /data/9-26-18/altrans/AdiposeSubcutaneous.Altrans.bestPerLink
 /data/9-26-18/altrans/ArteryTibial.Altrans.bestPerLink
+=======
+>>>>>>> d78f4442a225173a1457e2bd86416de3f49c3e82
