@@ -14,13 +14,19 @@ f2 <- fread(args[2], fill=TRUE)
 # not sure what I did here... I need someone's explanation
 f2 <- f2[Num != 'PosID' | PosID != 'rsID']
 <<<<<<< HEAD
+<<<<<<< HEAD
 # Remove ensembl IDs - removed it on 10/15/18 to retain them
 # f1 <- f1[,-c(2,3)]
 =======
+=======
+>>>>>>> 97d3a0806c2cc02fbc7bdf11e0e09c70eeb4016c
 # making the names unique because the two ensembl ID columns are both named 'Link'
 names(f1) <- make.unique(names(f1))
 #Next line removes ensembl IDs - removed that on 10/15/2018
 #f1 <- f1[,-c(2,3)]
+<<<<<<< HEAD
+>>>>>>> 97d3a0806c2cc02fbc7bdf11e0e09c70eeb4016c
+=======
 >>>>>>> 97d3a0806c2cc02fbc7bdf11e0e09c70eeb4016c
 f2 <- f2[,-c("Num")]
 colnames(f1)[colnames(f1)=="Variation"] <- "rsID"
