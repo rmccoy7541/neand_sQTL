@@ -10,6 +10,9 @@ such as height [2].
 
 Updates
 ----------------------------------------------------------------------------------------------------------------------------------------
+### As of 10/17/2018
+Fixed a problem with the column headers in the merged Neanderthal x Altrans data.
+
 ### As of 10/15/2018
 I realized that I didn't include the Ensembl ID codes in my Neanderthal x Altrans data merge, so changed the TissueMerge.R code to make it do that.
 

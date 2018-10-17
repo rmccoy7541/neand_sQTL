@@ -1,5 +1,8 @@
 # data
 
+## 10-17-2018
+	Realized that the merged Neanderthal x Altrans data in /10-15-2018 had an additional column for the row IDs that were mismatched with the column header "rsID." Wrote some come with the help of Rajiv to remedy that problem. Modified the files in-place.
+
 ## 10-15-2018
 	Fixed the TissueMerge.R code to allow for the ensembl IDs to be part of the final merge table. Ran the script again and 
 generated output files.
