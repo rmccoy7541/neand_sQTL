@@ -39,7 +39,7 @@ such as height [2].
 Updates
 ----------------------------------------------------------------------------------------------------------------------------------------
 ### 11/08/2018
-	After weeks of learning how to use leafcutter, installing a dependent QTL mapper (FastQTL), and fixing certain problems with using the GTEx data, I was finally approved by Rajiv as a downloader on dbGaP, and am about to download RNA-Seq GTEx data from dbGaP using sra-toolkit's `prefetch` command. The command will look something like this: `nohup prefetch -O /home-1/aseyedi2@jhu.edu/data/aseyedi2/GTEx_SRA <Cart File> &` and I will be logged into the dtn2 server, which is intended for large data transfers. It's about 16 TB. 
+	After weeks of learning how to use leafcutter, installing a dependent QTL mapper (FastQTL), and fixing certain problems with using the GTEx data, I was finally approved by Rajiv as a downloader on dbGaP, and am about to download RNA-Seq GTEx data from dbGaP using sra-toolkit's `prefetch` command. The command will look something like this: `nohup ./prefetch -v -O /home-1/aseyedi2@jhu.edu/data/aseyedi2/GTEx_SRA cart_DAR72305_201811081445.krt &` and I will be logged into the dtn2 server, which is intended for large data transfers. It's about 16 TB. 
 
 ### 11/02/2018
 	Got rid of the contents of the scratch folder, updated the README for `TissueMerge.R`. Added analysis folder.
