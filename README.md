@@ -13,9 +13,10 @@ such as height [2].
 	Placeholder for ultimately instructing users on how to run all of these scripts to get identical output.
 
 ### Prerequisites
-
 	* Access to a high-performance cluster
-	* Probably some other stuff, figure out the difference between "prereqs" and "built with"
+	* LeafCutter 0.2.8
+	* FastQTL v2.184
+	* SAMtools or HTSlib
 
 ### Installing
 	How to install what they will need to install.
@@ -38,6 +39,9 @@ such as height [2].
 
 Updates
 ----------------------------------------------------------------------------------------------------------------------------------------
+### 11/09/2018
+	Disregard that last entry, the download was unsuccessful and after speaking with Rajiv, he found a repository of GTEx data he had downloaded previously minus some larger files had yet to download. He offered to convert the files to `.bam` format for me after repeated difficulties on my end working with sra-toolkit. The total size of the RNA-Seq data that will be used is ~16TB. Additonally, he will supply me the required `.vcf` file for QTL mapping via FastQTL. I did some investigation into potentially creating an R shiny app to visualize the data and it seems not only easy, but clear cut for LeafCutter users.
+
 ### 11/08/2018
 	After weeks of learning how to use leafcutter, installing a dependent QTL mapper (FastQTL), and fixing certain problems with using the GTEx data, I was finally approved by Rajiv as a downloader on dbGaP, and am about to download RNA-Seq GTEx data from dbGaP using sra-toolkit's `prefetch` command. The command will look something like this: `nohup ./prefetch -v -O /home-1/aseyedi2@jhu.edu/data/aseyedi2/GTEx_SRA cart_DAR72305_201811081445.krt &` and I will be logged into the dtn2 server, which is intended for large data transfers. It's about 16 TB. 
 
