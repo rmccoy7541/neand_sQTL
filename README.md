@@ -73,7 +73,11 @@ cd /scratch/users/rmccoy22@jhu.edu/dbgap/sra
 
 echo "Finished with job $SLURM_ARRAY_TASK_ID"```
 
+<<<<<<< HEAD
+	Since we won't need to delete and move things back and forth, I have commented-out the parts of the code that are now both practically and conceptually obsolete. I'm going to use the following command: `nohup ./prefetch -X 50000000000 /scratch/groups/rmccoy22/sratools/cart_prj19186_201811221749.krt &`
+=======
 	Since we won't need to delete and move things back and forth, I have commented-out the parts of the code that are now both practically and conceptually obsolete.
+>>>>>>> master
 
 	I am using the following command to download a subset of data for use: `nohup ./prefetch -X 50000000000 /scratch/groups/rmccoy22/sratools/cart_prj19186_201811221749.krt &`
 
