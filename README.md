@@ -39,6 +39,42 @@ such as height [2].
 
 Updates
 ----------------------------------------------------------------------------------------------------------------------------------------
+### 11/26/2018
+	The more things change, the more they stay the same. We are meeting with the director of MARCC on Wednesday to discuss our options when dealing with big ol' datasets. Looks like using `~/scratch` is a no-go, but `~/work` apparently has up to 50TB of space AND is a scratch partition, so that's what we're going to use. We're still waiting to meet with the dude on Wednesday but in the meantime, I'm going to play around with a small subset of the total data to see what's what. I already made some progress last week; I came up with a little ditty like this: `for f in $PWD/*.sra; do ./sam-dump $f | samtools view -bS > $f.bam; done`. However, this one-off command doesn't utilize parallelization, so Rajiv recommended something that makes use of SLURM's capabilities:
+```#!/bin/bash
+#SBATCH --job-name=convert_gtex
+#SBATCH --time=12:00:00
+#SBATCH --partition=shared
+#SBATCH --nodes=1
+# number of tasks (processes) per node
+#SBATCH --ntasks-per-node=1
+#SBATCH --array=1-10%10
+#SBATCH --output=/scratch/users/rmccoy22@jhu.edu/logs/slurm-%A_%a.out
+
+#### load and unload modules you may need
+module load samtools
+
+# test.txt contains a list of dbGaP run IDs (e.g., SRR1068687) 
+line=`sed "${SLURM_ARRAY_TASK_ID}q;d" /scratch/users/rmccoy22@jhu.edu/test.txt`
+
+echo "Text read from file: $line"
+
+cd /scratch/users/rmccoy22@jhu.edu/dbgap/sra
+
+# Download the .sra file according to SRA ID
+~/progs/sratoolkit.2.9.2-centos_linux64/bin/prefetch \
+  --ascp-path '/software/apps/aspera/3.7.2.354/bin/ascp|/software/apps/aspera/3.7.2.354/etc/asperaweb_id_dsa.openssh' $line
+
+# Convert from .sra to .bam
+~/progs/sratoolkit.2.9.2-centos_linux64/bin/sam-dump $line.sra |\
+  samtools view -bS - > $line.bam
+#mv $line.bam /work-zfs/rmccoy22/rmccoy22/gtex/RootStudyConsentSet_phs000424.GTEx.v7.p2.c1.GRU/BamFiles/$line.bam
+#rm /scratch/users/rmccoy22@jhu.edu/dbgap/sra/$line.*
+
+echo "Finished with job $SLURM_ARRAY_TASK_ID"```
+
+	Since we won't need to delete and move things back and forth, I have commented-out the parts of the code that are now both practically and conceptually obsolete. I'm going to use the following command: `nohup ./prefetch -X 50000000000 /scratch/groups/rmccoy22/sratools/cart_prj19186_201811221749.krt &`
+
 ### 11/12/2018
 	Our journey continues. Rajiv accidentally deleted the dbGaP folder so now we have to download the sra files again. The cart file I was using before was incomplete so I got a new one. What I need to do now is to download the sra files in chunks to /scratch, convert the files to .bam, then move the converted files to /data. A good thing to keep in mind is to set the max size for prefetch to a high number so that the download won't be capped. I used the command `./prefetch -s ~/scratch/ncbi/cart_prj19186_201811121649.krt > ../../sizeOfCart.txt` to get a text file with the sizes of all the sra files so that I can find the best possible chunking. Actually, now that I think about it, that's not necessary; chunking by 3TB is probably fine and that's what I'm going to do, but it's cool that I have the sizes of the sra files. So now I have to write a bash script that will download to scratch in a 3TB chunk, convert to *.bam, move *.bam to /data, delete pre-converted data as well as bam data on /scratch, repeat for remainder of sra files in 3TB chunks.
 
