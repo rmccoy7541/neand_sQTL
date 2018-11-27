@@ -14,24 +14,24 @@ such as height [2].
 Placeholder for ultimately instructing users on how to run all of these scripts to get identical output.
 
 ### Prerequisites
-	* Access to a high-performance cluster
-	* LeafCutter 0.2.8
-	* FastQTL v2.184
-	* SAMtools or HTSlib
+* Access to a high-performance cluster
+* LeafCutter 0.2.8
+* FastQTL v2.184
+* SAMtools or HTSlib
 
 ### Installing
-	How to install what they will need to install.
+How to install what they will need to install.
 
 ## Running the Tests
-	Step-by-step instructions with intermediate ends and full explanations of important code.
+Step-by-step instructions with intermediate ends and full explanations of important code.
 
 ## Built With
-	* R 3.4.4 (2018-03-15) -- "Someone to Lean On"
-	* Python 2.7-anaconda
-	* Obviously some other stuff
+* R 3.4.4 (2018-03-15) -- "Someone to Lean On"
+* Python 2.7-anaconda
+* Obviously some other stuff
 
 ## Contributing
-	* Thank the important people
+* Thank the important people
 
 ## Authors
 
