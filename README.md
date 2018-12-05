@@ -40,6 +40,14 @@ Step-by-step instructions with intermediate ends and full explanations of import
 
 Updates
 ----------------------------------------------------------------------------------------------------------------------------------------
+### 12/04/2018
+We met with the directors of MARCC last week and we talked about using a tool called `GNU-Parallel` which, from what I remember, is a good way to multithread jobs in a way such that if one crashes, we can pick up from where it left off or at least figure out what the problem was. Also, Keven wanted us to measure for him the download speed of the SRA files so he has an idea of how fast a TB downloads. I'm gonna do a dry run with LeafCutter and only about 10 files to see how it works, first. Then I'm going to study `GNU-Parallel` a bit and then email Kevin saying I don't understand it. For the purposes of this practice run, I'm using `for f in $PWD/*.sra; do ./sam-dump $f | samtools view -bS - > $f.bam; done` to convert the boys into `.bam` files.
+
+## Update
+`for f in $PWD/*.sra; do ./sam-dump $f | samtools view -bS - | tee $f.bam; done`
+
+I tried out the above command and it was a nightmare. I thought it would be readable for whatever reason. It would be cool if I figure out how to add like a progress bar or something just so I can monitor the progress of the conversion, but I guess I won't even have to with parallelizaiton.
+
 ### 11/27/2018
 Using `nohup` didn't work, or something else happened, but the cart files did not download. Disappointingly. I'm going to try again, but this time with `screen`. I'm going to use `./prefetch -X 50000000000 /scratch/groups/rmccoy22/sratools/cart_prj19186_201811221749.krt > /scratch/groups/rmccoy22/logs/SRA_DL.out`, with the output redirected to a `logs` folder so that the download progress can be monitored by `tail -f`. Just to clarify, I am using the dtn node. Also, Ubuntu's built-in text editor isn't working on my laptop, weirdly.
 
