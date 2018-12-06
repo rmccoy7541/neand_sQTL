@@ -43,16 +43,19 @@ Updates
 ### 12/06/2018
 `interact` isn't working on MARCC right now so I'm still using our development node, which should be more than enough in terms of resources. I have converted our 10 .sras to .bams. Now, following the LeafCutter guide, I'm going to convert them to .junc files, and then I'm going to cluster the introns. 
 
-```for bamfile in `ls example_geuvadis/*.bam`
+```
+for bamfile in `ls example_geuvadis/*.bam`
 do
     echo Converting $bamfile to $bamfile.junc
     sh ../scripts/bam2junc.sh $bamfile $bamfile.junc
     echo $bamfile.junc >> test_juncfiles.txt
-done```
+done
+```
 
 Above is the script provided by LeafCutter to do the .bam -> .junc conversion. Adapted for my needs, the script will look a little something like this:
 
-```#!/bin/bash
+```
+#!/bin/bash
 # used in bam2junc.sh
 ml samtools
 for bamfile in `ls *.bam`
@@ -65,7 +68,8 @@ done
 
 bam2junc.sh:
 
-```#!/bin/bash
+```
+#!/bin/bash
 
 leafCutterDir='/scratch/groups/rmccoy22/leafcutter/' ## use only if you don't have scripts folder in your path
 bamfile=$1
@@ -101,7 +105,8 @@ I proceeded to the "Intron Clustering" portion of the LeafCutter:
 `python /scratch/groups/rmccoy22/leafcutter/clustering/leafcutter_cluster.py -j test_juncfiles.txt -m 50 -o testgTEX -l 500000`
 
 Here's what output `testgTEX_perind_numers.counts.gz` looks like:
-```SRR1068929.sra.bam SRR1068855.sra.bam SRR1069141.sra.bam SRR1068808.sra.bam SRR1068977.sra.bam SRR1069024.sra.bam SRR1069097.sra.bam SRR1069231.sra.bam SRR1069188.sra.bam SRR1068880.sra.bam
+```
+SRR1068929.sra.bam SRR1068855.sra.bam SRR1069141.sra.bam SRR1068808.sra.bam SRR1068977.sra.bam SRR1069024.sra.bam SRR1069097.sra.bam SRR1069231.sra.bam SRR1069188.sra.bam SRR1068880.sra.bam
 14:20813246:20813553:clu_1_NA 20 67 9 30 87 1 2 15 86 4
 14:20813285:20813553:clu_1_NA 0 0 0 0 1 0 33 18 0 171
 14:20822406:20822968:clu_2_NA 14 48 19 15 55 1 19 29 68 103
