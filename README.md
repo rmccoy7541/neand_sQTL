@@ -95,7 +95,9 @@ Again, these scripts are altered from what is included in LeafCutter.
 After running this, I got a lot of "problematic spliced reads." Of course, like I said earlier, I'm only using about 10 sra files, so I'm keeping the console output in MARCC. I hope that isn't too big of a deal. The files referenced above are named `callbam2junc.sh` and `bam2junc.sh`, respectively. The first script I pulled from the worked-out example that doesn't actually work that comes with LeafCutter.
 
 I proceeded to the "Intron Clustering" portion of the LeafCutter:
+
 `ml python/2.7-anaconda`
+
 `python /scratch/groups/rmccoy22/leafcutter/clustering/leafcutter_cluster.py -j test_juncfiles.txt -m 50 -o testgTEX -l 500000`
 
 Here's what output `testgTEX_perind_numers.counts.gz` looks like:
