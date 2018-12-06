@@ -40,6 +40,56 @@ Step-by-step instructions with intermediate ends and full explanations of import
 
 Updates
 ----------------------------------------------------------------------------------------------------------------------------------------
+### 12/06/2018
+`interact` isn't working on MARCC right now so I'm still using our development node, which should be more than enough. I have converted our 10 .sras to .bams. Now, following the LeafCutter guide, I'm going to convert them to .junc files, and then I'm going to cluster the introns. 
+
+```for bamfile in `ls example_geuvadis/*.bam`
+do
+    echo Converting $bamfile to $bamfile.junc
+    sh ../scripts/bam2junc.sh $bamfile $bamfile.junc
+    echo $bamfile.junc >> test_juncfiles.txt
+done```
+
+Above is the script provided by LeafCutter to do the .bam -> .junc conversion. Adapted for my needs, the script will look a little something like this:
+
+```#!/bin/bash
+# used in bam2junc.sh
+ml samtools
+for bamfile in `ls *.bam`
+do
+    echo Converting $bamfile to $bamfile.junc
+    sh /scratch/groups/rmccoy22/leafcutter/scripts/bam2junc.sh $bamfile $bamfile.junc
+    echo $bamfile.junc >> test_juncfiles.txt
+done```
+
+bam2junc.sh:
+
+```#!/bin/bash
+
+leafCutterDir='/scratch/groups/rmccoy22/leafcutter/' ## use only if you don't have scripts folder in your path
+bamfile=$1
+bedfile=$1.bed
+juncfile=$2
+
+
+if [ ! -z "$leafCutterDir" ]
+then
+        samtools view $bamfile | python $leafCutterDir/scripts/filter_cs.py | $leafCutterDir/scripts/sam2bed.pl --use-RNA-strand - $bedfile
+        $leafCutterDir/scripts/bed2junc.pl $bedfile $juncfile
+else
+        if ! which filter_cs.py>/dev/null
+        then
+                echo "ERROR:"
+                echo "Add 'scripts' forlder to your path or set leafCutterDir variable in $0"
+                exit 1
+        fi
+        samtools view $bamfile | filter_cs.py | sam2bed.pl --use-RNA-strand - $bedfile
+        bed2junc.pl $bedfile $juncfile
+fi
+rm $bedfile```
+
+Again, these scripts are altered from what is included in LeafCutter.
+
 ### 12/05/2018
 Got up this morning and looks like firing off the command `for f in $PWD/*.sra; do ./sam-dump $f | samtools view -bS - > $f.bam; done` wasn't even enough for just 10 files. I'm converting the rest of the files on `rmccoy22-dev`. 
 
