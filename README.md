@@ -114,7 +114,7 @@ Here's what output `testgTEX_perind_numers.counts.gz` looks like:
 14:20917425:20919416:clu_5_NA 2 6 6 1 20 3 1 9 14 0
 ```
 
-I think each line is an intron and the columns represent the number of split reads that support each intron, and the `clu_X` represents which "cluster" it's in. Cool. Now we can get into splicing QTL analysis, which may be the tricky part. I'm doing this all with just 10 SRA files and it's really highlighting the need to parallelize this process, because if we don't, it would take like 20 years just to get to this part using the full dataset.
+I think each line is an intron and the columns represent the number of split reads from the corresponding file that supports that intron, and the `clu_X` represents which "cluster" it's in. Cool. Now we can get into splicing QTL analysis, which may be the tricky part. I'm doing this all with just 10 SRA files and it's really highlighting the need to parallelize this process, because if we don't, it would take like 20 years just to get to this part using the full dataset.
 
 ### 12/05/2018
 Got up this morning and looks like firing off the command `for f in $PWD/*.sra; do ./sam-dump $f | samtools view -bS - > $f.bam; done` with a 4-hour long interactive session wasn't even enough for just 10 files. I'm converting the rest of the files on `rmccoy22-dev`. 
