@@ -88,7 +88,28 @@ else
 fi
 rm $bedfile```
 
-Again, these scripts are altered from what is included in LeafCutter.
+Again, these scripts are altered from what is included in LeafCutter. 
+
+After running this, I got a lot of "problematic spliced reads." Of course, like I said earlier, I'm only using about 10 sra files, so I'm keeping the console output in MARCC. I hope that isn't too big of a deal. The files referenced above are named `callbam2junc.sh` and `bam2junc.sh`, respectively. The first script I pulled from the worked-out example that doesn't actually work that comes with LeafCutter.
+
+I proceeded to the "Intron Clustering" portion of the LeafCutter:
+`ml python/2.7-anaconda`
+`python /scratch/groups/rmccoy22/leafcutter/clustering/leafcutter_cluster.py -j test_juncfiles.txt -m 50 -o testgTEX -l 500000`
+
+Here's what output `testgTEX_perind_numers.counts.gz` looks like:
+```SRR1068929.sra.bam SRR1068855.sra.bam SRR1069141.sra.bam SRR1068808.sra.bam SRR1068977.sra.bam SRR1069024.sra.bam SRR1069097.sra.bam SRR1069231.sra.bam SRR1069188.sra.bam SRR1068880.sra.bam
+14:20813246:20813553:clu_1_NA 20 67 9 30 87 1 2 15 86 4
+14:20813285:20813553:clu_1_NA 0 0 0 0 1 0 33 18 0 171
+14:20822406:20822968:clu_2_NA 14 48 19 15 55 1 19 29 68 103
+14:20822406:20822994:clu_2_NA 5 5 0 1 24 0 6 6 4 7
+14:20839791:20840892:clu_3_NA 11 13 32 11 18 1 20 12 1 16
+14:20839791:20841170:clu_3_NA 8 3 16 6 30 2 5 10 14 7
+14:20841016:20841170:clu_3_NA 7 9 23 7 21 3 19 12 2 8
+14:20916970:20917061:clu_4_NA 2 18 5 3 18 0 8 18 115 2
+14:20916970:20917123:clu_4_NA 56 93 64 50 102 14 47 53 95 113
+14:20917425:20919416:clu_5_NA 2 6 6 1 20 3 1 9 14 0```
+
+I think each line is an intron and the columns represent the number of split reads that support each intron, and the `clu_X` represents which "cluster" it's in. Cool. Now we can get into splicing QTL analysis, which may be the tricky part. I'm doing this all with just 10 SRA files and it's really highlighting the need to parallelize this process, because if we don't, it would take like 20 years just to get to this part using the full dataset.
 
 ### 12/05/2018
 Got up this morning and looks like firing off the command `for f in $PWD/*.sra; do ./sam-dump $f | samtools view -bS - > $f.bam; done` wasn't even enough for just 10 files. I'm converting the rest of the files on `rmccoy22-dev`. 
