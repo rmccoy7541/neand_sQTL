@@ -104,6 +104,10 @@ I proceeded to the "Intron Clustering" portion of the LeafCutter:
 
 `python /scratch/groups/rmccoy22/leafcutter/clustering/leafcutter_cluster.py -j test_juncfiles.txt -m 50 -o testgTEX -l 500000`
 
+From the LeafCutter documentation:
+
+>This will cluster together the introns fond in the junc files listed in test_juncfiles.txt, requiring 50 split reads supporting each cluster and allowing introns of up to 500kb. The predix [testgTEX] means the output will be called [testgTEX]_perind_numers.counts.gz (perind meaning these are the per individual counts).
+
 Here's what output `testgTEX_perind_numers.counts.gz` looks like:
 ```
 SRR1068929.sra.bam SRR1068855.sra.bam SRR1069141.sra.bam SRR1068808.sra.bam SRR1068977.sra.bam SRR1069024.sra.bam SRR1069097.sra.bam SRR1069231.sra.bam SRR1069188.sra.bam SRR1068880.sra.bam
