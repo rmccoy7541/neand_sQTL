@@ -41,7 +41,7 @@ Step-by-step instructions with intermediate ends and full explanations of import
 Updates
 ----------------------------------------------------------------------------------------------------------------------------------------
 ### 12/06/2018
-`interact` isn't working on MARCC right now so I'm still using our development node, which should be more than enough. I have converted our 10 .sras to .bams. Now, following the LeafCutter guide, I'm going to convert them to .junc files, and then I'm going to cluster the introns. 
+`interact` isn't working on MARCC right now so I'm still using our development node, which should be more than enough in terms of resources. I have converted our 10 .sras to .bams. Now, following the LeafCutter guide, I'm going to convert them to .junc files, and then I'm going to cluster the introns. 
 
 ```for bamfile in `ls example_geuvadis/*.bam`
 do
@@ -60,7 +60,8 @@ do
     echo Converting $bamfile to $bamfile.junc
     sh /scratch/groups/rmccoy22/leafcutter/scripts/bam2junc.sh $bamfile $bamfile.junc
     echo $bamfile.junc >> test_juncfiles.txt
-done```
+done
+```
 
 bam2junc.sh:
 
@@ -86,7 +87,8 @@ else
         samtools view $bamfile | filter_cs.py | sam2bed.pl --use-RNA-strand - $bedfile
         bed2junc.pl $bedfile $juncfile
 fi
-rm $bedfile```
+rm $bedfile
+```
 
 Again, these scripts are altered from what is included in LeafCutter. 
 
@@ -107,12 +109,13 @@ Here's what output `testgTEX_perind_numers.counts.gz` looks like:
 14:20841016:20841170:clu_3_NA 7 9 23 7 21 3 19 12 2 8
 14:20916970:20917061:clu_4_NA 2 18 5 3 18 0 8 18 115 2
 14:20916970:20917123:clu_4_NA 56 93 64 50 102 14 47 53 95 113
-14:20917425:20919416:clu_5_NA 2 6 6 1 20 3 1 9 14 0```
+14:20917425:20919416:clu_5_NA 2 6 6 1 20 3 1 9 14 0
+```
 
 I think each line is an intron and the columns represent the number of split reads that support each intron, and the `clu_X` represents which "cluster" it's in. Cool. Now we can get into splicing QTL analysis, which may be the tricky part. I'm doing this all with just 10 SRA files and it's really highlighting the need to parallelize this process, because if we don't, it would take like 20 years just to get to this part using the full dataset.
 
 ### 12/05/2018
-Got up this morning and looks like firing off the command `for f in $PWD/*.sra; do ./sam-dump $f | samtools view -bS - > $f.bam; done` wasn't even enough for just 10 files. I'm converting the rest of the files on `rmccoy22-dev`. 
+Got up this morning and looks like firing off the command `for f in $PWD/*.sra; do ./sam-dump $f | samtools view -bS - > $f.bam; done` with a 4-hour long interactive session wasn't even enough for just 10 files. I'm converting the rest of the files on `rmccoy22-dev`. 
 
 ### 12/04/2018
 We met with the directors of MARCC last week and we talked about using a tool called `GNU-Parallel` which, from what I remember, is a good way to multithread jobs in a way such that if one crashes, we can pick up from where it left off or at least figure out what the problem was. Also, Keven wanted us to measure for him the download speed of the SRA files so he has an idea of how fast a TB downloads. I'm gonna do a dry run with LeafCutter and only about 10 files to see how it works, first. Then I'm going to study `GNU-Parallel` a bit and then email Kevin saying I don't understand it. For the purposes of this practice run, I'm using `for f in $PWD/*.sra; do ./sam-dump $f | samtools view -bS - > $f.bam; done` to convert the boys into `.bam` files.
