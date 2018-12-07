@@ -40,8 +40,17 @@ Step-by-step instructions with intermediate ends and full explanations of import
 
 Updates
 ----------------------------------------------------------------------------------------------------------------------------------------
+### 12/07/2018
+I met Rajiv about the problem that I wrote about in the README last night without committing the changes and pushing to GitHub (it's okay). Basically the code (`prepare_phenotype.py`) can't handle string inputs that are not simply 'X' or 'Y'. Rajiv slapped together `/data/12-07-2018/GRCh37.bed`, which has the the chromosome number/letter and sequence range (0-terminal) to be used with `samtools` to filter anything that is **not** that from the `bam`. He used the following command: `cat input.txt | sed 's/chr//g' | awk '{print $1"\t0\t"$2}' > GRCh37.bed` and his source was the [UCSC website](http://hgdownload.cse.ucsc.edu/goldenpath/hg19/encodeDCC/referenceSequences/male.hg19.chrom.sizes).
+
+So now I have to figure out which `samtools` commands/flags I need to use to do this. I have to now go back to the previous step, after converting the `sra` files to `bam`s but before turning the `bam` files to `junc`.
+
+`samtools view -L GRCh37.bed <file>`
+
+I created a text list of files to parallelize the above command: `ls | tail -n +2 >> bamlist.txt `; I'm going to have `$SLURM_ARRAY_TASK_ID` correspond to each line in the file.
+
 ### 12/06/2018
-`interact` isn't working on MARCC right now so I'm still using our development node, which should be more than enough in terms of resources. I have converted our 10 .sras to .bams. Now, following the LeafCutter guide, I'm going to convert them to .junc files, and then I'm going to cluster the introns. 
+`interact` isn't working on MARCC right now so I'm still using our development node, which should be more than enough in terms of resources. I have converted our 10 `.sras` to `.bams`. Now, following the LeafCutter guide, I'm going to convert them to .junc files, and then I'm going to cluster the introns. 
 
 ```
 for bamfile in `ls example_geuvadis/*.bam`
