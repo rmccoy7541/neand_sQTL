@@ -125,6 +125,24 @@ SRR1068929.sra.bam SRR1068855.sra.bam SRR1069141.sra.bam SRR1068808.sra.bam SRR1
 
 I think each line is an intron and the columns represent the number of split reads from the corresponding file that supports that intron, and the `clu_X` represents which "cluster" it's in. Cool. Now we can get into splicing QTL analysis, which may be the tricky part. I'm doing this all with just 10 SRA files and it's really highlighting the need to parallelize this process, because if we don't, it would take like 20 years just to get to this part using the full dataset.
 
+[Splicing QTL Analysis](http://davidaknowles.github.io/leafcutter/articles/sQTL.html):
+
+`python /scratch/groups/rmccoy22/leafcutter/scripts/prepare_phenotype_table.py /scratch/groups/rmccoy22/bamfiles/testgTEX_perind.counts.gz -p 10`
+
+I get this error message:
+```
+[aseyedi2@jhu.edu@rmccoy22-dev bamfiles]$ python /scratch/groups/rmccoy22/leafcutter/scripts/prepare_phenotype_table.py testgTEX_perind.counts.gz -p 10
+Starting...
+Parsed 1000 introns...
+Traceback (most recent call last):
+  File "/scratch/groups/rmccoy22/leafcutter/scripts/prepare_phenotype_table.py", line 171, in <module>
+    main(args[0], int(options.npcs) )
+  File "/scratch/groups/rmccoy22/leafcutter/scripts/prepare_phenotype_table.py", line 99, in main
+    chrom_int = int(chr_)
+ValueError: invalid literal for int() with base 10: 'GL000219.1'
+```
+Going to tell Rajiv about it.
+
 ### 12/05/2018
 Got up this morning and looks like firing off the command `for f in $PWD/*.sra; do ./sam-dump $f | samtools view -bS - > $f.bam; done` with a 4-hour long interactive session wasn't even enough for just 10 files. I'm converting the rest of the files on `rmccoy22-dev`. 
 
@@ -134,7 +152,7 @@ We met with the directors of MARCC last week and we talked about using a tool ca
 ## Update
 `for f in $PWD/*.sra; do ./sam-dump $f | samtools view -bS - | tee $f.bam; done`
 
-I tried out the above command and it was a nightmare. I thought it would be readable for whatever reason. It would be cool if I figure out how to add like a progress bar or something just so I can monitor the progress of the conversion, but I guess I won't even have to with parallelizaiton.
+I tried out the above command and it was a nightmare. I thought it would be readable for whatever reason. It would be cool if I figure out how to add like a progress bar or something just so I can monitor the progress of the conversion, but I guess I won't even have to with parallelization.
 
 ### 11/27/2018
 Using `nohup` didn't work, or something else happened, but the cart files did not download. Disappointingly. I'm going to try again, but this time with `screen`. I'm going to use `./prefetch -X 50000000000 /scratch/groups/rmccoy22/sratools/cart_prj19186_201811221749.krt > /scratch/groups/rmccoy22/logs/SRA_DL.out`, with the output redirected to a `logs` folder so that the download progress can be monitored by `tail -f`. Just to clarify, I am using the dtn node. Also, Ubuntu's built-in text editor isn't working on my laptop, weirdly.
