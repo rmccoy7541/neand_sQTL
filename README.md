@@ -45,6 +45,10 @@ I met Rajiv about the problem that I wrote about in the README last night withou
 
 So now I have to figure out which `samtools` commands/flags I need to use to do this. I have to now go back to the previous step, after converting the `sra` files to `bam`s but before turning the `bam` files to `junc`.
 
+`samtools view -L GRCh37.bed <file>`
+
+I created a text list of files to parallelize the above command: `ls | tail -n +2 >> bamlist.txt `; I'm going to have `$SLURM_ARRAY_TASK_ID` correspond to each line in the file.
+
 ### 12/06/2018
 `interact` isn't working on MARCC right now so I'm still using our development node, which should be more than enough in terms of resources. I have converted our 10 `.sras` to `.bams`. Now, following the LeafCutter guide, I'm going to convert them to .junc files, and then I'm going to cluster the introns. 
 
