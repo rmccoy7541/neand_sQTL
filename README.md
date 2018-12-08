@@ -40,10 +40,19 @@ Step-by-step instructions with intermediate ends and full explanations of import
 
 Updates
 ----------------------------------------------------------------------------------------------------------------------------------------
+### 12/08/2018
+I wrote a script `scratch/filter_bam.txt`, picking up from yesterday. MARCC isn't working right now but I'll try it again tomorrow morning. 
+
+Note: I feel like I didn't mention this before, but `scratch/convertgTEX.txt` is my obviously flawed draft to parallelize converting the gTEX files to `.bam`. I'll have to do the same thing for converting them to `.junc` and pretty much ever ensuing step of the project. God what a pain. I'm going to talk to Rajiv about how he thinks we should approach this. 
+
 ### 12/07/2018
 I met Rajiv about the problem that I wrote about in the README last night without committing the changes and pushing to GitHub (it's okay). Basically the code (`prepare_phenotype.py`) can't handle string inputs that are not simply 'X' or 'Y'. Rajiv slapped together `/data/12-07-2018/GRCh37.bed`, which has the the chromosome number/letter and sequence range (0-terminal) to be used with `samtools` to filter anything that is **not** that from the `bam`. He used the following command: `cat input.txt | sed 's/chr//g' | awk '{print $1"\t0\t"$2}' > GRCh37.bed` and his source was the [UCSC website](http://hgdownload.cse.ucsc.edu/goldenpath/hg19/encodeDCC/referenceSequences/male.hg19.chrom.sizes).
 
 So now I have to figure out which `samtools` commands/flags I need to use to do this. I have to now go back to the previous step, after converting the `sra` files to `bam`s but before turning the `bam` files to `junc`.
+
+From the [samtools documentation](http://www.htslib.org/doc/samtools.html):
+>-L FILE
+>Only output alignments overlapping the input BED FILE [null].
 
 `samtools view -L GRCh37.bed <file>`
 
