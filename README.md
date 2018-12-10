@@ -40,10 +40,13 @@ Step-by-step instructions with intermediate ends and full explanations of import
 
 Updates
 ----------------------------------------------------------------------------------------------------------------------------------------
+### 12/10/2018
+I was able to use `src/12-10-2018/filter_bam.sh` to get rid of all unplaced contigs from the bam files before converting them to `.junc` files and sending them through LeafCutter. `filter_bam.sh` does not remove mitochondrial DNA from the files and I am not sure if LeafCutter can process mitochondiral intron cluters so we will see how this plays out.  
+
 ### 12/08/2018
 I wrote a script `scratch/filter_bam.txt`, picking up from yesterday. MARCC isn't working right now but I'll try it again tomorrow morning. 
 
-Note: I feel like I didn't mention this before, but `scratch/convertgTEX.txt` is my obviously flawed draft to parallelize converting the gTEX files to `.bam`. I'll have to do the same thing for converting them to `.junc` and pretty much ever ensuing step of the project. God what a pain. I'm going to talk to Rajiv about how he thinks we should approach this. 
+Note: I feel like I didn't mention this before, but `scratch/convertgTEX.txt` is my obviously flawed draft to parallelize converting the gTEX files to `.bam`. I'll have to do the same thing for converting them to `.junc` and pretty much every ensuing step of the project. God what a pain. I'm going to talk to Rajiv about how he thinks we should approach this. 
 
 ### 12/07/2018
 I met Rajiv about the problem that I wrote about in the README last night without committing the changes and pushing to GitHub (it's okay). Basically the code (`prepare_phenotype.py`) can't handle string inputs that are not simply 'X' or 'Y'. Rajiv slapped together `/data/12-07-2018/GRCh37.bed`, which has the the chromosome number/letter and sequence range (0-terminal) to be used with `samtools` to filter anything that is **not** that from the `bam`. He used the following command: `cat input.txt | sed 's/chr//g' | awk '{print $1"\t0\t"$2}' > GRCh37.bed` and his source was the [UCSC website](http://hgdownload.cse.ucsc.edu/goldenpath/hg19/encodeDCC/referenceSequences/male.hg19.chrom.sizes).
