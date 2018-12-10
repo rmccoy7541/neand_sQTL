@@ -43,6 +43,10 @@ Updates
 ### 12/10/2018
 I was able to use `src/12-10-2018/filter_bam.sh` to get rid of all unplaced contigs from the bam files before converting them to `.junc` files and sending them through LeafCutter. `filter_bam.sh` does not remove mitochondrial DNA from the files and I am not sure if LeafCutter can process mitochondiral intron cluters so we will see how this plays out.  
 
+`ls *.filt | tail -n +2 >> filtbamlist.txt`
+
+Doing the same thing; going to round up all of the filtered bam files and put them in this here text file to do the `junc` conversion.
+
 ### 12/08/2018
 I wrote a script `scratch/filter_bam.txt`, picking up from yesterday. MARCC isn't working right now but I'll try it again tomorrow morning. 
 
