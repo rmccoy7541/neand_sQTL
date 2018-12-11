@@ -56,7 +56,7 @@ From the [documentation](http://davidaknowles.github.io/leafcutter/articles/Usag
 
 I also added the `-r` flag to indicate that all of the output files should go to our boy `intronclustering/`. The other flag parameters, I don't know about. For example, I don't know why I should make the minimum cluster reads 50 instead of 30 (which is the default), or why the max intron length should be 50,000bp as opposed to 100,000bp. I'll ask Rajiv if he wants to alter these values but for now I'm going to truck along.
 
-Since this is starting to get complicating, I'm going to show what the master script will look like immediately preceeding the above `leafcutter_cluster.py` call:
+Since this is starting to get complicated, I'm going to show what the master script will look like immediately preceeding the above `leafcutter_cluster.py` call:
 
 ```
 split -d -a 6 -l 1 --additional-suffix '.split' test_juncfiles.txt ''
