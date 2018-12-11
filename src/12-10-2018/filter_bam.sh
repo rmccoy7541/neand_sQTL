@@ -11,7 +11,7 @@
 ml samtools
 
 # create text file with all *.bam files
-# ls *.bam | tail -n +2 >> bamlist.txt
+# ls *.bam | tail -n +1 >> bamlist.txt
 # run this as a one-off command; job array will create massive list with duplicates
 
 # each line with a .SRA file is a job in the job array
@@ -22,3 +22,4 @@ filt="${line}.filt"
 echo "Filtering $line"
 
 samtools view -b -L GRCh37.bed $line > "$filt"
+

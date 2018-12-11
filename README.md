@@ -40,12 +40,46 @@ Step-by-step instructions with intermediate ends and full explanations of import
 
 Updates
 ----------------------------------------------------------------------------------------------------------------------------------------
+### 12/11/2018
+I found this script from [this stack overflow post](https://stackoverflow.com/questions/2074687/bash-command-to-remove-leading-zeros-from-all-file-names/2074704) that removes all leading zeros from any file in that directory that has a file name that starts with zeros. Not sure exactly how it works and I honestly don't really care. Just hope whoever is using this doesn't use input files that start with zeros.
+
+`shopt -s extglob; for i in *.split; do mv "$i" "${i##*(0)}"; done`
+
+All of the extra code I have to write just to call the LeafCutter scripts is getting out of hand. I really should consider writing a master script soon. Maybe after I call the intron clustering step, I could also call a `rm *.split` to clear the clutter in the working directory, but that's for another time. I should note that the only reason I'm going through all of this trouble is that from all indications, `leafcutter_clustering.py` **only** takes "text file[s] with all junction files to be processed," and not the junction files themselves, unless I'm mistaken which I might be.
+
+Ok, I just checked and it doesn't. Going to `mkdir intronclustering` to reduce working directory clutter. 
+
+`python ../clustering/leafcutter_cluster.py -j ${SLURM_ARRAY_TASK_ID}.split -r intronclustering/ -m 50 -o testNE_sQTL -l 500000`
+
+From the [documentation](http://davidaknowles.github.io/leafcutter/articles/Usage.html#step-2--intron-clustering)
+>This will cluster together the introns fond in the junc files listed in test_juncfiles.txt, requiring 50 split reads supporting each cluster and allowing introns of up to 500kb. The predix testYRIvsEU means the output will be called testYRIvsEU_perind_numers.counts.gz (perind meaning these are the per individual counts).
+
+I also added the `-r` flag to indicate that all of the output files should go to our boy `intronclustering/`. The other flag parameters, I don't know about. For example, I don't know why I should make the minimum cluster reads 50 instead of 30 (which is the default), or why the max intron length should be 50,000bp as opposed to 100,000bp. I'll ask Rajiv if he wants to alter these values but for now I'm going to truck along.
+
+Since this is starting to get complicating, I'm going to show what the master script will look like immediately preceeding the above `leafcutter_cluster.py` call:
+
+```
+split -d -a 6 -l 1 --additional-suffix '.split' test_juncfiles.txt ''
+shopt -s extglob; for i in *.split; do mv "$i" "${i##*(0)}"; done
+sbatch intron_cluster.sh
+```
+
+I just realized I'm going to have to do this with GNU-Parallel when I do the full dataset which is frustrating but I guess I gotta if we're going to be efficient. The guy never got back to me about how to best call it but I think I figured it out. Looking at MARCC's documentation, it seems that the most important things are (a) to not use job arrays, (b) `parallel="parallel --delay .2 -j 4 --joblog logs/runtask.log --resume"` and (c) `$parallel "$srun python example_lapack.py {1}000 6" ::: {1..10}`. I feel like meeting with the directors of MARCC made things more complicated for me, but it's okay. I'm actually going to talk to Rajiv about what he thinks about using GNU-Parallel. It might be useful for doing to `.sra` to `.bam` conversion and maybe some of the other more computationally intensive stuff but given that I don't quite understand how it works, I'm not sure how to implement it.
+
 ### 12/10/2018
 I was able to use `src/12-10-2018/filter_bam.sh` to get rid of all unplaced contigs from the bam files before converting them to `.junc` files and sending them through LeafCutter. `filter_bam.sh` does not remove mitochondrial DNA from the files and I am not sure if LeafCutter can process mitochondiral intron cluters so we will see how this plays out.  
 
-`ls *.filt | tail -n +2 >> filtbamlist.txt`
+`ls *.filt | tail -n +1 >> filtbamlist.txt`
 
 Doing the same thing; going to round up all of the filtered bam files and put them in this here text file to do the `junc` conversion.
+
+Don't forget to use `wc -l` on `filtbamlist.txt` or `bamlist.txt` or any other text file to be used with a job array to figure out what the job array size should be (if 0 indexed, -1 from size). I need to create some sort of master script that calls all of the job array scripts and basically does everything at once. I made `filter_bam.sh` and `bam2junccall.sh` functional as job arrays today. 
+
+For the intron clustering step, `clustering/leafcutter_python.py -j` intakes a "text file with all junction files to be processed," so I'm trying to figure out how to make this into a job array. Of course, I could make it so each individual line in that text file gets its own text file. 
+
+`split -d -a 6 -l 1 --additional-suffix '.split' <input> ''`
+
+The above command splits a text file. The `-a` flag designates the suffixes (for 5,000 files, 6 should suffice), the `-l` flag indicates lines per output file (1) and the `-d` flag indicates numeric suffixes (`xaa, xab, xac...`) rather than alphabetic suffixes (`x01, x02, x03...`). The `--addtional-suffix` flag ensures that the following command, which would remove leading zeros, can target the resulting files. Lastly, the `''` ensure there is no prefix. The problem with this is that `$SLURM_ARRAY_TASK_ID` generates numbers like `1, 2, 3, etc` but it shouldn't be too difficult to remedy this.
 
 ### 12/08/2018
 I wrote a script `scratch/filter_bam.txt`, picking up from yesterday. MARCC isn't working right now but I'll try it again tomorrow morning. 
@@ -63,7 +97,7 @@ From the [samtools documentation](http://www.htslib.org/doc/samtools.html):
 
 `samtools view -L GRCh37.bed <file>`
 
-I created a text list of files to parallelize the above command: `ls | tail -n +2 >> bamlist.txt `; I'm going to have `$SLURM_ARRAY_TASK_ID` correspond to each line in the file.
+I created a text list of files to parallelize the above command: `ls | tail -n +1 >> bamlist.txt `; I'm going to have `$SLURM_ARRAY_TASK_ID` correspond to each line in the file.
 
 ### 12/06/2018
 `interact` isn't working on MARCC right now so I'm still using our development node, which should be more than enough in terms of resources. I have converted our 10 `.sras` to `.bams`. Now, following the LeafCutter guide, I'm going to convert them to .junc files, and then I'm going to cluster the introns. 
@@ -184,7 +218,8 @@ Using `nohup` didn't work, or something else happened, but the cart files did no
 
 ### 11/26/2018
 The more things change, the more they stay the same. We are meeting with the director of MARCC on Wednesday to discuss our options when dealing with big ol' datasets. Looks like using `~/scratch` is a no-go, but `~/work` apparently has up to 50TB of space AND is a scratch partition, so that's what we're going to use. We're still waiting to meet with the dude on Wednesday but in the meantime, I'm going to play around with a small subset of the total data to see what's what. I already made some progress last week; I came up with a little ditty like this: `for f in $PWD/*.sra; do ./sam-dump $f | samtools view -bS > $f.bam; done`. However, this one-off command doesn't utilize parallelization, so Rajiv recommended something that makes use of SLURM's capabilities:
-```#!/bin/bash
+```
+#!/bin/bash
 #SBATCH --job-name=convert_gtex
 #SBATCH --time=12:00:00
 #SBATCH --partition=shared
