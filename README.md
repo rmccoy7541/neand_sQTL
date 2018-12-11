@@ -49,7 +49,7 @@ All of the extra code I have to write just to call the LeafCutter scripts is get
 
 Ok, I just checked and it doesn't. Going to `mkdir intronclustering` to reduce working directory clutter. 
 
-`python ../clustering/leafcutter_cluster.py -j ${SLURM_ARRAY_TASK_ID}.split -r intronclustering/ -m 50 -o testNE_sQTL -l 500000`
+~~`python ../clustering/leafcutter_cluster.py -j ${SLURM_ARRAY_TASK_ID}.split -r intronclustering/ -m 50 -o testNE_sQTL -l 500000`
 
 From the [documentation](http://davidaknowles.github.io/leafcutter/articles/Usage.html#step-2--intron-clustering)
 >This will cluster together the introns fond in the junc files listed in test_juncfiles.txt, requiring 50 split reads supporting each cluster and allowing introns of up to 500kb. The predix testYRIvsEU means the output will be called testYRIvsEU_perind_numers.counts.gz (perind meaning these are the per individual counts).
@@ -63,8 +63,11 @@ split -d -a 6 -l 1 --additional-suffix '.split' test_juncfiles.txt ''
 shopt -s extglob; for i in *.split; do mv "$i" "${i##*(0)}"; done
 sbatch intron_cluster.sh
 ```
-
+~~
 I just realized I'm going to have to do this with GNU-Parallel when I do the full dataset which is frustrating but I guess I gotta if we're going to be efficient. The guy never got back to me about how to best call it but I think I figured it out. Looking at MARCC's documentation, it seems that the most important things are (a) to not use job arrays, (b) `parallel="parallel --delay .2 -j 4 --joblog logs/runtask.log --resume"` and (c) `$parallel "$srun python example_lapack.py {1}000 6" ::: {1..10}`. I feel like meeting with the directors of MARCC made things more complicated for me, but it's okay. I'm actually going to talk to Rajiv about what he thinks about using GNU-Parallel. It might be useful for doing to `.sra` to `.bam` conversion and maybe some of the other more computationally intensive stuff but given that I don't quite understand how it works, I'm not sure how to implement it. **UPDATE:** yeah it's cool I don't need to use it. MARCC is so slow I can't launch a job(s) without first waiting like 4000 minutes.
+
+Okay, so I just figured out that `leafcutter_cluster.py` doesn't work in a job array, probably because all of the files are merged in the end. Shouldn't be too taxing though, because each `.junc` file is only a few MB in size.
+
 
 ### 12/10/2018
 I was able to use `src/12-10-2018/filter_bam.sh` to get rid of all unplaced contigs from the bam files before converting them to `.junc` files and sending them through LeafCutter. `filter_bam.sh` does not remove mitochondrial DNA from the files and I am not sure if LeafCutter can process mitochondiral intron cluters so we will see how this plays out.  
