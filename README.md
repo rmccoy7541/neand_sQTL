@@ -40,6 +40,34 @@ Step-by-step instructions with intermediate ends and full explanations of import
 
 Updates
 ----------------------------------------------------------------------------------------------------------------------------------------
+### 12/12/2018
+
+`fastQTL -V genotypes.vcf.gz -B  phenotypes.bed.gz -O res -L res.log --chunk 1 10 `
+
+This is the sample FastQTL line I got from the [NIH website.](https://hpc.nih.gov/apps/FastQTL.html). According to the LeafCutter, I have to use the `*qqnorm*.gz` files as the BED files. I downloaded the enormous, 447Gb genotype matrix in VCF format and now have to decode them using this command: `./vdb-decrypt -v phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1.GRU.tar.ncbi_enc GTExVCF > decryption.log`. Once that happens, I'm going to investigate fastQTL's multithreading/parallelization capabilities to see how I make a job array. 
+
+I just learned about `wait` in Bash. I'm going to use that when writing the master script (mostly because I have to).
+
+**I have to make a note that whomever tries to reproduce these results definitely keeps the bin files for SRAToolkit in the respective directories.**
+
+Okay, the VCF is done decrypting. I need to run FastQTL on each file, and chunk the QTL mapping into 10 distinct pieces.
+
+**BUT FIRST** I need to run `tabix` on the newly-generated VCF file (mazel-tov). We're gonna do something like `ml htslib; tabix -p vcf GTExVCF`. **BUT EVEN BEFORE THAT** I have to gzip our new friend: `bgzip -c GTExVCF.vcf > GTExVCF.vcf.gzip`
+
+so it looks like this:
+```
+ml htslib
+echo Start Time of Compression; date
+bgzip -c GTExVCF.vcf > GTExVCF.vcf.gzip
+echo End Time of Compression ; date
+tabix -p vcf GTExVCF.vcf.gzip
+rm GTExVCF.vcf
+```
+
+I could also do `bgzip -f` but I don't want to overwrite the decompressed VCF after *45 minutes* of decryption. *That turned out to be the right call* because I accidentally exited out of the interactive job which had a `screen` that was running the compression. I'm starting over from the dev node. I should have done it on a screen in the dev node but whatever, it's running. *Remind me to run that as a batch script*.
+
+Okay I cancelled it because it was taking a long time and I don't want it to still be running if I need to leave or anything. Here's what I'm doing: `ml htslib; echo Start Time; date; bgzip -c GTExVCF.vcf > GTExVCF.vcf.gzip; echo End Time; date; tabix -p vcf GTExVCF.vcf.gzip` **Just set it and forget it.** @Wed 12 Dec 2018 04:41:49 PM EST 
+
 ### 12/11/2018
 I found this script from [this stack overflow post](https://stackoverflow.com/questions/2074687/bash-command-to-remove-leading-zeros-from-all-file-names/2074704) that removes all leading zeros from any file in that directory that has a file name that starts with zeros. Not sure exactly how it works and I honestly don't really care. Just hope whoever is using this doesn't use input files that start with zeros.
 
@@ -49,7 +77,7 @@ All of the extra code I have to write just to call the LeafCutter scripts is get
 
 Ok, I just checked and it doesn't. Going to `mkdir intronclustering` to reduce working directory clutter. 
 
-~~python ../clustering/leafcutter_cluster.py -j ${SLURM_ARRAY_TASK_ID}.split -r intronclustering/ -m 50 -o testNE_sQTL -l 500000~~
+~~`python ../clustering/leafcutter_cluster.py -j ${SLURM_ARRAY_TASK_ID}.split -r intronclustering/ -m 50 -o testNE_sQTL -l 500000`~~
 
 From the [documentation](http://davidaknowles.github.io/leafcutter/articles/Usage.html#step-2--intron-clustering)
 >This will cluster together the introns fond in the junc files listed in test_juncfiles.txt, requiring 50 split reads supporting each cluster and allowing introns of up to 500kb. The predix testYRIvsEU means the output will be called testYRIvsEU_perind_numers.counts.gz (perind meaning these are the per individual counts).
@@ -59,9 +87,9 @@ I also added the `-r` flag to indicate that all of the output files should go to
 ~~Since this is starting to get complicated, I'm going to show what the master script will look like immediately preceeding the above `leafcutter_cluster.py` call:~~
 
 
-~~split -d -a 6 -l 1 --additional-suffix '.split' test_juncfiles.txt ''~~
-~~shopt -s extglob; for i in *.split; do mv "$i" "${i##*(0)}"; done~~
-~~sbatch intron_cluster.sh~~
+~~`split -d -a 6 -l 1 --additional-suffix '.split' test_juncfiles.txt ''`~~
+~~`shopt -s extglob; for i in *.split; do mv "$i" "${i##*(0)}"; done`~~
+~~`sbatch intron_cluster.sh`~~
 
 
 I just realized I'm going to have to do this with GNU-Parallel when I do the full dataset which is frustrating but I guess I gotta if we're going to be efficient. The guy never got back to me about how to best call it but I think I figured it out. Looking at MARCC's documentation, it seems that the most important things are (a) to not use job arrays, (b) `parallel="parallel --delay .2 -j 4 --joblog logs/runtask.log --resume"` and (c) `$parallel "$srun python example_lapack.py {1}000 6" ::: {1..10}`. I feel like meeting with the directors of MARCC made things more complicated for me, but it's okay. I'm actually going to talk to Rajiv about what he thinks about using GNU-Parallel. It might be useful for doing to `.sra` to `.bam` conversion and maybe some of the other more computationally intensive stuff but given that I don't quite understand how it works, I'm not sure how to implement it. **UPDATE:** yeah it's cool I don't need to use it. MARCC is so slow I can't launch a job(s) without first waiting like 4000 minutes.
@@ -102,7 +130,7 @@ The above command splits a text file. The `-a` flag designates the suffixes (for
 ### 12/08/2018
 I wrote a script `scratch/filter_bam.txt`, picking up from yesterday. MARCC isn't working right now but I'll try it again tomorrow morning. 
 
-Note: I feel like I didn't mention this before, but `scratch/convertgTEX.txt` is my obviously flawed draft to parallelize converting the gTEX files to `.bam`. I'll have to do the same thing for converting them to `.junc` and pretty much every ensuing step of the project. God what a pain. I'm going to talk to Rajiv about how he thinks we should approach this. 
+Note: I feel like I didn't mention this before, but `scratch/convertGTEx.txt` is my obviously flawed draft to parallelize converting the GTEx files to `.bam`. I'll have to do the same thing for converting them to `.junc` and pretty much every ensuing step of the project. God what a pain. I'm going to talk to Rajiv about how he thinks we should approach this. 
 
 ### 12/07/2018
 I met Rajiv about the problem that I wrote about in the README last night without committing the changes and pushing to GitHub (it's okay). Basically the code (`prepare_phenotype.py`) can't handle string inputs that are not simply 'X' or 'Y'. Rajiv slapped together `/data/12-07-2018/GRCh37.bed`, which has the the chromosome number/letter and sequence range (0-terminal) to be used with `samtools` to filter anything that is **not** that from the `bam`. He used the following command: `cat input.txt | sed 's/chr//g' | awk '{print $1"\t0\t"$2}' > GRCh37.bed` and his source was the [UCSC website](http://hgdownload.cse.ucsc.edu/goldenpath/hg19/encodeDCC/referenceSequences/male.hg19.chrom.sizes).
@@ -179,13 +207,13 @@ I proceeded to the "Intron Clustering" portion of the LeafCutter:
 
 `ml python/2.7-anaconda`
 
-`python /scratch/groups/rmccoy22/leafcutter/clustering/leafcutter_cluster.py -j test_juncfiles.txt -m 50 -o testgTEX -l 500000`
+`python /scratch/groups/rmccoy22/leafcutter/clustering/leafcutter_cluster.py -j test_juncfiles.txt -m 50 -o testGTEx -l 500000`
 
 From the [LeafCutter documentation](http://davidaknowles.github.io/leafcutter/articles/Usage.html#step-2--intron-clustering):
 
->This will cluster together the introns fond in the junc files listed in test_juncfiles.txt, requiring 50 split reads supporting each cluster and allowing introns of up to 500kb. The predix [testgTEX] means the output will be called [testgTEX]_perind_numers.counts.gz (perind meaning these are the per individual counts).
+>This will cluster together the introns fond in the junc files listed in test_juncfiles.txt, requiring 50 split reads supporting each cluster and allowing introns of up to 500kb. The predix [testGTEx] means the output will be called [testGTEx]_perind_numers.counts.gz (perind meaning these are the per individual counts).
 
-Here's what output `testgTEX_perind_numers.counts.gz` looks like:
+Here's what output `testGTEx_perind_numers.counts.gz` looks like:
 ```
 SRR1068929.sra.bam SRR1068855.sra.bam SRR1069141.sra.bam SRR1068808.sra.bam SRR1068977.sra.bam SRR1069024.sra.bam SRR1069097.sra.bam SRR1069231.sra.bam SRR1069188.sra.bam SRR1068880.sra.bam
 14:20813246:20813553:clu_1_NA 20 67 9 30 87 1 2 15 86 4
@@ -204,11 +232,11 @@ I think each line is an intron and the columns represent the number of split rea
 
 [Splicing QTL Analysis](http://davidaknowles.github.io/leafcutter/articles/sQTL.html):
 
-`python /scratch/groups/rmccoy22/leafcutter/scripts/prepare_phenotype_table.py /scratch/groups/rmccoy22/bamfiles/testgTEX_perind.counts.gz -p 10`
+`python /scratch/groups/rmccoy22/leafcutter/scripts/prepare_phenotype_table.py /scratch/groups/rmccoy22/bamfiles/testGTEx_perind.counts.gz -p 10`
 
 I get this error message:
 ```
-[aseyedi2@jhu.edu@rmccoy22-dev bamfiles]$ python /scratch/groups/rmccoy22/leafcutter/scripts/prepare_phenotype_table.py testgTEX_perind.counts.gz -p 10
+[aseyedi2@jhu.edu@rmccoy22-dev bamfiles]$ python /scratch/groups/rmccoy22/leafcutter/scripts/prepare_phenotype_table.py testGTEx_perind.counts.gz -p 10
 Starting...
 Parsed 1000 introns...
 Traceback (most recent call last):
