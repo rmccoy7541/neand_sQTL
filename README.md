@@ -54,15 +54,15 @@ I just learned about `wait` in Bash. I'm going to use that when writing the mast
 
 ~~**BUT FIRST** I need to run `tabix` on the newly-generated VCF file (mazel-tov). We're gonna do something like `ml htslib; tabix -p vcf GTExVCF`. **BUT EVEN BEFORE THAT** I have to gzip our new friend: `bgzip -c GTExVCF.vcf > GTExVCF.vcf.gzip`~~
 
-~~so it looks like this:
-```
-ml htslib
+
+~~so it looks like this:~~
+~~`ml htslib
 echo Start Time of Compression; date
 bgzip -c GTExVCF.vcf > GTExVCF.vcf.gzip
 echo End Time of Compression ; date
 tabix -p vcf GTExVCF.vcf.gzip
-rm GTExVCF.vcf
-```~~
+rm GTExVCF.vcf`~~
+
 
 ~~I could also do `bgzip -f` but I don't want to overwrite the decompressed VCF after *45 minutes* of decryption. *That turned out to be the right call* because I accidentally exited out of the interactive job which had a `screen` that was running the compression. I'm starting over from the dev node. I should have done it on a screen in the dev node but whatever, it's running. *Remind me to run that as a batch script*.~~
 
