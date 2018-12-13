@@ -8,7 +8,7 @@
 #SBATCH --array=1-10
 
 # creates list of filtered bam files for job array
-# ls *.filt | tail -n +1 >> filtbamlist.txt
+# ls *.filt >> filtbamlist.txt
 
 # each line is a bam file to be used as an input in the job array
 line=`sed "${SLURM_ARRAY_TASK_ID}q;d" filtbamlist.txt`

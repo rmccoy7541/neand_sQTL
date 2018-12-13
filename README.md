@@ -40,6 +40,19 @@ Step-by-step instructions with intermediate ends and full explanations of import
 
 Updates
 ----------------------------------------------------------------------------------------------------------------------------------------
+### 12/13/2018
+#### Thu 13 Dec 2018 11:49:58 AM EST 
+FastQTL isn't working. I'm going to talk to Rajiv about this.
+
+#### Thu 13 Dec 2018 01:34:54 PM EST 
+According to Rajiv, the .vcf file refers to individuals by a GTEX ID (GTEX-????). However, the corresponding phenotype files are in SRA ID format.
+
+#### Thu 13 Dec 2018 04:59:22 PM EST  
+I am the president. I am the olympics. Here is the command to fire off after filtering our SRA files: `for file in $PWD/*.filt; do ID=$(samtools view -H $file | grep -o -m 1 'GTEX-....'); mv $file ${ID}.sra.bam.filt; done;` This will find within each filtered bam file its corresponding GTEX ID and rename the file accordingly. Unfortunately, this means I will have to start the whole thing over again. Fortunately, this is a good opportunity to make the master script.
+
+#### Thu 13 Dec 2018 05:40:41 PM EST 
+Okay, so apparently `ml sra-tools` works now, so I can actually make the master script much easier now without copying the binary files into each working directory. I have submitted `sra2bam.sh` now, we'll see how it goes.
+
 ### 12/12/2018
 
 `fastQTL -V genotypes.vcf.gz -B  phenotypes.bed.gz -O res -L res.log --chunk 1 10 `
