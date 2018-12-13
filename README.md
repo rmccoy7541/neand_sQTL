@@ -67,7 +67,7 @@ I just learned about `wait` in Bash. I'm going to use that when writing the mast
 Just found out about `sbatch -d`, will be *extremely* important in writing the master script. S[ecifically, `afterok`. Consult [SLURM documenation](https://slurm.schedmd.com/sbatch.html) for more details.
 
 #### Wed 12 Dec 2018 07:17:42 PM EST 
-I just realized that the massive file I was gzipping this whole time was actually the decrypted tar file of what I downloaded. So I got to about 387 GB before I found this out and had to cancel the compression and delete the file. Starting over but instead am doing `tar -xvf phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1.GRU.tar`
+I just realized that the massive file I was gzipping this whole time was actually the decrypted tar file of what I downloaded. So I got to about 387 GB before I found this out and had to cancel the compression and delete the file. Starting over but instead am doing `tar -xvf phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1.GRU.tar`. Our resulting friend is in a folder already in `.vcf.gz` format, which is what we want.
 
 ### 12/11/2018
 I found this script from [this stack overflow post](https://stackoverflow.com/questions/2074687/bash-command-to-remove-leading-zeros-from-all-file-names/2074704) that removes all leading zeros from any file in that directory that has a file name that starts with zeros. Not sure exactly how it works and I honestly don't really care. Just hope whoever is using this doesn't use input files that start with zeros.
