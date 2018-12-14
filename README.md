@@ -40,6 +40,10 @@ Step-by-step instructions with intermediate ends and full explanations of import
 
 Updates
 ----------------------------------------------------------------------------------------------------------------------------------------
+### 12/14/2018
+#### 12/14/2018 10:14:38 AM
+`sra2bam.sh` finished running overnight. I'm still building the master script (`master.sh`) and am figuring out how to make a pipeline by using SLURM dependencies. I have now called `filter_bam.sh` which should remove unplaced contigs. I should still remember to fire off `for file in $PWD/*.filt; do ID=$(samtools view -H $file | grep -o -m 1 'GTEX-....'); mv $file ${ID}.sra.bam.filt; done;` as a SLURM job array once this step is done. Should be easy.
+
 ### 12/13/2018
 #### Thu 13 Dec 2018 11:49:58 AM EST 
 FastQTL isn't working. I'm going to talk to Rajiv about this.
@@ -52,9 +56,6 @@ I am the president. I am the olympics. Here is the command to fire off after fil
 
 #### Thu 13 Dec 2018 05:40:41 PM EST 
 Okay, so apparently `ml sra-tools` works now, so I can actually make the master script much easier now without copying the binary files into each working directory. I have submitted `sra2bam.sh` now, we'll see how it goes.
-
-#### 6:42 PM 12/13/2018
-
 
 ### 12/12/2018
 
@@ -111,7 +112,7 @@ I also added the `-r` flag to indicate that all of the output files should go to
 
 I just realized I'm going to have to do this with GNU-Parallel when I do the full dataset which is frustrating but I guess I gotta if we're going to be efficient. The guy never got back to me about how to best call it but I think I figured it out. Looking at MARCC's documentation, it seems that the most important things are (a) to not use job arrays, (b) `parallel="parallel --delay .2 -j 4 --joblog logs/runtask.log --resume"` and (c) `$parallel "$srun python example_lapack.py {1}000 6" ::: {1..10}`. I feel like meeting with the directors of MARCC made things more complicated for me, but it's okay. I'm actually going to talk to Rajiv about what he thinks about using GNU-Parallel. It might be useful for doing to `.sra` to `.bam` conversion and maybe some of the other more computationally intensive stuff but given that I don't quite understand how it works, I'm not sure how to implement it. **UPDATE:** yeah it's cool I don't need to use it. MARCC is so slow I can't launch a job(s) without first waiting like 4000 minutes.
 
-Okay, so I just figured out that `leafcutter_cluster.py` doesn't work in a job array, probably because all of the files are merged in the end. Shouldn't be too taxing though, because each `.junc` file is only a few MB in size.
+**Okay, so I just figured out that `leafcutter_cluster.py` doesn't work in a job array, probably because all of the files are merged in the end. Shouldn't be too taxing though, because each `.junc` file is only a few MB in size.**
 
 Ignore what I've striked above. Here is what the code must look like:
 

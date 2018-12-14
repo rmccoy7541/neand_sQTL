@@ -12,10 +12,16 @@ ml sra-tools
 ml python/2.7-anaconda
 ml
 
-homeDir = pwd -P
+homeDir = $(pwd -P)
 # Step 1 - Convert .sra to .bam files
 cd ncbi/sra
 # store all .sra names into text file for job array
 ls *.sra >> sralist.txt
-# submit batch job
-sbatch sra2bam.sh
+# submit batch job, return stdout in $RES
+jid1=$(sbatch ${homeDir}/NE-sQTL/src/12-14-2018/sra2bam.sh)
+# list of bams to be filtered 
+ls *.bam >> bamlist.txt
+# bring bed file to current directory
+cp ${homeDir}/NE-sQTL/data/12-07-2018/GRCh37.bed $PWD
+# filter unplaced contigs
+jid2=$(sbatch --dependency=afterok:${RES1##* } ${homeDir}/NE-sQTL/src/12-14-2018/filter_bam.sh)

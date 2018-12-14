@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=filter_bam
-#SBATCH --time=12:00:00
+#SBATCH --time=3:00:00
 #SBATCH --partition=shared
 #SBATCH --nodes=1
 # number of tasks (processes) per node
@@ -10,7 +10,7 @@
 # load samtools
 ml samtools
 
-# bamlist.txt is list of bam files generated from sra's using `ls | tail -n +2 >> bamlist.txt`
+# bamlist.txt is list of bam files generated from sra's using `ls >> bamlist.txt`
 line=`sed "${SLURM_ARRAY_TASK_ID}q;d" bamlist.txt`
 
 filt="${line}.filt"
