@@ -53,6 +53,9 @@ I am the president. I am the olympics. Here is the command to fire off after fil
 #### Thu 13 Dec 2018 05:40:41 PM EST 
 Okay, so apparently `ml sra-tools` works now, so I can actually make the master script much easier now without copying the binary files into each working directory. I have submitted `sra2bam.sh` now, we'll see how it goes.
 
+#### 6:42 PM 12/13/2018
+
+
 ### 12/12/2018
 
 `fastQTL -V genotypes.vcf.gz -B  phenotypes.bed.gz -O res -L res.log --chunk 1 10 `
