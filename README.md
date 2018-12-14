@@ -44,6 +44,9 @@ Updates
 #### 12/14/2018 10:14:38 AM
 `sra2bam.sh` finished running overnight. I'm still building the master script (`master.sh`) and am figuring out how to make a pipeline by using SLURM dependencies. I have now called `filter_bam.sh` which should remove unplaced contigs. I should still remember to fire off `for file in $PWD/*.filt; do ID=$(samtools view -H $file | grep -o -m 1 'GTEX-....'); mv $file ${ID}.sra.bam.filt; done;` as a SLURM job array once this step is done. Should be easy.
 
+#### 2:16 PM 12/14/2018
+Should do something like `ls *.filt >> filtlist.txt` to make it a job array.
+
 ### 12/13/2018
 #### Thu 13 Dec 2018 11:49:58 AM EST 
 FastQTL isn't working. I'm going to talk to Rajiv about this.
