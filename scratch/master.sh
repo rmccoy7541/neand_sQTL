@@ -18,10 +18,17 @@ cd ncbi/sra
 # store all .sra names into text file for job array
 ls *.sra >> sralist.txt
 # submit batch job, return stdout in $RES
-jid1=$(sbatch ${homeDir}/NE-sQTL/src/12-14-2018/sra2bam.sh)
+jid1=$(sbatch --wait ${homeDir}/NE-sQTL/src/12-14-2018/sra2bam.sh)
 # list of bams to be filtered 
 ls *.bam >> bamlist.txt
 # bring bed file to current directory
 cp ${homeDir}/NE-sQTL/data/12-07-2018/GRCh37.bed $PWD
 # filter unplaced contigs
-jid2=$(sbatch --dependency=afterok:${jid1##* } ${homeDir}/NE-sQTL/src/12-14-2018/filter_bam.sh)
+jid2=$(sbatch --wait --dependency=afterok:${jid1##* } ${homeDir}/NE-sQTL/src/12-14-2018/filter_bam.sh)
+ls *.filt >> filtlist.txt
+sbatch --wait $(homeDir)/NE-sQTL/src/12-14-2018/rename_gtex.sh
+ls GTEX* >> gtexlist.txt
+mkdir juncfiles
+sbatch --wait ${homeDir}/NE-sQTL/src/12-10-2018/bam2junccall.sh
+mv *.junc juncfiles/
+# include a command here that would strip the .junc extension from our boys

@@ -11,7 +11,7 @@
 # ls *.filt >> filtbamlist.txt
 
 # each line is a bam file to be used as an input in the job array
-line=`sed "${SLURM_ARRAY_TASK_ID}q;d" filtbamlist.txt`
+line=`sed "${SLURM_ARRAY_TASK_ID}q;d" gtexlist.txt`
 
 # load samtools
 ml samtools
@@ -19,5 +19,5 @@ ml samtools
 # converts each file to junc
 # Remember to set LeafCutter full path (leafCutterDir) in bam2junc.sh
 echo "Converting ${line} to ${line}.junc"
-sh ../scripts/bam2junc.sh ${line} ${line}.junc
+sh ../../leafcutter/scripts/bam2junc.sh ${line} ${line}.junc
 echo ${line}.junc >> test_juncfiles.txt

@@ -47,6 +47,9 @@ Updates
 #### 2:16 PM 12/14/2018
 Should do something like `ls *.filt >> filtlist.txt` to make it a job array.
 
+#### 7:18 PM 12/14/2018
+Ran the junc file script after renaming each file in the entire directory. Now I have to do something like `purename="${filename%.*}"` to remove the extension from each file and rename the file accordingly, so it's just `GTEX-####`.
+
 ### 12/13/2018
 #### Thu 13 Dec 2018 11:49:58 AM EST 
 FastQTL isn't working. I'm going to talk to Rajiv about this.
