@@ -20,4 +20,5 @@ ml samtools
 # Remember to set LeafCutter full path (leafCutterDir) in bam2junc.sh
 echo "Converting ${line} to ${line}.junc"
 sh ../../leafcutter/scripts/bam2junc.sh ${line} ${line}.junc
-echo ${line}.junc >> test_juncfiles.txt
+# echo ${line}.junc >> test_juncfiles.txt
+# run the above line seperately AFTER the .junc extension has been stripped from the files

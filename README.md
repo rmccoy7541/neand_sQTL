@@ -40,6 +40,20 @@ Step-by-step instructions with intermediate ends and full explanations of import
 
 Updates
 ----------------------------------------------------------------------------------------------------------------------------------------
+### 12/17/2018
+#### Mon 17 Dec 2018 12:39:07 PM EST 
+Okay, I've done all of the steps from making the junc files to doing PC analysis, and now I need to see if FastQTL will work. 
+`fastQTL -V ../../../files/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTEx_Analysis_2016-01-15_v7_WholeGenomeSeq_652Ind_GATK_HaplotypeCaller.vcf.gz -B  testNE_sQTL_perind.counts.gz.qqnorm_chr1.gz -O res -L res.log --chunk 1 10`
+
+Ok, it doesn't work, even though I renamed the bam files to their GTEX ID before generating the junc files. I'm going to talk to Rajiv.
+
+`bcftools view -m2 -M2 -v snps --threads 23 -O z -o biallelicOnly.vcf.gz ../../../files/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTEx_Analysis_2016-01-15_v7_WholeGenomeSeq_652Ind_GATK_HaplotypeCaller.vcf.gz`
+
+The above command is the filter out the non-biallelic sites. `--threads 23` because I'm running it on the dev node, and it's additional threads (dev node has 24 cores). Later, when running on MARCC, I can do something crazy like a bajillion cores probably. Afterwards, I can use tabix to split the vcf by chromosome.
+
+#### Mon 17 Dec 2018 03:37:38 PM EST 
+**I guess we would also have to figure out a way to make sure that all of the GTEX samples that were not whole genome sequenced are excluded from the FastQTL mapping somehow using bcftools. This is important since FastQTL will not work otherwise; it cannot take files with non-overlapping headers.**
+
 ### 12/14/2018
 #### 12/14/2018 10:14:38 AM
 `sra2bam.sh` finished running overnight. I'm still building the master script (`master.sh`) and am figuring out how to make a pipeline by using SLURM dependencies. I have now called `filter_bam.sh` which should remove unplaced contigs. I should still remember to fire off `for file in $PWD/*.filt; do ID=$(samtools view -H $file | grep -o -m 1 'GTEX-....'); mv $file ${ID}.sra.bam.filt; done;` as a SLURM job array once this step is done. Should be easy.
