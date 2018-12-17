@@ -14,10 +14,12 @@ such as height [2].
 Placeholder for ultimately instructing users on how to run all of these scripts to get identical output.
 
 ### Prerequisites
-* Access to a high-performance cluster
 * LeafCutter 0.2.8
 * FastQTL v2.184
 * SAMtools or HTSlib
+* SRA-Toolkit
+* GTEx RNA-Seq SRAs downloaded using SRA-Toolkit's `prefetch`
+* GTEx WGS VCF downloaded using SRA-Toolkit's `prefetch` and Aspera
 
 ### Installing
 How to install what they will need to install.
@@ -28,10 +30,12 @@ Step-by-step instructions with intermediate ends and full explanations of import
 ## Built With
 * R 3.4.4 (2018-03-15) -- "Someone to Lean On"
 * Python 2.7-anaconda
-* Obviously some other stuff
+* Bash
+* MARCC - Maryland Advanced Research Computing Center
 
 ## Contributing
 * Thank the important people
+* The MARCC guys
 
 ## Authors
 
