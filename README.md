@@ -20,6 +20,7 @@ Placeholder for ultimately instructing users on how to run all of these scripts 
 * SRA-Toolkit
 * GTEx RNA-Seq SRAs downloaded using SRA-Toolkit's `prefetch`
 * GTEx WGS VCF downloaded using SRA-Toolkit's `prefetch` and Aspera
+	* 31d26b9b8db53fa92d322bf34d2a2db9a671d6f5  phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1.GRU.tar.ncbi_enc
 
 ### Installing
 How to install what they will need to install.
