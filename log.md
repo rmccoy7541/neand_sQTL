@@ -1,5 +1,20 @@
 Updates
 ----------------------------------------------------------------------------------------------------------------------------------------
+### 12/18/2018
+#### Tue 18 Dec 2018 10:31:49 AM EST 
+	31d26b9b8db53fa92d322bf34d2a2db9a671d6f5  phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1.GRU.tar.ncbi_enc
+
+Above is the NCBI-encrypted enormous 488 Gb VCF-TAR. I need to make a note of the shasum in the documentation. 
+
+Okay. Our friend has been tabix'd. Let's try the FastQTL command once more.
+
+`fastQTL -V GTExWholeGenomeSequenceGenotypeMatrixBiallelicOnly.vcf.gz -B testNE_sQTL_perind.counts.gz.qqnorm_chr1.gz -O res -L res.log --chunk 1 10`
+
+Okay it works thankfully. Now I have to figure out how to parallelize it and also consider covariate analysis. 
+
+`fastQTL -V GTExWholeGenomeSequenceGenotypeMatrixBiallelicOnly.vcf.gz -B testNE_sQTL_perind.counts.gz.qqnorm_chr1.gz -O res -L res.log --chunk 1 10`
+
+
 ### 12/17/2018
 #### Mon 17 Dec 2018 12:39:07 PM EST 
 Okay, I've done all of the steps from making the junc files to doing PC analysis, and now I need to see if FastQTL will work. 
@@ -13,6 +28,12 @@ The above command is the filter out the non-biallelic sites. `--threads 23` beca
 
 #### Mon 17 Dec 2018 03:37:38 PM EST 
 **I guess we would also have to figure out a way to make sure that all of the GTEX samples that were not whole genome sequenced are excluded from the FastQTL mapping somehow using bcftools. This is important since FastQTL will not work otherwise; it cannot take files with non-overlapping headers.**
+
+#### Mon 17 Dec 2018 04:22:41 PM EST 
+Remember to include a section on how to reproducibly download data. This is very important as well. Also `sha1sum`/checksum everything.
+
+#### Mon 17 Dec 2018 05:25:51 PM EST 
+It's done filtering out the non-biallelic sites. I just used `tabix -p vcf GTExWholeGenomeSequenceGenotypeMatrixBiallelicOnly.vcf.gz` to index our new friend. 
 
 ### 12/14/2018
 #### 12/14/2018 10:14:38 AM

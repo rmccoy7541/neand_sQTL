@@ -46,4 +46,6 @@ python $homeDir/leafcutter/clustering/leafcutter_cluster.py -j test_juncfiles.tx
 python $homeDir/leafcutter/scripts/prepare_phenotype_table.py testNE_sQTL_perind.counts.gz -p 10 # works fine; there's no option for parallelization.
 # indexing and bedding
 ml htslib; sh testNE_sQTL_perind.counts.gz_prepare.sh
+# filter the genotype file using bcftools, 
+bcftools view -m2 -M2 -v snps --threads 23 -O z -o biallelicOnly.vcf.gz ../../../files/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTEx_Analysis_2016-01-15_v7_WholeGenomeSeq_652Ind_GATK_HaplotypeCaller.vcf.gz
 
