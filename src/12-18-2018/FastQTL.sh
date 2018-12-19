@@ -7,10 +7,11 @@
 #SBATCH --ntasks-per-node=1
 #SBATCH --array=1-22
 
+ml fastqtl
+# get file;
+line=`sed "${SLURM_ARRAY_TASK_ID}q;d" leafcutterphenotypes.txt`
+# chromosome number
+chr="chr${line//[!0-9]/}"
+# FastQTL command
+fastQTL -V GTExWholeGenomeSequenceGenotypeMatrixBiallelicOnly.vcf.gz -B $line -C testNE_sQTL_perind.counts.gz.PCs -O "${chr}_FastQTLresult.txt" -L "$chr.log" --chunk 1 1
 
-line=`sed "${SLURM_ARRAY_TASK_ID}q;d" FastQTLPhenotypes.txt`
-chr = $(expr "/$line" : '.*\([^/.]\{4\}\)\.[^/.]*$')
-for i in {1..10}
-do
-	fastQTL -V GTExWholeGenomeSequenceGenotypeMatrixBiallelicOnly.vcf.gz -B $line -C testNE_sQTL_perind.counts.gz.PCs -O ${chr}_${i}_FastQTLresult.txt -L ${chr}.log --chunk ${i} 10
-done

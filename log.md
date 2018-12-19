@@ -1,5 +1,11 @@
 Updates
 ----------------------------------------------------------------------------------------------------------------------------------------
+### 12/19/2018
+#### Wed 19 Dec 2018 01:40:56 PM EST 
+FastQTL is bunk. It doesn't work with covariates, which is why we have to use QTLtools instead. Going to read the paper on QTLtools first. Regardless of what we do, QTLtools does not accept BED files the same way FastQTL does. Here's the "quick and dirty" conversion sourced from QTLtools > Preparing Input Files: `zcat myFastQTLphenotypes.bed.gz | awk '{ $4=$4" . +"; print $0 }' | tr " " "\t" | bgzip -c > myQTLtoolsPhenotypes.bed.gz`
+
+Gonna have to do [cis] Discover QTL in cis [nominal pass] or [cis] Discover QTL in cis [permutation pass]
+
 ### 12/18/2018
 #### Tue 18 Dec 2018 10:31:49 AM EST 
 	31d26b9b8db53fa92d322bf34d2a2db9a671d6f5  phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1.GRU.tar.ncbi_enc

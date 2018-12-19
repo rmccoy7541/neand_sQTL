@@ -15,12 +15,12 @@ Placeholder for ultimately instructing users on how to run all of these scripts 
 
 ### Prerequisites
 * LeafCutter 0.2.8
-* FastQTL v2.184
+* QTLtools
 * SAMtools or HTSlib
 * SRA-Toolkit
 * GTEx RNA-Seq SRAs downloaded using SRA-Toolkit's `prefetch`
 * GTEx WGS VCF downloaded using SRA-Toolkit's `prefetch` and Aspera
-	* 31d26b9b8db53fa92d322bf34d2a2db9a671d6f5
+	* SHA1SUM: 31d26b9b8db53fa92d322bf34d2a2db9a671d6f5
 	* Downloaded 12/11/2018 at 6:44 PM EST
 
 ### Installing
@@ -34,6 +34,8 @@ Step-by-step instructions with intermediate ends and full explanations of import
 * Python 2.7-anaconda
 * Bash
 * MARCC - Maryland Advanced Research Computing Center
+* LeafCutter
+* 
 
 ## Contributing
 * Thank the important people
