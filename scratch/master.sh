@@ -1,16 +1,19 @@
 #!/bin/bash
 
 # This is the master script that prepares and submits all jobs for LeafCutter
-# At the highest directory, it is assumed that the files are formatted as such:
+# At the highest directory, it is assumed that the files are arranged as such:
 # ncbi/		leafcutter/		NE-sQTL/		master.sh
-# It is also assumed that the GTEx VCF file for the whole genome has already been downloaded (see Documentation for details)
-# Finally, please make sure that you have also downloaded the SRA files (again, please see Documentation for details)
+# It is also assumed that the GTEx VCF file for the whole genome has already been downloaded and resides in ncbi/files/ 
+# 	(see Documentation for details)
+# Finally, please make sure that you have also downloaded the SRA files in ncbi/sra
+# 	(again, please see Documentation for details)
 
 # load modules
 ml samtools
 ml sra-tools
 ml python/2.7-anaconda
 ml bcftools
+ml htslib
 ml
 # the directory of master.sh
 homeDir = $(pwd -P)
@@ -46,6 +49,13 @@ python $homeDir/leafcutter/clustering/leafcutter_cluster.py -j test_juncfiles.tx
 python $homeDir/leafcutter/scripts/prepare_phenotype_table.py testNE_sQTL_perind.counts.gz -p 10 # works fine; there's no option for parallelization.
 # indexing and bedding
 ml htslib; sh testNE_sQTL_perind.counts.gz_prepare.sh
-# filter the genotype file using bcftools, 
-bcftools view -m2 -M2 -v snps --threads 23 -O z -o biallelicOnly.vcf.gz ../../../files/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTEx_Analysis_2016-01-15_v7_WholeGenomeSeq_652Ind_GATK_HaplotypeCaller.vcf.gz
+# filter the genotype file using bcftools
+sbatch --wait ${homeDir}/NE-sQTL/src/12-18-2018/bcf_tools.sh $homeDir
+# index our friend with tabix
+tabix -p vcf GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz
+# call FastQTL
+ls *qqnorm*.gz >> leafcutterphenotypes.txt 
+sbatch --wait ${homeDir}/NE-sQTL/src/12-18-2018/FastQTL.sh
+
+
 

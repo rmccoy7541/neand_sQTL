@@ -10,4 +10,7 @@
 
 line=`sed "${SLURM_ARRAY_TASK_ID}q;d" FastQTLPhenotypes.txt`
 chr = $(expr "/$line" : '.*\([^/.]\{4\}\)\.[^/.]*$')
-fastQTL -V GTExWholeGenomeSequenceGenotypeMatrixBiallelicOnly.vcf.gz -B $line -C testNE_sQTL_perind.counts.gz.PCs -O ${chr}_result.txt -L ${chr}.log --chunk 1 10
+for i in {1..10}
+do
+	fastQTL -V GTExWholeGenomeSequenceGenotypeMatrixBiallelicOnly.vcf.gz -B $line -C testNE_sQTL_perind.counts.gz.PCs -O ${chr}_${i}_FastQTLresult.txt -L ${chr}.log --chunk ${i} 10
+done

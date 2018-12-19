@@ -12,7 +12,7 @@ Okay. Our friend has been tabix'd. Let's try the FastQTL command once more.
 
 Okay it works thankfully. Now I have to figure out how to parallelize it and also consider covariate analysis. 
 
-`fastQTL -V GTExWholeGenomeSequenceGenotypeMatrixBiallelicOnly.vcf.gz -B testNE_sQTL_perind.counts.gz.qqnorm_chr1.gz -O res -L res.log --chunk 1 10`
+`fastQTL -V GTExWholeGenomeSequenceGenotypeMatrixBiallelicOnly.vcf.gz -B testNE_sQTL_perind.counts.gz.qqnorm_chr1.gz -C testNE_sQTL_perind.counts.gz.PCs -O res -L res.log`
 
 
 ### 12/17/2018
