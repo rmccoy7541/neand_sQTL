@@ -14,7 +14,7 @@ rsID <- fread(args[2], header=FALSE)
 
 names(rsID) <- c("PosID", "rsID")
 
-merge_data <- merge(NEdata[, c("PosID")], rsID, by = "PosID")
+merge_data <- merge(NEdata[, c("PosID")], rsID, by = "PosID")t
 
 outfile <- paste(args[4],"_", args[3], "_output.txt", sep = "")
 write.table(merge_data, file = outfile)

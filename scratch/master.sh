@@ -61,6 +61,10 @@ ls *.qtltools >> qtltools-input.txt
 # download genotype covariates
 wget https://storage.googleapis.com/gtex_analysis_v7/single_tissue_eqtl_data/GTEx_Analysis_v7_eQTL_covariates.tar.gz
 tar -xzf GTEx_Analysis_v7_eQTL_covariates.tar.gz
+# at this point, you want to pass each tissue PC file and the leafcutter PC file as command-line arguments into an R script that concatenates the PCs by GTEX ID
+#
+#
+#
 # call QTLtools
 sbatch --wait ${homeDir}/NE-sQTL/src/12-18-2018/QTLtools.sh
 
