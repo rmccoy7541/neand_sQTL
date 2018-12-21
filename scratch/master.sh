@@ -14,6 +14,7 @@ ml sra-tools
 ml python/2.7-anaconda
 ml bcftools
 ml htslib
+# ml qtltools - once MARCC guys install it
 ml
 # the directory of master.sh
 homeDir = $(pwd -P)
@@ -36,7 +37,6 @@ ls GTEX* >> gtexlist.txt
 mkdir juncfiles
 sbatch --wait --dependency=afterok:${jid2##* } ${homeDir}/NE-sQTL/src/12-10-2018/bam2junccall.sh
 mv *.junc juncfiles/
-# include a command here that would strip the .junc extension from our boys
 cd juncfiles/
 # strip junc files
 for junc in $PWD/*; do mv ${junc} ${junc%.*}; echo ${junc%.*}; done
@@ -46,16 +46,23 @@ ls GTEX* >> test_juncfiles.txt
 mkdir intronclustering/
 python $homeDir/leafcutter/clustering/leafcutter_cluster.py -j test_juncfiles.txt -r intronclustering/ -m 50 -o testNE_sQTL -l 500000
 #PCA calculation
-python $homeDir/leafcutter/scripts/prepare_phenotype_table.py testNE_sQTL_perind.counts.gz -p 10 # works fine; there's no option for parallelization.
+python $homeDir/leafcutter/scripts/prepare_phenotype_table.py testNE_sQTL_perind.counts.gz -p 10 # works fine; there's no option for parallelization
 # indexing and bedding
 ml htslib; sh testNE_sQTL_perind.counts.gz_prepare.sh
-# filter the genotype file using bcftools
+# filter the non-biallelic sites from genotype file using bcftools
 sbatch --wait ${homeDir}/NE-sQTL/src/12-18-2018/bcf_tools.sh $homeDir
 # index our friend with tabix
 tabix -p vcf GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz
-# call FastQTL
+# prepare files for QTLtools
 ls *qqnorm*.gz >> leafcutterphenotypes.txt 
-sbatch --wait ${homeDir}/NE-sQTL/src/12-18-2018/FastQTL.sh
+# important: render these files compatible with QTLtools
+sbatch --wait ${homeDir}/NE-sQTL/src/12-18-2018/QTLtools-Filter.sh
+ls *.qtltools >> qtltools-input.txt
+# download genotype covariates
+wget https://storage.googleapis.com/gtex_analysis_v7/single_tissue_eqtl_data/GTEx_Analysis_v7_eQTL_covariates.tar.gz
+tar -xzf GTEx_Analysis_v7_eQTL_covariates.tar.gz
+# call QTLtools
+sbatch --wait ${homeDir}/NE-sQTL/src/12-18-2018/QTLtools.sh
 
 
 
