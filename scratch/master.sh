@@ -14,6 +14,7 @@ ml sra-tools
 ml python/2.7-anaconda
 ml bcftools
 ml htslib
+ml R
 # ml qtltools - once MARCC guys install it
 ml
 # the directory of master.sh
@@ -62,9 +63,7 @@ ls *.qtltools >> qtltools-input.txt
 wget https://storage.googleapis.com/gtex_analysis_v7/single_tissue_eqtl_data/GTEx_Analysis_v7_eQTL_covariates.tar.gz
 tar -xzf GTEx_Analysis_v7_eQTL_covariates.tar.gz
 # at this point, you want to pass each tissue PC file and the leafcutter PC file as command-line arguments into an R script that concatenates the PCs by GTEX ID
-#
-#
-#
+for tissue in GTEx_Analysis_v7_eQTL_covariates/*; do Rscript --vanilla $homeDir/src/12-21-2018/mergePCs.R testNE_sQTL_perind.counts.gz.PCs ${tissue}; done
 # call QTLtools
 sbatch --wait ${homeDir}/NE-sQTL/src/12-18-2018/QTLtools.sh
 

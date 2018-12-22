@@ -16,6 +16,12 @@ Okay, don't forget what you have to do:
 	* Transpose and merge in R the covariates
 * Run QTLtools on each set of tissues using the concatenated PCs
 
+#### Fri 21 Dec 2018 04:57:47 PM EST 
+`mergePCs.R` works.
+
+#### Fri 21 Dec 2018 07:17:08 PM EST 
+Paralellizing with QTLtools does **not** work.
+
 ### 12/20/2018
 #### Thu 20 Dec 2018 01:41:29 PM EST 
 * Get GTEx covariates

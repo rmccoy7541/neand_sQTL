@@ -13,5 +13,6 @@ line=`sed "${SLURM_ARRAY_TASK_ID}q;d" QTLtools-input.txt`
 # chromosome number
 chr="chr${line//[!0-9]/}"
 # FastQTL command
-QTLtools -V GTExWholeGenomeSequenceGenotypeMatrixBiallelicOnly.vcf.gz -B $line -C testNE_sQTL_perind.counts.gz.PCs -O "${chr}_QTLtools-result.txt" -L "$chr.log" --chunk 1 1
-
+#QTLtools -V GTExWholeGenomeSequenceGenotypeMatrixBiallelicOnly.vcf.gz -B $line -C testNE_sQTL_perind.counts.gz.PCs -O "${chr}_QTLtools-result.txt" -L "$chr.log" --chunk 1 1
+# nominal pass
+QTLtools cis --vcf GTExWholeGenomeSequenceGenotypeMatrixBiallelicOnly.vcf.gz --bed $line --cov  --nominal 0.01 --chunk 1 1 --out ${line%.*}_nominals.txt
