@@ -1,5 +1,8 @@
 # data
 
+## 12-30-2018
+Added the SRA run table which contains SRA metadata.
+
 ## 12-07-2018
 Added a `bed` file that is intended to filter out introns that are not handled by LeafCutter from `bam` files. See home directory README for more details.
 
