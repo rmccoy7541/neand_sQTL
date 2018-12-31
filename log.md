@@ -1,4 +1,4 @@
-# Updates
+﻿# Updates
 ----------------------------------------------------------------------------------------------------------------------------------------
 ### 12/30/2018
 #### Sun 30 Dec 2018 05:47:25 PM EST 
@@ -11,6 +11,11 @@ Okay, don't forget what you have to do:
 * Concatenate leafcutter-generated PCs with GTEx PCs
 	* Transpose and merge in R the covariates
 * Run QTLtools on each set of tissues using the concatenated PCs
+
+### 12/22/2018
+#### 12:21 PM 12/22/2018
+
+Remember to `sha1sum` all the sra's or whatever you end up downloading.
 
 ### 12/21/2018
 #### Fri 21 Dec 2018 11:10:08 AM EST 
