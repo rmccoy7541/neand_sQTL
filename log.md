@@ -6,6 +6,11 @@ It's the last day of the year and I'm trying to remember what I was working on b
 
 Okay, MARCC isn't working with Windows right now, gonna switch computers. Just to save my train of thought, I was going to try to concatenate all of the covariate files.
 
+#### Mon 31 Dec 2018 12:29:43 PM EST 
+Concatenating the PCs worked but I ran into a problem with `QTLtools-nompass.sh`. I just realized that if I'm going to "convert" the leafcutter-generated files to a QTLtools compatible format, I'm going to need to re-index them.
+
+Surprise, it worked. Check out the master script for details.
+
 ### 12/30/2018
 #### Sun 30 Dec 2018 05:47:25 PM EST 
 Christmas is over. Deal with it. I downloaded the SRA run table. It's the metadata for all of GTEx because dbGaP won't allow me to only download metadata for the runs that I want. It's in `data/`.
