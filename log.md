@@ -1,5 +1,11 @@
 ﻿# Updates
 ----------------------------------------------------------------------------------------------------------------------------------------
+### 12/31/2018
+#### 10:39 AM 12/31/2018
+It's the last day of the year and I'm trying to remember what I was working on before I took a week+ long break for the holidays. According to my chat log with Rajiv, QTLtools wasn't working when chunked, so I'm going to have to stick with only doing them in 1/1 chunks, which is fine and will take longer but it doesn't appear that I have any other choice.
+
+Okay, MARCC isn't working with Windows right now, gonna switch computers. Just to save my train of thought, I was going to try to concatenate all of the covariate files.
+
 ### 12/30/2018
 #### Sun 30 Dec 2018 05:47:25 PM EST 
 Christmas is over. Deal with it. I downloaded the SRA run table. It's the metadata for all of GTEx because dbGaP won't allow me to only download metadata for the runs that I want. It's in `data/`.
