@@ -1,5 +1,16 @@
 ﻿# Updates
 ----------------------------------------------------------------------------------------------------------------------------------------
+### 01/01/2019
+#### Tue 01 Jan 2019 04:11:17 PM EST 
+Happy new year. It seems like whatever I do, I keep getting this error from QTLtools:
+```
+Residualize phenotypes for covariates
+terminate called after throwing an instance of 'std::invalid_argument'
+  what():  stof
+/var/spool/slurm//job31982167/slurm_script: line 10:  3263 Aborted                 ./QTLtools_1.1_Ubuntu14.04_x86_64 cis --vcf GTExWholeGenomeSequenceGenotypeMatrixBiallelicOnly.vcf.gz --bed testNE_sQTL_perind.counts.gz.qqnorm_chr$SLURM_ARRAY_TASK_ID.gz.qtltools --cov ${tissue} --nominal 0.01 --chunk 1 1 --out ${tissue}_nominals_chr${SLURM_ARRAY_TASK_ID}.txt
+```
+
+
 ### 12/31/2018
 #### 10:39 AM 12/31/2018
 It's the last day of the year and I'm trying to remember what I was working on before I took a week+ long break for the holidays. According to my chat log with Rajiv, QTLtools wasn't working when chunked, so I'm going to have to stick with only doing them in 1/1 chunks, which is fine and will take longer but it doesn't appear that I have any other choice.
