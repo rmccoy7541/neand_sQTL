@@ -14,6 +14,15 @@ It occurs right after `Residualize phenotypes for covariates`
 
 I'm going to talk to Rajiv about this since I tried multiple different things.
 
+* ~~Output the samples and sort them by tissue~~
+	* ~~Get table that matches GTEX ID with tissue~~
+* Run leafcutter for all samples of all tissues
+* ~~Concatenate leafcutter-generated PCs with GTEx PCs~~
+	* ~~Transpose and merge in R the covariates~~
+* Run QTLtools on each set of tissues using the concatenated PCs
+
+
+
 ### 01/01/2019
 #### Tue 01 Jan 2019 04:11:17 PM EST 
 Happy new year. It seems like whatever I do, I keep getting this error from QTLtools:
