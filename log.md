@@ -1,5 +1,19 @@
 ﻿# Updates
 ----------------------------------------------------------------------------------------------------------------------------------------
+### 01/02/2019
+#### Wed 02 Jan 2019 01:08:58 PM EST
+I'm running the QTLtools command again as a single-line type deal:
+`./QTLtools_1.1_Ubuntu14.04_x86_64 cis --vcf GTExWholeGenomeSequenceGenotypeMatrixBiallelicOnly.vcf.gz --bed testNE_sQTL_perind.counts.gz.qqnorm_chr1.gz.qtltools --cov Whole_Blood.v7.covariates_output.txt --nominal 0.01 --chunk 1 1 --out WholeBlood_nominals_chr1.txt`
+
+Right after I looked for the command, the process aborted. I keep getting this error, no matter what I do:
+```
+terminate called after throwing an instance of 'std::invalid_argument'
+what():  stof
+```
+It occurs right after `Residualize phenotypes for covariates`
+
+I'm going to talk to Rajiv about this since I tried multiple different things.
+
 ### 01/01/2019
 #### Tue 01 Jan 2019 04:11:17 PM EST 
 Happy new year. It seems like whatever I do, I keep getting this error from QTLtools:
