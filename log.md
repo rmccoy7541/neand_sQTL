@@ -1,4 +1,5 @@
 ﻿# Updates
+These updates are read from most recent date at the top to initial entry at the bottom.
 ----------------------------------------------------------------------------------------------------------------------------------------
 ### 01/02/2019
 #### Wed 02 Jan 2019 01:08:58 PM EST
@@ -21,7 +22,11 @@ I'm going to talk to Rajiv about this since I tried multiple different things.
 	* ~~Transpose and merge in R the covariates~~
 * Run QTLtools on each set of tissues using the concatenated PCs
 
+#### Wed 02 Jan 2019 03:51:01 PM EST 
+Okay, weird stuff: it turns out that the reason QTLtools wasn't working is because the concatenated covariate file in question (Whole blood) was missing i.e. had "NA" values for GTEX-XV7Q. I looked it up on dbGaP and our friend GTEX-XV7Q actually **has** phenotype/expression data for whole blood. So it's just not represented on the covariate file and a handful of other tissue covariate files. I emailed GTEx's help desk and in the meantime and simply going to totally exclude any samples that contain any "NA" values since that seems to be what's junking up QTLtools.
 
+#### Wed 02 Jan 2019 05:21:26 PM EST 
+Figured out how to do this good; I included removing all columns with NA's in `mergePCs.R`. Let's see if this works now.
 
 ### 01/01/2019
 #### Tue 01 Jan 2019 04:11:17 PM EST 

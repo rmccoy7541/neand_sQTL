@@ -11,7 +11,6 @@ gtexPC <- fread(args[2])
 setnames(gtexPC, "ID", "id")
 # concatenate; fill missing values with na, but then remove 
 out = rbind(leafcut,gtexPC, use.names=T, fill=T)
-# omit NA's with a function that only works on rows
 out <- t(na.omit(t(out)))
 tissue = tools::file_path_sans_ext(basename(args[2]))
 outfile <- gsub(" ", "", paste(tissue, "_output.txt"), fixed = TRUE)
