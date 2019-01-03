@@ -28,6 +28,9 @@ Okay, weird stuff: it turns out that the reason QTLtools wasn't working is becau
 #### Wed 02 Jan 2019 05:21:26 PM EST 
 Figured out how to do this good; I included removing all columns with NA's in `mergePCs.R`. Let's see if this works now.
 
+#### Wed 02 Jan 2019 07:59:50 PM EST  
+It worked. So, it's important to note: **QTLtools does not take NA values.**
+
 ### 01/01/2019
 #### Tue 01 Jan 2019 04:11:17 PM EST 
 Happy new year. It seems like whatever I do, I keep getting this error from QTLtools:
