@@ -1,6 +1,12 @@
 ﻿# Updates
+
 These updates are read from most recent date at the top to initial entry at the bottom.
+
 ----------------------------------------------------------------------------------------------------------------------------------------
+### 01/03/2019
+#### Thu 03 Jan 2019 12:20:46 PM EST 
+I have to figure out a way to like... tri-layer the job paralellization. I have 22 chromosomes, something like 48 different tissues with covariates, and each chromosome has 20 chunks that will be concatenated. Together, that's 22 * 48 * 20 = 21120 independent jobs that I want to run *if* I want to do this as efficiently as possible, otherwise I could just do a single job array for each chromsome that churns out nominal pass results in chunks of 1/1.
+
 ### 01/02/2019
 #### Wed 02 Jan 2019 01:08:58 PM EST
 I'm running the QTLtools command again as a single-line type deal:
@@ -110,7 +116,7 @@ QTLtools:
 
 Nominal pass > Permutation pass > Conditional analysis
 
-Nominal pass test each variant within a let's say 1 Mb range of the phenotype for an association. Then, permutation pass adjusts the p-value to account for multiple testing (all variants within range of a phenotype as well as all of the variants from all phenotype ranges; how this affects the p-value, idk). Then, conditional analysis accounts for like genetic drift and linkage disequilibrium. 
+Nominal pass tests each variant within a let's say 1 Mb range of the phenotype for an association. Then, permutation pass adjusts the p-value to account for multiple testing (all variants within range of a phenotype as well as all of the variants from all phenotype ranges; how this affects the p-value, idk). Then, conditional analysis accounts for like genetic drift and linkage disequilibrium. 
 
 ### 12/19/2018
 #### Wed 19 Dec 2018 01:40:56 PM EST 
