@@ -4,7 +4,18 @@ These updates are read from most recent date at the top to initial entry at the 
 
 ### 01/03/2019
 #### Thu 03 Jan 2019 12:20:46 PM EST 
-I have to figure out a way to like... tri-layer the job paralellization. I have 22 chromosomes, something like 48 different tissues with covariates, and each chromosome has 20 chunks that will be concatenated. Together, that's 22 * 48 * 20 = 21120 independent jobs that I want to run *if* I want to do this as efficiently as possible, otherwise I could just do a single job array for each chromsome that churns out nominal pass results in chunks of 1/1.
+I have to figure out a way to like... tri-layer the job paralellization. I have 22 chromosomes, something like 48 different tissues with covariates, and each chromosome has 20 chunks that will be concatenated. Together, that's 22 * 48 * 20 = **21120** independent jobs that I want to run *if* I want to do this as efficiently as possible, otherwise I could just do a single job array for each chromsome that churns out nominal pass results in chunks of 1/1.
+
+I could just make the job array only handle different chromosomes and make a nested bash for-loop that handles each tissue and chunk. For example:
+
+```
+for tissue in tissuefolder
+	for chunk of 20
+		do sbatch QTLtools-nompass.sh $tissue $chunk
+	done
+done
+```
+where I pass command-line variables to `QTLtools-nompass.sh`, such that, let's say the first tissue will be adipose and the first chunk 1/20, this script will call adipose chunk 1/20 for *every* chromosome 1-22 at once. Or at least I hope. Let's try it out.
 
 ### 01/02/2019
 #### Wed 02 Jan 2019 01:08:58 PM EST
