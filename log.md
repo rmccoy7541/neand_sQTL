@@ -2,7 +2,6 @@
 
 These updates are read from most recent date at the top to initial entry at the bottom.
 
-----------------------------------------------------------------------------------------------------------------------------------------
 ### 01/03/2019
 #### Thu 03 Jan 2019 12:20:46 PM EST 
 I have to figure out a way to like... tri-layer the job paralellization. I have 22 chromosomes, something like 48 different tissues with covariates, and each chromosome has 20 chunks that will be concatenated. Together, that's 22 * 48 * 20 = 21120 independent jobs that I want to run *if* I want to do this as efficiently as possible, otherwise I could just do a single job array for each chromsome that churns out nominal pass results in chunks of 1/1.
