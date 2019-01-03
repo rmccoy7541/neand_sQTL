@@ -17,6 +17,25 @@ done
 ```
 where I pass command-line variables to `QTLtools-nompass.sh`, such that, let's say the first tissue will be adipose and the first chunk 1/20, this script will call adipose chunk 1/20 for *every* chromosome 1-22 at once. Or at least I hope. Let's try it out.
 
+
+`for tissue in testcovmer/*; do for chunk in {1..20}; do sbatch --export=tissue=$tissue,chunk=$chunk QTLtools-NomPass.sh; done; done`
+
+#### Thu 03 Jan 2019 04:22:43 PM EST 
+Took a while, but realized that our friend over here does **not** work.
+
+#### Thu 03 Jan 2019 05:03:49 PM EST 
+Got some advice from Rajiv. Fixed it. Was fundamentally a formatting issue. Important note: outputs all files to `testcovmer/`, which is fine I guess but not necessarily what I had in mind. Will have to deal with that in the master script.
+
+
+* ~~Output the samples and sort them by tissue~~
+	* ~~Get table that matches GTEX ID with tissue~~
+* Run leafcutter for all samples of all tissues
+* ~~Concatenate leafcutter-generated PCs with GTEx PCs~~
+	* ~~Transpose and merge in R the covariates~~
+* ~~Run QTLtools on each set of tissues using the concatenated PCs~~
+* *Deal with the outputs going straight to testcovmer/*
+
+
 ### 01/02/2019
 #### Wed 02 Jan 2019 01:08:58 PM EST
 I'm running the QTLtools command again as a single-line type deal:
