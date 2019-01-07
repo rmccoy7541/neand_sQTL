@@ -8,7 +8,7 @@ Working from home today. The job array worked and now we have all 21,000+ nomina
 `cat *nominals_*_20.txt | gzip -c > permutations_full.txt.gz`	
 ...except with "nominals." There are so many files that MARCC needs a few minutes to display them.
 
-Strangely enough, there are only a little over 15,000 output files when there should be more. Strange. I wonder why that is.
+Strangely enough, there are only a little over 15,000 output files when there should be more. I wonder why that is.
 
 
 ### 01/03/2019
