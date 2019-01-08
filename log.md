@@ -2,6 +2,68 @@
 
 These updates are read from most recent date at the top to initial entry at the bottom.
 
+### 01/08/2019
+#### Tue 08 Jan 2019 12:00:46 PM EST 
+I screwed something up. Overnight, QTLtools produced our nominal pass results, but in trying to tidy up the subdirectory names (how does "`Esophagus_Gastroesophageal_Junction.v7.covariates_output.txt_folder`" look to you?) I ended up destroying over half of the results (I used `for tissue in *; do newname=$(echo $tissue | awk -F'[_.]' '{print $1}'); mv $tissue/* $newname; done` when I *SHOULD HAVE USED* `for tissue in *; do newname=$(echo $tissue | awk -F'[.]' '{print $1}'); mv $tissue/* $newname; done`; note the missing underscore). This actually isn't that big of a deal, since I have all of the same data that I used to generate the nominal pass results, but it'll just take a long time and be a pain in the ass. That's right, I said it: "ass". There is no "undo" option in shell and it is painfully clear.
+
+I also accidentally renamed all of the merged covariate files from `Nerve_Tibial.v7.covariates_output.txt` to just `Nerve_Tibial`, which, again, not that big of a deal. 
+
+That does mean, howver, that I no longer need to "clean things up a bit." I will have to include that lethal one liner `for tissue in *; do newname=$(echo $tissue | awk -F'[.]' '{print $1}'); mv $tissue/* $newname; done` in the master script somehow, though.
+
+This didn't work, and according to Rajiv it's because they need to be processed by sample ID.
+
+-covariates need sample ID
+-through leafcutter, generate 22 chromosomes times however many tissues there are
+-all of our analysis will be within tissues; segregate the bam files prior to using leafcutter
+
+NEW PIPELINE
+- Generate LeafCutter phenotypes without renaming the SRAs
+- Massive chr 1-22 tables with all across all samples
+- Use dbGaP metadata to segregate all columns by tissue, create a new table for those samples in tissue directory
+- put covariate file in tissue directories
+- Change the column header in each tissue directory's folder to the full GTEX sample ID
+- Run QTLtools for each tissue
+also remember
+- CrossRef the GTEx file that contains all of our samples of interest
+- use samtools to convert cram files to bam files to use with leafcutter
+
+### 01/07/2019
+#### Mon 07 Jan 2019 02:57:28 PM EST 
+**Important**: consider switching the batch scripts from `parallel` instead of `shared`, also consider using the `--exclusive` flag. 
+
+I'm going to do some troubleshooting to see why I am being punished this way. I will do so by *okay my computer crashed* I will do so by redoing the nominal pass but naming all of the resultant files with the SLURM job metadata: `--out slurm_${SLURM_JOBID}_nominals_chr${SLURM_ARRAY_TASK_ID}_chunk${chunk}.txt` 
+
+I also need to separate them by directory.
+
+`for tissue in testcovmer/*; do mkdir "${tissue}_folder"; for chunk in {1..20}; do sbatch --export=tissue=$tissue,chunk=$chunk QTLtools-NomPass.sh; done; done`
+
+```
+#!/bin/bash
+#SBATCH --job-name=QTLtools-NomPass
+#SBATCH --time=2:0:0
+#SBATCH --partition=shared
+#SBATCH --nodes=1
+# number of tasks (processes) per node
+#SBATCH --ntasks-per-node=1
+#SBATCH --array=1-22
+
+# tissue is going to be $tissue and chunk $chunk
+./QTLtools_1.1_Ubuntu14.04_x86_64 cis \
+  --vcf GTExWholeGenomeSequenceGenotypeMatrixBiallelicOnly.vcf.gz \
+  --bed testNE_sQTL_perind.counts.gz.qqnorm_chr${SLURM_ARRAY_TASK_ID}.gz.qtltools \
+  --cov $tissue \
+  --nominal 0.01 \
+  --chunk $chunk 20 \
+  --out ${tissue}_folder/slurm_${SLURM_JOBID}_nominals_chr${SLURM_ARRAY_TASK_ID}_chunk${chunk}.txt
+```
+
+also figure out how to clean things up a little bit with `$tissue` using `tissue=$(echo $tissue | awk -F'[_.]' '{print $1})'`
+
+`# must be in testcovmer/`
+`for tissue in *; do newname=$(echo $tissue | awk -F'[_.]' '{print $1}'); mv $tissue/* $newname; done`
+
+Something like that. Maybe just figure it out later. Or not. Don't fix it if it ain't broke, right? Right.
+
 ### 01/04/2019
 #### 3:09 PM 1/4/2019
 Working from home today. The job array worked and now we have all 21,000+ nominal pass files ready. To merge them, I'm going to be using this shell command that I borrowed from FastQTL.
