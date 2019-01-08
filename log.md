@@ -27,6 +27,43 @@ also remember
 - CrossRef the GTEx file that contains all of our samples of interest
 - use samtools to convert cram files to bam files to use with leafcutter
 
+#### Tue 08 Jan 2019 02:56:07 PM EST 
+Look at the above list. Learn to love it. We're starting over. How over? I'm downloading the samples as cram files now. Had a good meeting with Rajiv where we came to sketch out the overall structure.
+
+At the top level we have the VCF file of the whole genome sequence. Then, we will split the analysis up into separate tissue files. We will run leafcutter on all the samples but the create a new table for each tissue that contains its corresponding phenotypes. Probably by chromosme. That sounds hard. But I'm going to do it. Probably in R. 
+
+* VCF
+	* Adipose_Subcutaneous
+		* Phenotypes
+		* Covariates
+	* Adipose_Visceral
+		* Phenotypes
+		* Covariates
+	* etc
+
+
+I deleted everything and am starting over. Downloading new samples in cram now. UPDATE: Downloading cram files don't work. We're sticking to sra's for now.
+
+#### Tue 08 Jan 2019 04:20:50 PM EST 
+```
+[aseyedi2@jhu.edu@compute0231 Ne_sQTL]$ ./prefetch -l cart_prj20712_201901081608.krt | awk -F'[||]' '{print $3}' > srafiles.txt
+
+SRR598124
+SRR598484
+SRR599192
+SRR600445
+SRR601068
+SRR601925
+SRR602598
+SRR607586
+SRR608288
+SRR608344
+```
+`sed -i '/^$/d' srafiles.txt`
+
+#### Tue 08 Jan 2019 04:50:09 PM EST 
+I'm redownloading the SRA files. I'll get back to this later.
+
 ### 01/07/2019
 #### Mon 07 Jan 2019 02:57:28 PM EST 
 **Important**: consider switching the batch scripts from `parallel` instead of `shared`, also consider using the `--exclusive` flag. 
@@ -538,7 +575,7 @@ cd /scratch/users/rmccoy22@jhu.edu/dbgap/sra
 #mv $line.bam /work-zfs/rmccoy22/rmccoy22/gtex/RootStudyConsentSet_phs000424.GTEx.v7.p2.c1.GRU/BamFiles/$line.bam
 #rm /scratch/users/rmccoy22@jhu.edu/dbgap/sra/$line.*
 
-echo "Finished with job $SLURM_ARRAY_TASK_ID"```
+echo "Finished with job $SLURM_ARRAY_TASK_ID"
 ```
 Since we won't need to delete and move things back and forth, I have commented-out the parts of the code that are now both practically and conceptually obsolete. I'm going to use the following command: `nohup ./prefetch -X 50000000000 /scratch/groups/rmccoy22/sratools/cart_prj19186_201811221749.krt &` to download the boys (the boys being the SRA files).
 

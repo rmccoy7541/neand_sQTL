@@ -24,6 +24,7 @@ cd ncbi/sra
 # store all .sra names into text file for job array
 ls *.sra >> sralist.txt
 # submit batch job, return stdout in $RES
+#jid1=$(sbatch --wait ${homeDir}/Ne-sQTL/src/12-14-2018/sra2bam.sh)
 jid1=$(sbatch --wait ${homeDir}/Ne-sQTL/src/12-14-2018/sra2bam.sh)
 # list of bams to be filtered 
 ls *.bam >> bamlist.txt
@@ -32,10 +33,14 @@ cp ${homeDir}/Ne-sQTL/data/12-07-2018/GRCh37.bed $PWD
 # filter unplaced contigs
 jid2=$(sbatch --wait --dependency=afterok:${jid1##* } ${homeDir}/Ne-sQTL/src/12-14-2018/filter_bam.sh)
 ls *.filt >> filtlist.txt
+
+
+# No longer renaming SRAs until after leafcutter
+
 # maybe inclue an if-statement after each sbatch that would catch any non-zero exit codes and abort the program
-sbatch --wait $(homeDir)/Ne-sQTL/src/12-14-2018/rename_gtex.sh
-ls GTEX* >> gtexlist.txt
-mkdir juncfiles
+# sbatch --wait $(homeDir)/Ne-sQTL/src/12-14-2018/rename_gtex.sh
+# ls GTEX* >> gtexlist.txt
+# mkdir juncfiles
 sbatch --wait --dependency=afterok:${jid2##* } ${homeDir}/Ne-sQTL/src/12-10-2018/bam2junccall.sh
 mv *.junc juncfiles/
 cd juncfiles/
@@ -68,6 +73,8 @@ wget https://storage.googleapis.com/gtex_analysis_v7/single_tissue_eqtl_data/GTE
 tar -xzf GTEx_Analysis_v7_eQTL_covariates.tar.gz
 # at this point, you want to pass each tissue PC file and the leafcutter PC file as command-line arguments into an R script that concatenates the PCs by GTEX ID
 for tissue in GTEx_Analysis_v7_eQTL_covariates/*; do Rscript --vanilla $homeDir/src/12-21-2018/mergePCs.R testNE_sQTL_perind.counts.gz.PCs ${tissue}; echo "Concatenating ${tissue}"; done
+mkdir covariates
+mv *covariates_* covariates/
 # call QTLtools
 sbatch --wait ${homeDir}/Ne-sQTL/src/12-31-2018/QTLtools-nompass.sh
 
