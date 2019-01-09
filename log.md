@@ -2,6 +2,25 @@
 
 These updates are read from most recent date at the top to initial entry at the bottom.
 
+NEW PIPELINE
+- Generate LeafCutter phenotypes without renaming the SRAs
+- Massive chr 1-22 tables with all across all samples
+- Use dbGaP metadata to segregate all columns by tissue, create a new table for those samples in tissue directory
+- put covariate file in tissue directories
+- Change the column header in each tissue directory's folder to the full GTEX sample ID
+- Run QTLtools for each tissue
+also remember
+- CrossRef the GTEx file that contains all of our samples of interest
+- use samtools to convert cram files to bam files to use with leafcutter
+
+### 01/09/2019
+#### Wed 09 Jan 2019 02:02:37 PM EST 
+Downloaded a new set of SRA files to test the pipeline with.
+
+`tissuesite <- subset(sratabl, select=c("Run", "body_site"))`
+
+I'm trying to figure out how to extract the tissue metadata about the samples that get downloaded. Above works, I think. I need to write it to file. ~~Not sure how I'm going to use it.~~ I'm going to use it after the leafcutter phenotype tables have been generated to figure out what each sra and/or GTEx name corresponds to. I included a little R ditty that would take care of that, `sraTissueExtract.R`. Bad name, I know.
+
 ### 01/08/2019
 #### Tue 08 Jan 2019 12:00:46 PM EST 
 I screwed something up. Overnight, QTLtools produced our nominal pass results, but in trying to tidy up the subdirectory names (how does "`Esophagus_Gastroesophageal_Junction.v7.covariates_output.txt_folder`" look to you?) I ended up destroying over half of the results (I used `for tissue in *; do newname=$(echo $tissue | awk -F'[_.]' '{print $1}'); mv $tissue/* $newname; done` when I *SHOULD HAVE USED* `for tissue in *; do newname=$(echo $tissue | awk -F'[.]' '{print $1}'); mv $tissue/* $newname; done`; note the missing underscore). This actually isn't that big of a deal, since I have all of the same data that I used to generate the nominal pass results, but it'll just take a long time and be a pain in the ass. That's right, I said it: "ass". There is no "undo" option in shell and it is painfully clear.
