@@ -11,7 +11,7 @@
 # ls *.filt >> filtbamlist.txt
 
 # each line is a bam file to be used as an input in the job array
-line=`sed "${SLURM_ARRAY_TASK_ID}q;d" gtexlist.txt`
+line=`sed "${SLURM_ARRAY_TASK_ID}q;d" filtlist.txt`
 
 # load samtools
 ml samtools
