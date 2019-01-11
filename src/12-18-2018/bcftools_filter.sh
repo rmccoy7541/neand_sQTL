@@ -6,6 +6,7 @@
 # number of tasks (processes) per node
 #SBATCH --ntasks-per-node=24
 
+echo "Filtering non-biallelic sites from genotype file ucing bcftools..."
 ml bcftools
 # filters all non-biallelic sites
 bcftools view -m2 -M2 -v snps --threads 23 -O z -o GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz ${1}/ncbi/files/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTEx_Analysis_2016-01-15_v7_WholeGenomeSeq_652Ind_GATK_HaplotypeCaller.vcf.gz

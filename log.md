@@ -43,6 +43,9 @@ Anyway, on with our pipeline; newly filtered bam files are now available.
 
 Started conversion to junc files. Made some changes to `bam2junccall.sh`; see version history.
 
+#### Fri 11 Jan 2019 05:31:19 PM EST 
+I'm signing off for the day. I got up until the point where I need to reach into the phenotype files and match and rename headers to their full GTEx ID equivalent while sorting them into distince tissue subdirectories. **Also, I need to bear in mind that in MARCC, because of some technical difficulty that I'm having with `sra-toolkit`, the `ncbi/` file is actually `Ne-sQTL`, and in the work partition, there is no git directory. I don't know if that makes sense, but anyway, don't get confused while developing the pipeline. I doubt I'll even read this again** Good night.
+
 ### 01/09/2019
 #### Wed 09 Jan 2019 02:02:37 PM EST 
 Downloaded a new set of SRA files to test the pipeline with.
