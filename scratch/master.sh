@@ -1,13 +1,14 @@
 #!/bin/bash
 
 ##########################################################################################################################################
-# This is the master script that prepares and submits all jobs for LeafCutter
-# At the highest directory, it is assumed that the files are arranged as such:
-# ncbi/		leafcutter/		Ne-sQTL/		master.sh
-# It is also assumed that the GTEx VCF file for the whole genome has already been downloaded and resides in ncbi/files/ 
-# 	(see Documentation for details)
-# Finally, please make sure that you have also downloaded the SRA files in ncbi/sra AND their corresponding SRA metadata (SraRunTable.txt)\
-# 	(again, please see Documentation for details)
+# This is the master script that prepares and submits all jobs for LeafCutter								 #
+# At the highest directory, it is assumed that the files are arranged as such:								 #
+# ncbi/		leafcutter/		Ne-sQTL/		master.sh								 #
+# It is also assumed that the GTEx VCF file for the whole genome has already been downloaded and resides in ncbi/files/ 		 #
+# 	(see Documentation for details)													 #
+# Finally, please make sure that you have also downloaded the SRA files in ncbi/sra/ AND their corresponding SRA metadata 		 #
+#														(SraRunTable.txt)	 #
+# 	(again, please see Documentation for details)											 #
 ##########################################################################################################################################
 
 # load modules
@@ -34,7 +35,7 @@ jid1=$(sbatch --wait ${homeDir}/ncbi/src/12-14-2018/sra2bam.sh)
 # list of bams to be filtered 
 ls *.bam >> bamlist.txt
 # get the tissue sites for each corresonding sra file
-Rscript ${homeDir}/ncbi/src/01-09-2019/sraTissueExtract.R ${homeDir}/ncbi/data/SraRunTable.txt
+Rscript ${homeDir}/ncbi/src/01-09-2019/sraTissueExtract.R ${homeDir}/ncbi/data/SraRunTable.txt $PWD
 # bring bed file to current directory
 cp ${homeDir}/ncbi/data/12-07-2018/GRCh37.bed $PWD
 # filter unplaced contigs
@@ -83,12 +84,21 @@ for i in {1..22}; do tabix -p bed NE_sQTL_perind.counts.gz.qqnorm_chr${i}.gz.qtl
 # download genotype covariates
 wget https://storage.googleapis.com/gtex_analysis_v7/single_tissue_eqtl_data/GTEx_Analysis_v7_eQTL_covariates.tar.gz
 tar -xzf GTEx_Analysis_v7_eQTL_covariates.tar.gz
+
+## HERE - DO THE TISSUE SEGREGATION AND RENAMING COLUMN HEADERS TO FULL GTEX ID USING sraTissueExtract.R 
+mv ../../tissue_table.txt $PWD
+for tissue in GTEx_Analysis_v7_eQTL_covariates/*; do newname=$(echo $tissue | awk -F'[.]' '{print $1}'); mkdir $newname; done
+mkdir tissues
+tissues=$(ls -d GTEx_Analysis_v7_eQTL_covariates/*/)
+mv $tissues tissues/
+
 # at this point, you want to pass each tissue PC file and the leafcutter PC file as command-line arguments into an R script that concatenates the PCs by GTEX ID
 for tissue in GTEx_Analysis_v7_eQTL_covariates/*; do Rscript --vanilla $homeDir/src/12-21-2018/mergePCs.R NE_sQTL_perind.counts.gz.PCs ${tissue}; echo "Concatenating ${tissue}"; done
 mkdir covariates
 mv *covariates_* covariates/
 
-## HERE - DO THE TISSUE SEGREGATION AND RENAMING COLUMN HEADERS TO FULL GTEX ID USING sraTissueExtract.R 
+
+
 
 ## Step 4 - Mapping sQTLs using QTLtools
 ################################################

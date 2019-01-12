@@ -13,6 +13,58 @@ also remember
 - CrossRef the GTEx file that contains all of our samples of interest
 - use samtools to convert cram files to bam files to use with leafcutter
 
+### 01/12/2019
+#### Sat 12 Jan 2019 03:29:24 PM EST 
+I've done a bunch of little things and I don't feel like listing them, just check the version history. I'm now trying to set up the tissue directories. 
+
+I feel like what I want to do right now is immensely complicated. I have a file named `tissue_table.txt` that looks like this:
+
+```
+Run	Sample_Name	body_site
+SRR598484	GTEX-PW2O-0526-SM-2I3DX	Lung
+SRR598124	GTEX-NPJ8-0011-R4a-SM-2HML3	Brain - Amygdala
+SRR599192	GTEX-N7MT-0011-R5a-SM-2I3G6	Brain - Caudate (basal ganglia)
+SRR601925	GTEX-OHPK-0526-SM-2HMJB	Lung
+SRR601068	GTEX-Q2AG-0126-SM-2HMLB	Skin - Sun Exposed (Lower leg)
+SRR602598	GTEX-Q2AG-0011-R9A-SM-2HMJ6	Brain - Spinal cord (cervical c-1)
+SRR607586	GTEX-OXRL-0526-SM-2I3EZ	Lung
+SRR608288	GTEX-OXRK-0926-SM-2HMKP	Lung
+SRR600445	GTEX-Q2AG-0011-R4A-SM-2HMKA	Brain - Amygdala
+SRR608344	GTEX-OIZH-0005-SM-2HMJN	Whole Blood
+```
+with the run id in the first column, full GTEx sample in second, and tissue in third. I also have a ton of phenotype files:
+
+```
+NE_sQTL_perind.counts.gz.qqnorm_chr10.gz.qtltools  NE_sQTL_perind.counts.gz.qqnorm_chr20.gz.qtltools
+NE_sQTL_perind.counts.gz.qqnorm_chr11.gz.qtltools  NE_sQTL_perind.counts.gz.qqnorm_chr21.gz.qtltools
+NE_sQTL_perind.counts.gz.qqnorm_chr12.gz.qtltools  NE_sQTL_perind.counts.gz.qqnorm_chr22.gz.qtltools
+NE_sQTL_perind.counts.gz.qqnorm_chr13.gz.qtltools  NE_sQTL_perind.counts.gz.qqnorm_chr2.gz.qtltools
+NE_sQTL_perind.counts.gz.qqnorm_chr14.gz.qtltools  NE_sQTL_perind.counts.gz.qqnorm_chr3.gz.qtltools
+NE_sQTL_perind.counts.gz.qqnorm_chr15.gz.qtltools  NE_sQTL_perind.counts.gz.qqnorm_chr4.gz.qtltools
+NE_sQTL_perind.counts.gz.qqnorm_chr16.gz.qtltools  NE_sQTL_perind.counts.gz.qqnorm_chr5.gz.qtltools
+NE_sQTL_perind.counts.gz.qqnorm_chr17.gz.qtltools  NE_sQTL_perind.counts.gz.qqnorm_chr6.gz.qtltools
+NE_sQTL_perind.counts.gz.qqnorm_chr18.gz.qtltools  NE_sQTL_perind.counts.gz.qqnorm_chr7.gz.qtltools
+NE_sQTL_perind.counts.gz.qqnorm_chr19.gz.qtltools  NE_sQTL_perind.counts.gz.qqnorm_chr8.gz.qtltools
+NE_sQTL_perind.counts.gz.qqnorm_chr1.gz.qtltools   NE_sQTL_perind.counts.gz.qqnorm_chr9.gz.qtltools
+```
+which each contain sample information as such:
+
+```
+[aseyedi2@jhu.edu@compute0175 intronclustering]$ zcat NE_sQTL_perind.counts.gz.qqnorm_chr17.gz.qtltools | head
+#Chr	start	end	ID	.	+	SRR601068	SRR599192	SRR598484	SRR601925	SRR607586	SRR598124	SRR602598	SRR608344	SRR600445	SRR608288
+17	914103	914385	17:914103:914385:clu_242_NA	.	+	0.8486631322642567	-0.9028329307690043	-0.48356192470323517	1.990047368643184	1.1073250856949786	-1.067056903921965	-0.3230811226873516	0.5399025398720513	-0.9903307055215957	-0.5089548923498618
+17	914103	915086	17:914103:915086:clu_242_NA	.	+	-0.8525574183170223	0.9110166377754605	0.6842637898910064	-2.2366906721286655	-1.074273388889014	0.9684244937444385	0.39818950364007744	-0.7207118830582105	0.902606468982208	0.7055563878099839
+17	915225	915928	17:915225:915928:clu_243_NA	.	+	-0.07956489889950728	0.8215433191997514	-0.7020819862644853	-1.0992940719017426	-0.06793127017856682	0.9053270737028077	0.7376160886524243	-1.9342885283098337	0.8724468436863674	0.562175939259561
+17	915797	915928	17:915797:915928:clu_243_NA	.	+	0.1972239104174658	-0.7728877020815833	0.8529909148778154	1.0622766254525227	0.2988851856516097	-0.9725265742164065	-0.792124561392808	1.4717826271510717	-0.9271067287932372	-0.32466900655206166
+17	1003975	1012174	17:1003975:1012174:clu_244_NA	.	+	0.8270457899025043	-1.241843521736311	0.43947833126406216	0.501251979241662	0.420143179232026	-1.1974652340294456	-0.771669548635817	1.1987005974336862	-1.1045477219149238	0.7900642238203405
+17	1003975	1028518	17:1003975:1028518:clu_244_NA	.	+	-0.875979615366985	1.2027282193859805	-0.21646581467441642	-0.33516980981693184	-0.20368069440873698	1.0834411763774872	0.7201259305240991	-1.6432820168901987	1.0139816920087252	-0.6010781589979557
+17	1268352	1273003	17:1268352:1273003:clu_245_NA	.	+	-1.4985649346311092	-0.22109555248029047	-0.8083123481260814	-0.00926664132977811	0.3933010555168565	0.5258359932679728	2.1669897779111342	0.07578664228527895	-0.2875599864868766	-0.12759032172880408
+17	1268352	1303341	17:1268352:1303341:clu_245_NA	.	+	1.2021073155555755	0.4558006992174561	0.7615623865236025	0.44812432048529693	-0.041221266481142924	-0.4900077761500515	-2.570380323280003	-0.33421368011489794	0.47561708848328343	0.42805614716447965
+17	1273035	1303341	17:1273035:1303341:clu_245_NA	.	+	-1.1873424499471859	-0.42690051379285743	-0.26782834696045893	-0.5502160519586197	0.14173083445409398	0.5220334649134223	2.1162546604968853	0.4551321272853628	-0.5747499104115467	-0.22418467313515364
+```
+I want to match up the column names to the tissues found in `tissue_table.txt`, make a new phenotype table for each tissue formatted the same as the original phenotype table found directly above, rename the columns to the full GTEx sample ID found in `tissue_table.txt`, and then I guess that's it. I feel like I should do this in R but it seems like a daunting task.
+
+
 ### 01/11/2019
 #### Fri 11 Jan 2019 01:14:57 PM EST 
 They're all bam files now, every single one of the, but they're still named after the SRR run number thing. I need to figure out how to rename them to the full GTEX ID e.g. `GTEX-NPJ8-0011-R4a-SM-2HML3`. ~~The problem is, they're not all uniform in the format, so I have to figure out how to detect them even though some of them are 21 characters and others 16 (without the dashes).~~ ~~Nevermind, I could use the tissue table generated by SraRunTable.txt, and match the sra to the tissue type and GTEX ID. Not sure how I would do that in bash though.~~ Actually I don't need to do any of this until after I generate the phenotype tables with leafcutter and I'm trying to excise the columns and place them in new tables in the corresponding tissue subdirectories. 
