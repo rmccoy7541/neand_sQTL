@@ -13,6 +13,24 @@ also remember
 - CrossRef the GTEx file that contains all of our samples of interest
 - use samtools to convert cram files to bam files to use with leafcutter
 
+### 01/14/2019
+#### Mon 14 Jan 2019 10:54:43 AM EST 
+~~After a couple of days of procrastinating, I am ready to face this monster. This demon. First, last night or maybe two nights ago I realized that I should probably rename these guys **before** running `prepare_phenotype.py` or whatever it's called. This is because, when it generates the covariates, it makes the Run ID the colname. I could also change the colnames of the covariate file in place, which is what I think I will do.
+
+I'm going to try to change everything after running `prepare_phenotype.py`. This is going to be hard. I'm going to download these files so I can develop the R script locally.
+
+Okay. I'm pretty confused and am not sure what to do. The GTEx supplied covariates are all in subject id format i.e. GTEX-.... (with an optional 5th char). I have a tissue table which has sra run IDs, corresponding tissue type, and *full* GTEx sample ID i.e. GTEX-....-....-..-.... (or something like that). Not sure how to proceed here. Do I want to change the LeafCutter PCs file to match the GTEx supplied one? My puny brain which was intentionally designed for being dumb is having a meltdown.~~
+
+I'm confusing the hell out of myself. I think I should just roll back a step, to before `prepare_phenotype.py`.
+
+Starting over with `python ../../../leafcutter/clustering/leafcutter_cluster.py -j juncfiles.txt -r intronclustering/ -m 50 -o NE_sQTL -l 500000`. 
+
+Okay, I reread the notes I took. I guess I forgot that I was doing this (this being... renaming column headers and segregating based on tissue) for only the phenotype files. But I also have to do this sort of thing for the covariate files. I guess I could acheive this by simply renaming the colnames for the LC-generated PCs and then *renaming the GTEx-supplied covariate colnames* to the sample id of the tissue/subject complex.
+
+This is so complicated. I have no idea how to make this more simple. I do not like how complicated it is. 
+
+I'm just going to go ahead with doing this rename and rewrite thing but only for the phenotype files right now. I will later focus on the PCs.
+
 ### 01/12/2019
 #### Sat 12 Jan 2019 03:29:24 PM EST 
 I've done a bunch of little things and I don't feel like listing them, just check the version history. I'm now trying to set up the tissue directories. 
