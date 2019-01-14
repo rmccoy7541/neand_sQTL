@@ -15,11 +15,11 @@ also remember
 
 ### 01/14/2019
 #### Mon 14 Jan 2019 10:54:43 AM EST 
-~~After a couple of days of procrastinating, I am ready to face this monster. This demon. First, last night or maybe two nights ago I realized that I should probably rename these guys **before** running `prepare_phenotype.py` or whatever it's called. This is because, when it generates the covariates, it makes the Run ID the colname. I could also change the colnames of the covariate file in place, which is what I think I will do.
+~~After a couple of days of procrastinating, I am ready to face this monster. This demon. First, last night or maybe two nights ago I realized that I should probably rename these guys **before** running `prepare_phenotype.py` or whatever it's called. This is because, when it generates the covariates, it makes the Run ID the colname. I could also change the colnames of the covariate file in place, which is what I think I will do.~~
 
-I'm going to try to change everything after running `prepare_phenotype.py`. This is going to be hard. I'm going to download these files so I can develop the R script locally.
+~~I'm going to try to change everything after running `prepare_phenotype.py`. This is going to be hard. I'm going to download these files so I can develop the R script locally.~~
 
-Okay. I'm pretty confused and am not sure what to do. The GTEx supplied covariates are all in subject id format i.e. GTEX-.... (with an optional 5th char). I have a tissue table which has sra run IDs, corresponding tissue type, and *full* GTEx sample ID i.e. GTEX-....-....-..-.... (or something like that). Not sure how to proceed here. Do I want to change the LeafCutter PCs file to match the GTEx supplied one? My puny brain which was intentionally designed for being dumb is having a meltdown.~~
+~~Okay. I'm pretty confused and am not sure what to do. The GTEx supplied covariates are all in subject id format i.e. GTEX-.... (with an optional 5th char). I have a tissue table which has sra run IDs, corresponding tissue type, and *full* GTEx sample ID i.e. GTEX-....-....-..-.... (or something like that). Not sure how to proceed here. Do I want to change the LeafCutter PCs file to match the GTEx supplied one? My puny brain which was intentionally designed for being dumb is having a meltdown.~~
 
 I'm confusing the hell out of myself. I think I should just roll back a step, to before `prepare_phenotype.py`.
 
