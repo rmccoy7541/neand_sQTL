@@ -31,6 +31,9 @@ This is so complicated. I have no idea how to make this more simple. I do not li
 
 I'm just going to go ahead with doing this rename and rewrite thing but only for the phenotype files right now. I will later focus on the PCs.
 
+#### Mon 14 Jan 2019 04:51:25 PM EST 
+[Some guy on stack overflow helped me figure it out.](https://stackoverflow.com/questions/54189236/how-do-i-split-a-table-into-several-new-tables-based-on-whether-the-column-heade/54189469#54189469)
+
 ### 01/12/2019
 #### Sat 12 Jan 2019 03:29:24 PM EST 
 I've done a bunch of little things and I don't feel like listing them, just check the version history. I'm now trying to set up the tissue directories. 
