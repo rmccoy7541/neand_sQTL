@@ -13,6 +13,20 @@ also remember
 - CrossRef the GTEx file that contains all of our samples of interest
 - use samtools to convert cram files to bam files to use with leafcutter
 
+### 01/15/2019
+#### Tue 15 Jan 2019 02:08:25 PM EST 
+I finished making `sraNameChange&Sort.R`. Hopefully it works. Rajiv is now working on getting access to the CRAM files hosted on Google/Amazon but I think we're going to test the pipeline again after this with SRAs of just one tissue. Now I have to, very painfully, do the same thing again, but concoct a script that replaces the *subject IDs* that are listed as column names in the GTEX covariate files with the *sample IDs*, which are longer and denote the tissue and subject, instead of just the subject. I was thinking about extracting the GTEX subject IDs and replacing it with the corresponding sample ID **IF** both the tissue type and subject ID match. This is going to be yet another struggle.
+
+To do this, I'm going to have to reconfigure `sraTissueExtract.R` to also print out `submitted_subject_id`. Okay cool. 
+
+#### Tue 15 Jan 2019 03:49:57 PM EST 
+I'm having trouble figuring out if, when calling a script outside of the working directory, one has to provide the path for the thing as;kdjf;lksajdf;lkkjs nevermind
+
+#### Tue 15 Jan 2019 04:16:50 PM EST 
+I made an oopsie daisy and have to start again.
+
+Okay, I give up. I think MARCC is broken. I tried to retrace my steps to figure out exactly where I was and what I had to do next and I just ended up in prison. I kind of want to start over again from the beginning whenever I could get this to work.
+
 ### 01/14/2019
 #### Mon 14 Jan 2019 10:54:43 AM EST 
 ~~After a couple of days of procrastinating, I am ready to face this monster. This demon. First, last night or maybe two nights ago I realized that I should probably rename these guys **before** running `prepare_phenotype.py` or whatever it's called. This is because, when it generates the covariates, it makes the Run ID the colname. I could also change the colnames of the covariate file in place, which is what I think I will do.~~

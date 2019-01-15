@@ -1,10 +1,10 @@
 require("data.table")
-requirse("R.utils")
+require("R.utils")
 args = commandArgs(trailingOnly=TRUE)
 # args[1] is the leafcutter-generated phenotypes, args[2] is the tissue table
-NE <- fread("NE_sQTL_perind.counts.gz.qqnorm_chr13")
+NE <- fread(args[1])
 
-tistab <- fread("tissue_table.txt")
+tistab <- fread(args[2])
 
 # below takes the SRR IDs found in NE column headers, matches them to those found in the
 # tissue table, and then changes them the GTEX sample ID
@@ -24,5 +24,8 @@ sites <- with(tistab, split(Sample_Name, body_site))
 
 keep <- c('#Chr', 'start', 'end', 'ID')
 
-lapply(sites, function(x) 
+tissues <- lapply(sites, function(x)
   NE[, .SD, .SDcols = c(keep, intersect(names(NE), x))])
+
+sapply(names(tissues), function (x) 
+  write.table(tissues[[x]], file=paste(x, "txt", sep="."), quote=FALSE, sep="\t"))

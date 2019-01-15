@@ -31,15 +31,13 @@ cd ncbi/sra
 ls *.sra >> sralist.txt
 # submit batch job, return stdout in $RES
 #jid1=$(sbatch --wait ${homeDir}/ncbi/src/12-14-2018/sra2bam.sh)
-jid1=$(sbatch --wait ${homeDir}/ncbi/src/12-14-2018/sra2bam.sh)
+jid1=$(sbatch --wait ${homeDir}/Ne-sQTL/src/12-14-2018/sra2bam.sh)
 # list of bams to be filtered 
 ls *.bam >> bamlist.txt
-# get the tissue sites for each corresonding sra file
-Rscript ${homeDir}/ncbi/src/01-09-2019/sraTissueExtract.R ${homeDir}/ncbi/data/SraRunTable.txt $PWD
 # bring bed file to current directory
-cp ${homeDir}/ncbi/data/12-07-2018/GRCh37.bed $PWD
+cp ${homeDir}/Ne-sQTL/data/12-07-2018/GRCh37.bed $PWD
 # filter unplaced contigs
-jid2=$(sbatch --wait --dependency=afterok:${jid1##* } ${homeDir}/ncbi/src/12-14-2018/filter_bam.sh)
+jid2=$(sbatch --wait --dependency=afterok:${jid1##* } ${homeDir}/Ne-sQTL/src/12-14-2018/filter_bam.sh)
 ls *.filt >> filtlist.txt
 # No longer renaming SRAs until after leafcutter
 ## maybe inclue an if-statement after each sbatch that would catch any non-zero exit codes and abort the program
@@ -49,7 +47,7 @@ ls *.filt >> filtlist.txt
 ## Step 2 - Intron Clustering
 ################################################
 mkdir juncfiles
-sbatch --wait --dependency=afterok:${jid2##* } ${homeDir}/ncbi/src/12-10-2018/bam2junccall.sh
+sbatch --wait --dependency=afterok:${jid2##* } ${homeDir}/Ne-sQTL/src/12-10-2018/bam2junccall.sh
 mv *.junc juncfiles/
 cd juncfiles/
 # strip junc files - STILL WITH RUN ID 'SRR######'
@@ -59,41 +57,50 @@ find -type f -name '*.sra.bam.filt.junc' | while read f; do mv "$f" "${f%.sra.ba
 ls SRR* >> juncfiles.txt
 # intron clustering
 mkdir intronclustering/
-python $homeDir/leafcutter/clustering/leafcutter_cluster.py -j juncfiles.txt -r intronclustering/ -m 50 -o NE_sQTL -l 500000
+python $homeDir/leafcutter/clustering/leafcutter_cluster.py -j juncfiles.txt -r intronclustering/ -m 50 -o Ne-sQTL -l 500000
 cd intronclustering/
 
 ## Step 3 - PCA calculation
 ################################################
-python $homeDir/leafcutter/scripts/prepare_phenotype_table.py NE_sQTL_perind.counts.gz -p 10 # works fine; there's no option for parallelization
+python $homeDir/leafcutter/scripts/prepare_phenotype_table.py Ne-sQTL_perind.counts.gz -p 10 # works fine; there's no option for parallelization
 # indexing and bedding
-ml htslib; sh NE_sQTL_perind.counts.gz_prepare.sh
+ml htslib; sh Ne-sQTL_perind.counts.gz_prepare.sh
 # about the above line: you need to remove all of the index files and generate new ones once you convert the beds to a QTLtools compatible format
 # filter the non-biallelic sites from genotype file using bcftools
-sbatch --wait ${homeDir}/ncbi/src/12-18-2018/bcf_tools.sh $homeDir
+sbatch --wait ${homeDir}/Ne-sQTL/src/12-18-2018/bcf_tools.sh $homeDir
+mv ${homeDir}/ncbi/files/
 # index our friend with tabix
 echo "Indexing our friend..."
 tabix -p vcf GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz
 # prepare files for QTLtools
 ls *qqnorm*.gz >> leafcutterphenotypes.txt 
 # important: render these files compatible with QTLtools
-sbatch --wait ${homeDir}/ncbi/src/12-18-2018/QTLtools-Filter.sh
+sbatch --wait ${homeDir}/Ne-sQTL/src/12-18-2018/QTLtools-Filter.sh
 ls *.qtltools >> qtltools-input.txt
 # generate the corresponding tbi files
 rm NE*tbi
-for i in {1..22}; do tabix -p bed NE_sQTL_perind.counts.gz.qqnorm_chr${i}.gz.qtltools; echo "Bedding chromosome $i"; done
+for i in {1..22}; do tabix -p bed Ne-sQTL_perind.counts.gz.qqnorm_chr${i}.gz.qtltools; echo "Bedding chromosome $i"; done
 # download genotype covariates
 wget https://storage.googleapis.com/gtex_analysis_v7/single_tissue_eqtl_data/GTEx_Analysis_v7_eQTL_covariates.tar.gz
 tar -xzf GTEx_Analysis_v7_eQTL_covariates.tar.gz
 
-## HERE - DO THE TISSUE SEGREGATION AND RENAMING COLUMN HEADERS TO FULL GTEX ID USING sraTissueExtract.R 
-mv ../../tissue_table.txt $PWD
-for tissue in GTEx_Analysis_v7_eQTL_covariates/*; do newname=$(echo $tissue | awk -F'[.]' '{print $1}'); mkdir $newname; done
+
+
+########### ENTERING THE NIGHTMARE ZONE OF CONFUSION
+
+# get the tissue sites for each corresonding sra file
+Rscript --vanilla ${homeDir}/Ne-sQTL/src/01-09-2019/sraTissueExtract.R ${homeDir}/Ne-sQTL/data/SraRunTable.txt $PWD
+# submit each LF phenotype file to sraNameChangeSort as command line variable as well as tissue_table.txt
+for phen in *qqnorm*; do Rscript --vanilla ${homeDir}/Ne-sQTL/src/01-15-2019/sraNameChangeSort.R $phen tissue_table.txt; done
+
+
+# for tissue in GTEx_Analysis_v7_eQTL_covariates/*; do newname=$(echo $tissue | awk -F'[.]' '{print $1}'); mkdir $newname; done
 mkdir tissues
-tissues=$(ls -d GTEx_Analysis_v7_eQTL_covariates/*/)
+# tissues=$(ls -d GTEx_Analysis_v7_eQTL_covariates/*/)
 mv $tissues tissues/
 
 # at this point, you want to pass each tissue PC file and the leafcutter PC file as command-line arguments into an R script that concatenates the PCs by GTEX ID
-for tissue in GTEx_Analysis_v7_eQTL_covariates/*; do Rscript --vanilla $homeDir/src/12-21-2018/mergePCs.R NE_sQTL_perind.counts.gz.PCs ${tissue}; echo "Concatenating ${tissue}"; done
+for tissue in GTEx_Analysis_v7_eQTL_covariates/*; do Rscript --vanilla $homeDir/src/12-21-2018/mergePCs.R Ne-sQTL_perind.counts.gz.PCs ${tissue}; echo "Concatenating ${tissue}"; done
 mkdir covariates
 mv *covariates_* covariates/
 
@@ -103,7 +110,7 @@ mv *covariates_* covariates/
 ## Step 4 - Mapping sQTLs using QTLtools
 ################################################
 # Under construction
-# sbatch --wait ${homeDir}/ncbi/src/12-31-2018/QTLtools-nompass.sh
+# sbatch --wait ${homeDir}/Ne-sQTL/src/12-31-2018/QTLtools-nompass.sh
 
 
 
