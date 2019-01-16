@@ -13,6 +13,25 @@ also remember
 - CrossRef the GTEx file that contains all of our samples of interest
 - use samtools to convert cram files to bam files to use with leafcutter
 
+### 01/16/2019
+#### Wed 16 Jan 2019 12:54:55 PM EST 
+Our massive VCF was indexed overnight and just now I deleted it thinking that it wasn't fully indexed. Turns out the file doesn't even appear until it's done indexing. I'm going to do a `sha1sum` on it so I have a record of exactly what it's supposed to look like. Done.
+
+#### Wed 16 Jan 2019 02:50:34 PM EST 
+
+```
+Warning message:
+In fread(args[1]) :
+  Stopped early on line 2. Expected 1 fields but found 1. Consider fill=TRUE and comment.char=. First discarded non-empty line: <<>>
+Error in `[.data.table`(NE, , .SD, .SDcols = c(keep, intersect(names(NE),  : 
+  Some items of .SDcols are not column names (or are NA)
+Calls: lapply -> FUN -> [ -> [.data.table
+```
+I'm getting this error when running `sraNameChangeSort.R` and I don't know why. I should talk to Rajiv about it.
+
+Update: I'm just going to talk to Rajiv about it and take it easy for today. I don't want to screw anything up. 
+
+
 ### 01/15/2019
 #### Tue 15 Jan 2019 02:08:25 PM EST 
 I finished making `sraNameChange&Sort.R`. Hopefully it works. Rajiv is now working on getting access to the CRAM files hosted on Google/Amazon but I think we're going to test the pipeline again after this with SRAs of just one tissue. Now I have to, very painfully, do the same thing again, but concoct a script that replaces the *subject IDs* that are listed as column names in the GTEX covariate files with the *sample IDs*, which are longer and denote the tissue and subject, instead of just the subject. I was thinking about extracting the GTEX subject IDs and replacing it with the corresponding sample ID **IF** both the tissue type and subject ID match. This is going to be yet another struggle.

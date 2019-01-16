@@ -66,9 +66,11 @@ python $homeDir/leafcutter/scripts/prepare_phenotype_table.py Ne-sQTL_perind.cou
 # indexing and bedding
 ml htslib; sh Ne-sQTL_perind.counts.gz_prepare.sh
 # about the above line: you need to remove all of the index files and generate new ones once you convert the beds to a QTLtools compatible format
-# filter the non-biallelic sites from genotype file using bcftools
+# filter the non-biallelic sites from genotype file using bcftools; see script for details
+
+## Step 4 - Genotype & Covariates Preparation
+################################################
 sbatch --wait ${homeDir}/Ne-sQTL/src/12-18-2018/bcf_tools.sh $homeDir
-mv ${homeDir}/ncbi/files/
 # index our friend with tabix
 echo "Indexing our friend..."
 tabix -p vcf GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz
@@ -78,20 +80,20 @@ ls *qqnorm*.gz >> leafcutterphenotypes.txt
 sbatch --wait ${homeDir}/Ne-sQTL/src/12-18-2018/QTLtools-Filter.sh
 ls *.qtltools >> qtltools-input.txt
 # generate the corresponding tbi files
-rm NE*tbi
+rm Ne*tbi
 for i in {1..22}; do tabix -p bed Ne-sQTL_perind.counts.gz.qqnorm_chr${i}.gz.qtltools; echo "Bedding chromosome $i"; done
 # download genotype covariates
 wget https://storage.googleapis.com/gtex_analysis_v7/single_tissue_eqtl_data/GTEx_Analysis_v7_eQTL_covariates.tar.gz
 tar -xzf GTEx_Analysis_v7_eQTL_covariates.tar.gz
-
-
 
 ########### ENTERING THE NIGHTMARE ZONE OF CONFUSION
 
 # get the tissue sites for each corresonding sra file
 Rscript --vanilla ${homeDir}/Ne-sQTL/src/01-09-2019/sraTissueExtract.R ${homeDir}/Ne-sQTL/data/SraRunTable.txt $PWD
 # submit each LF phenotype file to sraNameChangeSort as command line variable as well as tissue_table.txt
-for phen in *qqnorm*; do Rscript --vanilla ${homeDir}/Ne-sQTL/src/01-15-2019/sraNameChangeSort.R $phen tissue_table.txt; done
+
+############### 01/16/2019 -- getting error, see log
+for phen in *qqnorm*.gz.qtltools; do Rscript --vanilla ${homeDir}/Ne-sQTL/src/01-15-2019/sraNameChangeSort.R $phen tissue_table.txt; done
 
 
 # for tissue in GTEx_Analysis_v7_eQTL_covariates/*; do newname=$(echo $tissue | awk -F'[.]' '{print $1}'); mkdir $newname; done
@@ -103,6 +105,7 @@ mv $tissues tissues/
 for tissue in GTEx_Analysis_v7_eQTL_covariates/*; do Rscript --vanilla $homeDir/src/12-21-2018/mergePCs.R Ne-sQTL_perind.counts.gz.PCs ${tissue}; echo "Concatenating ${tissue}"; done
 mkdir covariates
 mv *covariates_* covariates/
+
 
 
 

@@ -22,6 +22,8 @@ Placeholder for ultimately instructing users on how to run all of these scripts 
 * GTEx WGS VCF downloaded using SRA-Toolkit's `prefetch` and Aspera
 	* SHA1SUM: 31d26b9b8db53fa92d322bf34d2a2db9a671d6f5
 	* Downloaded Tue 11 Dec 2018 6:44:34 PM EST
+* GTEx WGS VCF TBI (index) generated using `htslib`'s `tabix -p vcf`
+	* SHA1SUM: 45dda7776d4904a7f840bceb0e85e8075645d572 
 * GTEx SRA Run Table from dbGaP
 	* SHA1SUM: 5482b35ec85d10a9a378a0d4915f61a783a6d09a
 	* Downloaded Sun 30 Dec 2018 05∶29∶53 PM EST

@@ -2,7 +2,7 @@ require("data.table")
 require("R.utils")
 args = commandArgs(trailingOnly=TRUE)
 # args[1] is the leafcutter-generated phenotypes, args[2] is the tissue table
-NE <- fread(args[1])
+NE <- fread(gunzip(args[1]))
 
 tistab <- fread(args[2])
 
@@ -14,7 +14,7 @@ names(NE) <- tistab$Sample_Name[ind]
 # I guess now what I want to do is find the tissue that corresponds to each sample, and write
 # to file the phenotypes or whatever
 
-## From GitHub (https://stackoverflow.com/questions/54189236/how-do-i-split-a-table-into-several-new-tables-based-on-whether-the-column-heade/54189469#54189469)
+## From GitHub
 
 # If you split Sample_Name by body_site, you get a vector of Sample_Names corresponding to 
 # each body_site. Then you just need to intersect this with the names of NE for each body_site, 
