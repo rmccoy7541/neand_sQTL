@@ -91,12 +91,16 @@ tar -xzf GTEx_Analysis_v7_eQTL_covariates.tar.gz
 # get the tissue sites for each corresonding sra file
 Rscript --vanilla ${homeDir}/Ne-sQTL/src/01-09-2019/sraTissueExtract.R ${homeDir}/Ne-sQTL/data/SraRunTable.txt $PWD
 # submit each LF phenotype file to sraNameChangeSort as command line variable as well as tissue_table.txt
-
-############### 01/16/2019 -- getting error, see log
 for phen in *qqnorm*.gz.qtltools; do Rscript --vanilla ${homeDir}/Ne-sQTL/src/01-15-2019/sraNameChangeSort.R $phen tissue_table.txt; done
 
+#line=`sed "${SLURM_ARRAY_TASK_ID}q;d" leafcutterphenotypes.txt`
 
-# for tissue in GTEx_Analysis_v7_eQTL_covariates/*; do newname=$(echo $tissue | awk -F'[.]' '{print $1}'); mkdir $newname; done
+
+# getting the tissue names from covariate files - 48 tissues in all
+for tissue in GTEx_Analysis_v7_eQTL_covariates/*; do newname=$(echo $tissue | awk -F'[.]' '{print $1}'); echo ${newname##*/} >> tissuenames.txt; done
+
+for i in {1..48}; do line=`sed "${i}q;d" tissuenames.txt`; echo "Concatenating $line..."; for q in {1..22}; do echo "Chr $q..."; cat "${q}_${line}.txt" >> [1-22]${line}.txt; done; done
+
 mkdir tissues
 # tissues=$(ls -d GTEx_Analysis_v7_eQTL_covariates/*/)
 mv $tissues tissues/

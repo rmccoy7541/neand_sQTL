@@ -13,6 +13,13 @@ also remember
 - CrossRef the GTEx file that contains all of our samples of interest
 - use samtools to convert cram files to bam files to use with leafcutter
 
+### 01/17/2019
+#### Thu 17 Jan 2019 03:13:57 PM EST 
+Turns out the fine folk over at GTEx consortium are gonna beat us to the punch when it comes to generated sQTL calls in v8. It's okay. Rajiv helped me out with `sraNameChangeSort.R`. Turns out I don't have to do anything with the covariates. I guess I forgot. 
+
+#### Thu 17 Jan 2019 05:07:30 PM EST 
+It's getting to be that time of the day where MARCC starts crashing. Here is the line I was trying to hit: `for i in {1..48}; do line=``sed "${i}q;d" tissuenames.txt``; echo "Concatenating $line..."; for q in {1..22}; do echo "Chr $q..."; cat "${q}_${line}.txt" >> [1-22]${line}.txt; done; done`
+
 ### 01/16/2019
 #### Wed 16 Jan 2019 12:54:55 PM EST 
 Our massive VCF was indexed overnight and just now I deleted it thinking that it wasn't fully indexed. Turns out the file doesn't even appear until it's done indexing. I'm going to do a `sha1sum` on it so I have a record of exactly what it's supposed to look like. Done.
