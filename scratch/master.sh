@@ -66,10 +66,11 @@ python $homeDir/leafcutter/scripts/prepare_phenotype_table.py Ne-sQTL_perind.cou
 # indexing and bedding
 ml htslib; sh Ne-sQTL_perind.counts.gz_prepare.sh
 # about the above line: you need to remove all of the index files and generate new ones once you convert the beds to a QTLtools compatible format
-# filter the non-biallelic sites from genotype file using bcftools; see script for details
+
 
 ## Step 4 - Genotype & Covariates Preparation
 ################################################
+# filter the non-biallelic sites from genotype file using bcftools; see script for details
 sbatch --wait ${homeDir}/Ne-sQTL/src/12-18-2018/bcf_tools.sh $homeDir
 # index our friend with tabix
 echo "Indexing our friend..."
@@ -86,38 +87,117 @@ for i in {1..22}; do tabix -p bed Ne-sQTL_perind.counts.gz.qqnorm_chr${i}.gz.qtl
 wget https://storage.googleapis.com/gtex_analysis_v7/single_tissue_eqtl_data/GTEx_Analysis_v7_eQTL_covariates.tar.gz
 tar -xzf GTEx_Analysis_v7_eQTL_covariates.tar.gz
 
-########### ENTERING THE NIGHTMARE ZONE OF CONFUSION
-
+## Step 5 - QTLtools Preparation
+################################################
 # get the tissue sites for each corresonding sra file
 Rscript --vanilla ${homeDir}/Ne-sQTL/src/01-09-2019/sraTissueExtract.R ${homeDir}/Ne-sQTL/data/SraRunTable.txt $PWD
 # submit each LF phenotype file to sraNameChangeSort as command line variable as well as tissue_table.txt
 for phen in *qqnorm*.gz.qtltools; do Rscript --vanilla ${homeDir}/Ne-sQTL/src/01-15-2019/sraNameChangeSort.R $phen tissue_table.txt; done
-
-#line=`sed "${SLURM_ARRAY_TASK_ID}q;d" leafcutterphenotypes.txt`
-
-
 # getting the tissue names from covariate files - 48 tissues in all
-for tissue in GTEx_Analysis_v7_eQTL_covariates/*; do newname=$(echo $tissue | awk -F'[.]' '{print $1}'); echo ${newname##*/} >> tissuenames.txt; done
+cat tissue_table.txt | cut -f3 | awk '{if(NR>1)print}' |  awk '!seen[$0]++' > tissuenames.txt
+mkdir cattissues
+# concatenate all tissues from chr 1-22 such that all chromosomes are found in one file per tissue
+for i in {1..48}; do line=`sed "${i}q;d" tissuenames.txt`; echo "Concatenating $line..."; for q in {1..22}; do echo "Chr $q..."; cat "${q}_${line}.txt" >> 1-22_"${line}".txt; rm "${q}_${line}.txt" done; done
 
-for i in {1..48}; do line=`sed "${i}q;d" tissuenames.txt`; echo "Concatenating $line..."; for q in {1..22}; do echo "Chr $q..."; cat "${q}_${line}.txt" >> [1-22]${line}.txt; done; done
+mv 1-22_* cattissues/
 
-mkdir tissues
-# tissues=$(ls -d GTEx_Analysis_v7_eQTL_covariates/*/)
-mv $tissues tissues/
-
+# Parts of this next line may appear redundant. That's okay. it just creates a directory for each concatenated tissue phenotype file and moves it in there.
+for file in cattissues/*; do i=$(echo $file); q=$(basename "$i"); filename="${q%.*}"; filename=$(echo ${filename#*_}); mkdir tissues/"${filename}"; mv "$file" tissues/"${filename}"; done
 # at this point, you want to pass each tissue PC file and the leafcutter PC file as command-line arguments into an R script that concatenates the PCs by GTEX ID
 for tissue in GTEx_Analysis_v7_eQTL_covariates/*; do Rscript --vanilla $homeDir/src/12-21-2018/mergePCs.R Ne-sQTL_perind.counts.gz.PCs ${tissue}; echo "Concatenating ${tissue}"; done
-mkdir covariates
-mv *covariates_* covariates/
+mv *covariates_* tissues/
+cd tissues/
 
-
-
-
+# Moving covariates to corresponding directories
+################################################
+#for i in *.txt;
+#do
+#  string=$i
+#  until_dot=${string%%.*}
+#  echo "$until_dot"
+#
+#  # Replace all non-alphabetic characters by the glob *
+#  glob_pattern=${until_dot//[^[:alpha:]]/*}
+#  echo "$glob_pattern"
+#
+#  # Use nullglob to have non matching glob expand to nothing
+#  shopt -s nullglob
+#  # DO NOT USE QUOTES IN THE FOLLOWING EXPANSION:
+#  # the variable is actually a glob!
+#  # Could also do dirs=( $glob_pattern*/ ) to check if directory
+#  dirs=( $glob_pattern/ )
+#
+#  # Now check how many matches there are:
+#  if ((${#dirs[@]} == 0)); then
+#      echo >&2 "No matches for $glob_pattern"
+#  elif ((${#dirs[@]} > 1)); then
+#      echo >&2 "More than one matches for $glob_pattern: ${dirs[@]}"
+#  else
+#      echo "All good"
+#      # Remove the echo to actually perform the move
+#      echo mv "$string" "${dirs[0]}"
+#  fi;
+#done
+## This doesn't work as it should - just going to do it manually
+mv Adipose_Subcutaneous.v7.covariates_output.txt "Adipose - Subcutaneous/"
+mv Adipose_Visceral_Omentum.v7.covariates_output.txt  "Adipose - Visceral (Omentum)/"
+mv Adrenal_Gland.v7.covariates_output.txt "Adrenal Gland/"
+mv Artery_Aorta.v7.covariates_output.txt "Artery - Aorta/"
+mv Artery_Coronary.v7.covariates_output.txt "Artery - Coronary/"
+mv Artery_Tibial.v7.covariates_output.txt "Artery - Tibial/"
+mv Brain_Amygdala.v7.covariates_output.txt "Brain - Amygdala/"
+mv Brain_Anterior_cingulate_cortex_BA24.v7.covariates_output.txt "Brain - Anterior cingulate cortex (BA24)/"
+mv Brain_Caudate_basal_ganglia.v7.covariates_output.txt "Brain - Caudate (basal ganglia)/"
+mv Brain_Cerebellar_Hemisphere.v7.covariates_output.txt "Brain - Cerebellar Hemisphere/"
+mv Brain_Cerebellum.v7.covariates_output.txt "Brain - Cerebellum/"
+mv Brain_Cortex.v7.covariates_output.txt "Brain - Cortex/"
+mv Brain_Frontal_Cortex_BA9.v7.covariates_output.txt "Brain - Frontal Cortex (BA9)/"
+mv Brain_Hippocampus.v7.covariates_output.txt "Brain - Hippocampus/"
+mv Brain_Hypothalamus.v7.covariates_output.txt "Brain - Hypothalamus/"
+mv Brain_Nucleus_accumbens_basal_ganglia.v7.covariates_output.txt "Brain - Nucleus accumbens (basal ganglia)/"
+mv Brain_Putamen_basal_ganglia.v7.covariates_output.txt "Brain - Putamen (basal ganglia)/"
+mv Brain_Spinal_cord_cervical_c-1.v7.covariates_output.txt "Brain - Spinal cord (cervical c-1)/"
+mv Brain_Substantia_nigra.v7.covariates_output.txt "Brain - Substantia nigra/"
+mv Breast_Mammary_Tissue.v7.covariates_output.txt "Breast - Mammary Tissue/"
+mv Cells_EBV-transformed_lymphocytes.v7.covariates_output.txt "Cells - EBV-transformed lymphocytes/"
+mv Cells_Transformed_fibroblasts.v7.covariates_output.txt "Cells - Transformed fibroblasts/"
+mv Colon_Sigmoid.v7.covariates_output.txt "Colon - Sigmoid/"
+mv Colon_Transverse.v7.covariates_output.txt "Colon - Transverse/"
+mv Esophagus_Gastroesophageal_Junction.v7.covariates_output.txt "Esophagus - Gastroesophageal Junction/"
+mv Esophagus_Mucosa.v7.covariates_output.txt "Esophagus - Mucosa/"
+mv Esophagus_Muscularis.v7.covariates_output.txt "Esophagus - Muscularis/"
+mv Heart_Atrial_Appendage.v7.covariates_output.txt "Heart - Atrial Appendage/"
+mv Heart_Left_Ventricle.v7.covariates_output.txt "Heart - Left Ventricle/"
+mv Liver.v7.covariates_output.txt "Liver/"
+mv Lung.v7.covariates_output.txt "Lung/"
+mv Minor_Salivary_Gland.v7.covariates_output.txt "Minor Salivary Gland/"
+mv Muscle_Skeletal.v7.covariates_output.txt "Muscle - Skeletal/"
+mv Nerve_Tibial.v7.covariates_output.txt "Nerve - Tibial/"
+mv Ovary.v7.covariates_output.txt "Ovary/"
+mv Pancreas.v7.covariates_output.txt "Pancreas/"
+mv Pituitary.v7.covariates_output.txt "Pituitary/"
+mv Prostate.v7.covariates_output.txt "Prostate/"
+mv Skin_Not_Sun_Exposed_Suprapubic.v7.covariates_output.txt "Skin - Not Sun Exposed (Suprapubic)/"
+mv Skin_Sun_Exposed_Lower_leg.v7.covariates_output.txt "Skin - Sun Exposed (Lower leg)/"
+mv Small_Intestine_Terminal_Ileum.v7.covariates_output.txt "Small Intestine - Terminal Ileum/"
+mv Spleen.v7.covariates_output.txt "Spleen/"
+mv Stomach.v7.covariates_output.txt "Stomach/"
+mv Testis.v7.covariates_output.txt "Testis/"
+mv Thyroid.v7.covariates_output.txt "Thyroid/"
+mv Uterus.v7.covariates_output.txt "Uterus/"
+mv Vagina.v7.covariates_output.txt "Vagina/"
+mv Whole_Blood.v7.covariates_output.txt "Whole Blood/" 
 
 ## Step 4 - Mapping sQTLs using QTLtools
 ################################################
-# Under construction
-# sbatch --wait ${homeDir}/Ne-sQTL/src/12-31-2018/QTLtools-nompass.sh
+
+find . -name "[1-22]*" -print0 | xargs -0 ls > phenpaths.txt
+
+IFS=$'\n'       # make newlines the only separator
+for tissue in $(cat ./phenpaths.txt)    
+do
+    for chunk in {1..20}; do sbatch --export=tissue=$tissue,chunk=$chunk QTLtools-NomPass.sh $tissue $chunk; done
+done
 
 
 

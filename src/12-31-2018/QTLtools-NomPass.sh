@@ -7,12 +7,13 @@
 #SBATCH --ntasks-per-node=1
 #SBATCH --array=1-22
 
-# tissue is going to be $tissue and chunk $chunk
+# tissue is going to be $1 and chunk $2
+
 ./QTLtools_1.1_Ubuntu14.04_x86_64 cis \
-  --vcf GTExWholeGenomeSequenceGenotypeMatrixBiallelicOnly.vcf.gz \
-  --bed testNE_sQTL_perind.counts.gz.qqnorm_chr${SLURM_ARRAY_TASK_ID}.gz.qtltools \
-  --cov $tissue \
+  --vcf ../GTExWholeGenomeSequenceGenotypeMatrixBiallelicOnly.vcf.gz \
+  --bed $tissue \
+  --cov  \
   --nominal 0.01 \
   --chunk $chunk 20 \
-  --out ${tissue}_nominals_chr${SLURM_ARRAY_TASK_ID}_chunk${chunk}.txt
+  --out ${tissue}_nominals_chunk${chunk}.txt
 

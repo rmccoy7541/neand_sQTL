@@ -13,6 +13,36 @@ also remember
 - CrossRef the GTEx file that contains all of our samples of interest
 - use samtools to convert cram files to bam files to use with leafcutter
 
+### 01/21/2019
+#### Mon 21 Jan 2019 10:26:30 AM EST 
+It's the King's day, as my high school wrestling coach once said. Here's a quote in his memory:
+
+```
+“When machines and computers, profit motives and property rights are considered more important than people, the giant triplets of racism, extreme materialism and militarism are incapable of being conquered.”
+
+—  “Revolution of Values,” 1967
+```
+
+I'm finally back at using QTLtools.
+
+Okay, MARCC crashed and isn't working. Don't know how to fix it. 
+
+Works again. Okay, I'm about to run QTLtools **EXCEPT** I have no idea where I left the GTEx VCF file so I have to copy & filter & index it again like I did in an earlier step, which will take a while. But I'm almost done.
+
+### Mon 21 Jan 2019 04:43:43 PM EST 
+I'm running `bcftools` and just waiting on it to finish.
+
+
+### 01/18/2019
+#### Fri 18 Jan 2019 11:06:53 AM EST 
+`for i in {1..48}; do line=``sed "${i}q;d" tissuenames.txt``; echo "Concatenating $line..."; for q in {1..22}; do echo "Chr $q..."; cat "${q}_${line}.txt" >> [1-22]${line}.txt; done; done`
+
+`cat tissue_table.txt | cut -f3 | awk '{if(NR>1)print}'`
+
+Turns out that the file names for the covariates are formatted differently than the tissue names that come from the SRA metadata. gonna fix now. 
+
+Works.
+
 ### 01/17/2019
 #### Thu 17 Jan 2019 03:13:57 PM EST 
 Turns out the fine folk over at GTEx consortium are gonna beat us to the punch when it comes to generated sQTL calls in v8. It's okay. Rajiv helped me out with `sraNameChangeSort.R`. Turns out I don't have to do anything with the covariates. I guess I forgot. 
