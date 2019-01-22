@@ -13,6 +13,22 @@ also remember
 - CrossRef the GTEx file that contains all of our samples of interest
 - use samtools to convert cram files to bam files to use with leafcutter
 
+### 01/22/2019
+#### Tue 22 Jan 2019 10:11:07 AM EST 
+Just finished indexing the big boy. 
+
+So much tedium. I have to fix the concatenated phenotype files because the header occurs multiple times throughout the file. I also have to figure out how to call QTLtools on every tissue-phenotype file while including also the covariate. I also just found out that the GTEx consortium is generating sQTLs using LeafCutter and it's undoubtably going to be better than everything I've done here for the past like... 4 months lol. It's fine I'm not upset I just think it's funny. Life. So it makes me wonder how important it is to actually pour so much energy into having a functioning pipeline? like it really doesn't matter, right? since I'm going to only test this out on just one tissue type, which we've decided will be whole blood.
+
+Whatever I'm almost done.
+
+```
+ml sra-tools
+IFS=$'\n'       # make newlines the only separator
+for sample in $(cat WholeBloodSRR.txt)
+do
+    prefetch -X 20G --ascp-path '/software/apps/aspera/3.7.2.354/bin/ascp|/software/apps/aspera/3.7.2.354/etc/asperaweb_id_dsa.openssh' $sample
+done
+```
 ### 01/21/2019
 #### Mon 21 Jan 2019 10:26:30 AM EST 
 It's the King's day, as my high school wrestling coach once said. Here's a quote in his memory:

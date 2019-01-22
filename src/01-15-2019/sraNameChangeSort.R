@@ -26,4 +26,4 @@ keep <- c('#Chr', 'start', 'end', 'ID')
 tissues <- lapply(sites, function(x)
   NE[, .SD, .SDcols = c(keep, intersect(names(NE), x))])
 
-sapply(names(tissues), function (x) write.table(tissues[[x]], file=paste0(paste0(tissues[[x]]$`#Chr`[1], "_"), x,".", "txt"), quote=FALSE, sep="\t"))
+sapply(names(tissues), function (x) write.table(tissues[[x]], file=paste0(paste0(tissues[[x]]$`#Chr`[1], "_"), x,".", "txt"), row.names=F, quote=FALSE, sep="\t"))

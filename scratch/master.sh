@@ -97,7 +97,7 @@ for phen in *qqnorm*.gz.qtltools; do Rscript --vanilla ${homeDir}/Ne-sQTL/src/01
 cat tissue_table.txt | cut -f3 | awk '{if(NR>1)print}' |  awk '!seen[$0]++' > tissuenames.txt
 mkdir cattissues
 # concatenate all tissues from chr 1-22 such that all chromosomes are found in one file per tissue
-for i in {1..48}; do line=`sed "${i}q;d" tissuenames.txt`; echo "Concatenating $line..."; for q in {1..22}; do echo "Chr $q..."; cat "${q}_${line}.txt" >> 1-22_"${line}".txt; rm "${q}_${line}.txt" done; done
+for i in {1..48}; do line=`sed "${i}q;d" tissuenames.txt`; echo "Concatenating $line..."; for q in {1..22}; do echo "Chr $q..."; awk 'FNR==1 && NR!=1{next;}{print}' "${q}_${line}.txt" > 1-22_"${line}".txt; rm "${q}_${line}.txt" done; done #formerly cat "${q}_${line}.txt" >> ... let's see if this works ; did this to prevent writing the header multiple times
 
 mv 1-22_* cattissues/
 
@@ -196,7 +196,7 @@ find . -name "[1-22]*" -print0 | xargs -0 ls > phenpaths.txt
 IFS=$'\n'       # make newlines the only separator
 for tissue in $(cat ./phenpaths.txt)    
 do
-    for chunk in {1..20}; do sbatch --export=tissue=$tissue,chunk=$chunk QTLtools-NomPass.sh $tissue $chunk; done
+    for chunk in {1..20}; do sbatch --export=tissue=$tissue,chunk=$chunk QTLtools-NomPass.sh; done
 done
 
 

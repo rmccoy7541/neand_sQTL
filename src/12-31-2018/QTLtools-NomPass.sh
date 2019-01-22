@@ -5,15 +5,18 @@
 #SBATCH --nodes=1
 # number of tasks (processes) per node
 #SBATCH --ntasks-per-node=1
-#SBATCH --array=1-22
+#SBATCH --array=1-20
 
-# tissue is going to be $1 and chunk $2
+# tissue is going to be $tissue and chunk $chunk
+
+q=$(basename "$tissue"); filename="${q%.*}"; filename=$(echo ${filename#*_}); filename=${filename/ - /_}; filename=${filename/ /""};
+
 
 ./QTLtools_1.1_Ubuntu14.04_x86_64 cis \
-  --vcf ../GTExWholeGenomeSequenceGenotypeMatrixBiallelicOnly.vcf.gz \
+  --vcf  GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz \
   --bed $tissue \
-  --cov  \
+  --cov  $filename*covariates*\
   --nominal 0.01 \
-  --chunk $chunk 20 \
-  --out ${tissue}_nominals_chunk${chunk}.txt
+  --chunk $SLURM_ARRAY_TASK_ID 20 \
+  --out ${filename}_nominals_chunk_${SLURM_ARRAY_TASK_ID}.txt
 
