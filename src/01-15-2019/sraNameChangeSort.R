@@ -6,6 +6,7 @@ NE <- fread(paste0("zcat ", args[1]))
 #NE <- fread("zcat Ne-sQTL_perind.counts.gz.qqnorm_chr16.gz.qtltools")
 tistab <- fread(args[2])
 #tistab <- fread("tissue_table.txt")
+
 # below takes the SRR IDs found in NE column headers, matches them to those found in the
 # tissue table, and then changes them the GTEX sample ID
 ind <- match(names(NE), tistab$Run)

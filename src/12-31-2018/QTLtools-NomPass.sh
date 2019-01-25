@@ -9,14 +9,13 @@
 
 # tissue is going to be $tissue and chunk $chunk
 
-q=$(basename "$tissue"); filename="${q%.*}"; filename=$(echo ${filename#*_}); filename=${filename/ - /_}; filename=${filename/ /""};
-
+q=$(basename "$tissue"); filename="${q%.*}"; filename=$(echo ${filename#*_}); filename=${filename/ - /_}; filename=${filename// /}; 
 
 ./QTLtools_1.1_Ubuntu14.04_x86_64 cis \
   --vcf  GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz \
-  --bed $tissue \
-  --cov  $filename*covariates*\
+  --bed "$tissue" \
+  --cov  "$filename/*covariates*" \
   --nominal 0.01 \
   --chunk $SLURM_ARRAY_TASK_ID 20 \
-  --out ${filename}_nominals_chunk_${SLURM_ARRAY_TASK_ID}.txt
+  --out "${filename}_nominals_chunk_${SLURM_ARRAY_TASK_ID}.txt"
 

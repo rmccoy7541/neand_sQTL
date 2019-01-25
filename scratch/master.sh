@@ -89,15 +89,23 @@ tar -xzf GTEx_Analysis_v7_eQTL_covariates.tar.gz
 
 ## Step 5 - QTLtools Preparation
 ################################################
+
+mv ${homeDir}/Ne-sQTL/data/01-22-2019/GTExTissueKey.txt $PWD
 # get the tissue sites for each corresonding sra file
-Rscript --vanilla ${homeDir}/Ne-sQTL/src/01-09-2019/sraTissueExtract.R ${homeDir}/Ne-sQTL/data/SraRunTable.txt $PWD
+Rscript --vanilla ${homeDir}/Ne-sQTL/src/01-09-2019/sraTissueExtract.R ${homeDir}/Ne-sQTL/data/SraRunTable.txt GTExTissueKey.csv
+
+
 # submit each LF phenotype file to sraNameChangeSort as command line variable as well as tissue_table.txt
-for phen in *qqnorm*.gz.qtltools; do Rscript --vanilla ${homeDir}/Ne-sQTL/src/01-15-2019/sraNameChangeSort.R $phen tissue_table.txt; done
-# getting the tissue names from covariate files - 48 tissues in all
+for phen in *qqnorm*.gz.qtltools; do Rscript --vanilla ${homeDir}/Ne-sQTL/src/01-15-2019/sraNameChangeSort.R $phen tissue_table.txt ; done
+rm *Leukemia*
+
+#this code is problematic - I can't have any whitespaces in filenames, yet the that's all they have in tissue_table
+# getting the tissue names from metadata - 48 tissues in all
 cat tissue_table.txt | cut -f3 | awk '{if(NR>1)print}' |  awk '!seen[$0]++' > tissuenames.txt
 mkdir cattissues
+
 # concatenate all tissues from chr 1-22 such that all chromosomes are found in one file per tissue
-for i in {1..48}; do line=`sed "${i}q;d" tissuenames.txt`; echo "Concatenating $line..."; for q in {1..22}; do echo "Chr $q..."; awk 'FNR==1 && NR!=1{next;}{print}' "${q}_${line}.txt" > 1-22_"${line}".txt; rm "${q}_${line}.txt" done; done #formerly cat "${q}_${line}.txt" >> ... let's see if this works ; did this to prevent writing the header multiple times
+for i in {1..48}; do line=`sed "${i}q;d" tissuenames.txt`; echo "Concatenating $line..."; for q in {1..22}; do echo "Chr $q..."; awk 'FNR==1 && NR!=1{next;}{print}' "${q}_${line}.txt" > "${line}".txt; rm "${q}_${line}.txt" done; done #formerly cat "${q}_${line}.txt" >> ... let's see if this works ; did this to prevent writing the header multiple times
 
 mv 1-22_* cattissues/
 
@@ -138,62 +146,45 @@ cd tissues/
 #      echo mv "$string" "${dirs[0]}"
 #  fi;
 #done
+
+
 ## This doesn't work as it should - just going to do it manually
-mv Adipose_Subcutaneous.v7.covariates_output.txt "Adipose - Subcutaneous/"
-mv Adipose_Visceral_Omentum.v7.covariates_output.txt  "Adipose - Visceral (Omentum)/"
-mv Adrenal_Gland.v7.covariates_output.txt "Adrenal Gland/"
-mv Artery_Aorta.v7.covariates_output.txt "Artery - Aorta/"
-mv Artery_Coronary.v7.covariates_output.txt "Artery - Coronary/"
-mv Artery_Tibial.v7.covariates_output.txt "Artery - Tibial/"
-mv Brain_Amygdala.v7.covariates_output.txt "Brain - Amygdala/"
-mv Brain_Anterior_cingulate_cortex_BA24.v7.covariates_output.txt "Brain - Anterior cingulate cortex (BA24)/"
-mv Brain_Caudate_basal_ganglia.v7.covariates_output.txt "Brain - Caudate (basal ganglia)/"
-mv Brain_Cerebellar_Hemisphere.v7.covariates_output.txt "Brain - Cerebellar Hemisphere/"
-mv Brain_Cerebellum.v7.covariates_output.txt "Brain - Cerebellum/"
-mv Brain_Cortex.v7.covariates_output.txt "Brain - Cortex/"
-mv Brain_Frontal_Cortex_BA9.v7.covariates_output.txt "Brain - Frontal Cortex (BA9)/"
-mv Brain_Hippocampus.v7.covariates_output.txt "Brain - Hippocampus/"
-mv Brain_Hypothalamus.v7.covariates_output.txt "Brain - Hypothalamus/"
-mv Brain_Nucleus_accumbens_basal_ganglia.v7.covariates_output.txt "Brain - Nucleus accumbens (basal ganglia)/"
-mv Brain_Putamen_basal_ganglia.v7.covariates_output.txt "Brain - Putamen (basal ganglia)/"
-mv Brain_Spinal_cord_cervical_c-1.v7.covariates_output.txt "Brain - Spinal cord (cervical c-1)/"
-mv Brain_Substantia_nigra.v7.covariates_output.txt "Brain - Substantia nigra/"
-mv Breast_Mammary_Tissue.v7.covariates_output.txt "Breast - Mammary Tissue/"
-mv Cells_EBV-transformed_lymphocytes.v7.covariates_output.txt "Cells - EBV-transformed lymphocytes/"
-mv Cells_Transformed_fibroblasts.v7.covariates_output.txt "Cells - Transformed fibroblasts/"
-mv Colon_Sigmoid.v7.covariates_output.txt "Colon - Sigmoid/"
-mv Colon_Transverse.v7.covariates_output.txt "Colon - Transverse/"
-mv Esophagus_Gastroesophageal_Junction.v7.covariates_output.txt "Esophagus - Gastroesophageal Junction/"
-mv Esophagus_Mucosa.v7.covariates_output.txt "Esophagus - Mucosa/"
-mv Esophagus_Muscularis.v7.covariates_output.txt "Esophagus - Muscularis/"
-mv Heart_Atrial_Appendage.v7.covariates_output.txt "Heart - Atrial Appendage/"
-mv Heart_Left_Ventricle.v7.covariates_output.txt "Heart - Left Ventricle/"
-mv Liver.v7.covariates_output.txt "Liver/"
-mv Lung.v7.covariates_output.txt "Lung/"
-mv Minor_Salivary_Gland.v7.covariates_output.txt "Minor Salivary Gland/"
-mv Muscle_Skeletal.v7.covariates_output.txt "Muscle - Skeletal/"
-mv Nerve_Tibial.v7.covariates_output.txt "Nerve - Tibial/"
-mv Ovary.v7.covariates_output.txt "Ovary/"
-mv Pancreas.v7.covariates_output.txt "Pancreas/"
-mv Pituitary.v7.covariates_output.txt "Pituitary/"
-mv Prostate.v7.covariates_output.txt "Prostate/"
-mv Skin_Not_Sun_Exposed_Suprapubic.v7.covariates_output.txt "Skin - Not Sun Exposed (Suprapubic)/"
-mv Skin_Sun_Exposed_Lower_leg.v7.covariates_output.txt "Skin - Sun Exposed (Lower leg)/"
-mv Small_Intestine_Terminal_Ileum.v7.covariates_output.txt "Small Intestine - Terminal Ileum/"
-mv Spleen.v7.covariates_output.txt "Spleen/"
-mv Stomach.v7.covariates_output.txt "Stomach/"
-mv Testis.v7.covariates_output.txt "Testis/"
-mv Thyroid.v7.covariates_output.txt "Thyroid/"
-mv Uterus.v7.covariates_output.txt "Uterus/"
-mv Vagina.v7.covariates_output.txt "Vagina/"
-mv Whole_Blood.v7.covariates_output.txt "Whole Blood/" 
+
 
 ## Step 4 - Mapping sQTLs using QTLtools
 ################################################
 
-find . -name "[1-22]*" -print0 | xargs -0 ls > phenpaths.txt
+find . -name "[1-22]*gz" -print0 | xargs -0 ls > phenpaths.txt
+
+
+phenpaths=$(sed 's/ /\\ /g' <<< cat phenpaths.txt)
 
 IFS=$'\n'       # make newlines the only separator
+
+for tissue in $(cat ./phenpaths.txt)    
+do
+    phenpaths=$(sed 's/ /\\ /g' $tissue); echo $phenpaths 
+done
+
+# gets rid of duplicate headers, removes row numbers
+for tissue in $(cat ./phenpaths.txt)    
+do
+    awk '{ if($0 != header) { print; } if(header == "") { header=$0; } }' "$tissue" | sed 's/^[0-9][0-9]*[ \t]*//' | awk '$3!=""' > "$tissue"
+done
+
+for tissue in $(cat ./phenpaths.txt)    
+do
+    bgzip -f "${tissue}"
+done
+
+#same as before, but with .gz
+find . -name "1-22*" -print0 | xargs -0 ls > phenpaths.txt
+
+for tissue in $(cat ./phenpaths.txt)    
+do
+    tabix -p bed $tissue
+done
+
 for tissue in $(cat ./phenpaths.txt)    
 do
     for chunk in {1..20}; do sbatch --export=tissue=$tissue,chunk=$chunk QTLtools-NomPass.sh; done
