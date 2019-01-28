@@ -5,7 +5,7 @@
 #SBATCH --nodes=1
 # number of tasks (processes) per node
 #SBATCH --ntasks-per-node=1
-#SBATCH --array=1-10
+#SBATCH --array=1-447%50
 
 # creates list of filtered bam files for job array
 # ls *.filt >> filtbamlist.txt

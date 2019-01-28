@@ -13,6 +13,21 @@ also remember
 - CrossRef the GTEx file that contains all of our samples of interest
 - use samtools to convert cram files to bam files to use with leafcutter
 
+### 01/28/2019
+#### 9:08 AM 1/28/2019
+We have the bam files to work with. Going down the list. 
+
+I have to rmember to change some of the array ranges on these batch scripts.
+
+A lot of the files were giving me the following error:
+```
+Filtering SRR1376294.sra.bam
+[W::bam_hdr_read] EOF marker is absent. The input is probably truncated
+[E::bgzf_read] Read block operation failed with error 4 after 0 of 4 bytes
+[main_samview] truncated file.
+```
+Not sure what that is so I'm going to keep moving on.
+
 ### 01/25/2019
 #### Fri 25 Jan 2019 10:27:47 AM EST 
 I'm going to run the code again to demonstrate to Rajiv exactly what the problem is. 
