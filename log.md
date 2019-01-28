@@ -28,6 +28,33 @@ Filtering SRR1376294.sra.bam
 ```
 Not sure what that is so I'm going to keep moving on.
 
+Turns out that meant that the files were incomplete, so I'm re-converting sra -> bam. In doing so, three files encountered errors:
+
+25th sra in sralist.txt...
+```
+slurmstepd: error: Munge decode failed: Expired credential
+slurmstepd: error: Verifying authentication credential: Expired credential
+slurmstepd: error: *** JOB 32321214 ON compute0221 CANCELLED AT 2019-01-28T10:43:09 DUE TO JOB REQUEUE ***
+```
+
+292nd...
+```
+/software/lmod/lmod/init/bash: line 70: 26150 Killed                  singularity exec /software/apps/sra-tools/2.9.2/sra-tools-2.9.2.simg sam-dump "$@"
+[W::sam_read1] Parse error at line 44952410
+[main_samview] truncated file.
+slurmstepd: error: Detected 1 oom-kill event(s) in step 32321481.batch cgroup. Some of your processes may have been killed by the cgroup out-of-memory handler.
+```
+
+48th...
+```
+/software/lmod/lmod/init/bash: line 70:  8241 Killed                  singularity exec /software/apps/sra-tools/2.9.2/sra-tools-2.9.2.simg sam-dump "$@"
+[W::sam_read1] Parse error at line 13112870
+[main_samview] truncated file.
+slurmstepd: error: Detected 1 oom-kill event(s) in step 32321237.batch cgroup. Some of your processes may have been killed by the cgroup out-of-memory handler.
+```
+
+I tried firing them off individually on the command line. Will report back. **Definitely need to develop a contingency plan if any of the files ever run into errors like this.**
+
 ### 01/25/2019
 #### Fri 25 Jan 2019 10:27:47 AM EST 
 I'm going to run the code again to demonstrate to Rajiv exactly what the problem is. 
