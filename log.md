@@ -13,6 +13,25 @@ also remember
 - CrossRef the GTEx file that contains all of our samples of interest
 - use samtools to convert cram files to bam files to use with leafcutter
 
+### 01/29/2019
+#### Tue 29 Jan 2019 10:27:19 AM EST 
+I've changed `sra2bam.sh` last night to both use 24 cores (`samtools` has multi-threaded capabilities) and 24 hours. This might be overkill, so I've set up a `time` wrapper to give us an idea of how long these jobs take. I'm guessing that both using 24 cores and 24 hours is too much, I could probably get away with just 16 hours, since the 50-or-so jobs that have finished so far have taken max 5 hours. That would help with the punishingly long wait in the priority queue. But I have time and I don't know how long these files will actually take to convert, just like I didn't know 20Gb was not enough to download all of the SRAs, so I'll just keep it this way and remember to tweak the script once I find out how long it really takes.
+
+Guy named Adam emailed me about something, needs *MY* help.
+
+Have to 1) optimize LeafCutter for use on a bajillion files and 2) figure out the deal with "Picard-tools"
+
+Found out how to use [picard-tools](https://broadinstitute.github.io/picard/command-line-overview.html#ValidateSamFile):
+
+```
+java -jar picard.jar ValidateSamFile \
+      I=input.bam \
+      MODE=SUMMARY
+```
+
+re: LeafCutter steps, I already addressed this earlier in the log. I should just call an `interact` with a good amount of memory, maybe like 12 Ghz or something.
+
+
 ### 01/28/2019
 #### 9:08 AM 1/28/2019
 We have the bam files to work with. Going down the list. 

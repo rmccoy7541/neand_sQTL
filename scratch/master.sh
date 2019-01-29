@@ -41,8 +41,6 @@ jid2=$(sbatch --wait --dependency=afterok:${jid1##* } ${homeDir}/Ne-sQTL/src/12-
 ls *.filt >> filtlist.txt
 # No longer renaming SRAs until after leafcutter
 ## maybe inclue an if-statement after each sbatch that would catch any non-zero exit codes and abort the program
-## sbatch --wait $(homeDir)/ncbi/src/12-14-2018/rename_gtex.sh
-## ls GTEX* >> gtexlist.txt
 
 ## Step 2 - Intron Clustering
 ################################################
@@ -51,18 +49,18 @@ sbatch --wait --dependency=afterok:${jid2##* } ${homeDir}/Ne-sQTL/src/12-10-2018
 mv *.junc juncfiles/
 cd juncfiles/
 # strip junc files - STILL WITH RUN ID 'SRR######'
-# for junc in $PWD/*; do mv ${junc} ${junc%.*}; echo ${junc%.*}; done
 find -type f -name '*.sra.bam.filt.junc' | while read f; do mv "$f" "${f%.sra.bam.filt.junc}"; done
 # put all of the renamed junc files in a text
 ls SRR* >> juncfiles.txt
 # intron clustering
 mkdir intronclustering/
-python $homeDir/leafcutter/clustering/leafcutter_cluster.py -j juncfiles.txt -r intronclustering/ -m 50 -o Ne-sQTL -l 500000
+### call an interactive session with a good deal of memory for this step
+python $homeDir/leafcutter/clustering/leafcutter_cluster.py -j juncfiles.txt -r intronclustering/ -m 50 -o Ne-sQTL -l 500000 # no option for parallelization
 cd intronclustering/
 
 ## Step 3 - PCA calculation
 ################################################
-python $homeDir/leafcutter/scripts/prepare_phenotype_table.py Ne-sQTL_perind.counts.gz -p 10 # works fine; there's no option for parallelization
+python $homeDir/leafcutter/scripts/prepare_phenotype_table.py Ne-sQTL_perind.counts.gz -p 10 # works fine; also no option for parallelization
 # indexing and bedding
 ml htslib; sh Ne-sQTL_perind.counts.gz_prepare.sh
 # about the above line: you need to remove all of the index files and generate new ones once you convert the beds to a QTLtools compatible format
