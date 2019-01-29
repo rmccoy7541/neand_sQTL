@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=bialleliconly
-#SBATCH --time=8:0:0
+#SBATCH --time=16:0:0
 #SBATCH --partition=shared
 #SBATCH --nodes=1
 # number of tasks (processes) per node

@@ -55,6 +55,59 @@ slurmstepd: error: Detected 1 oom-kill event(s) in step 32321237.batch cgroup. S
 
 I tried firing them off individually on the command line. Will report back. **Definitely need to develop a contingency plan if any of the files ever run into errors like this.**
 
+```
+[aseyedi2@jhu.edu@compute0230 sra]$ sam-dump SRR603421.sra | samtools view -bS - > SRR603421.sra.bam
+[E::sam_parse1] SEQ and QUAL are of different length
+[W::sam_read1] Parse error at line 5402763
+[main_samview] truncated file.
+```
+
+```
+[aseyedi2@jhu.edu@compute0230 sra]$ sam-dump SRR1315517.sra | samtools view -bS - > SRR1315517.sra.bam
+[W::sam_read1] Parse error at line 13112870
+[main_samview] truncated file.
+```
+
+I'm still having issues. MARCC crashed so I couldn't finish the last one's conversion (25th).
+
+I'm going to `sha1sum` and re-DL the files to see if the files were corrupted during download
+
+##### 2:47 PM 1/28/2019
+I'm still wating for all of the SRAs to finish `sha1sum`, but here are the three of interest:
+
+```
+42253bad8a7e7e38b3a3eb5c795e6c8c5bf4688c  SRR1090907.sra
+3eba112c500ee99b2d42f600c0292d6da5ab58bf  SRR603421.sra
+70461faa76e66bd6d1cb8097abdf36d5d6b6146b  SRR1315517.sra
+```
+Above are from when I downloaded them the other week. I'm downloading them again to make sure they're of the same quality
+
+```
+42253bad8a7e7e38b3a3eb5c795e6c8c5bf4688c  SRR1090907.sra
+3eba112c500ee99b2d42f600c0292d6da5ab58bf  SRR603421.sra
+70461faa76e66bd6d1cb8097abdf36d5d6b6146b  SRR1315517.sra
+```
+They're the same, so either MARCC has a problem or dbGaP/GTEx has a problem. I'm going to try converting `SRR1090907.sra` again since I think that one could have worked.
+
+
+Added several more cores to `sra2bam.sh` because of the multi-threaded capabilities. Not that it matters now.
+
+I got this error on jobs 164 and 165:
+```
+slurmstepd: error: Munge decode failed: Expired credential
+slurmstepd: error: Verifying authentication credential: Expired credential
+```
+SRR1398728.sra and SRR1399433.sra. 
+
+Big problem. Some of the whole bloods were not downloaded because I set the size too small (20Gb is too small??) gonna try again.
+
+#### 11:10 PM 1/28/2019
+
+Okay, so really there's 454 if you count the big boys. I updated the appropriate scripts to reflect that, and redid the `ls *sra >> sralist.txt` to contain all SRAs.
+
+Submitted the massive job. I also am making a new `sha1sum` of all of the SRAs for whole blood so I'll have to remember that.
+
+
 ### 01/25/2019
 #### Fri 25 Jan 2019 10:27:47 AM EST 
 I'm going to run the code again to demonstrate to Rajiv exactly what the problem is. 
@@ -68,6 +121,17 @@ I'm not even going to include brain samples in our analysis right now because db
 There are **447** whole blood samples we are working with.
 
 I'm doing the whole thing again but for the whole blood samples.
+
+```
+IFS=$'\n'       # make newlines the only separator
+for sample in $(cat WholeBloodSRR.txt)
+do
+    ./prefetch -X 50G --ascp-path '/software/apps/aspera/3.7.2.354/bin/ascp|/software/apps/aspera/3.7.2.354/etc/asperaweb_id_dsa.openssh' $sample
+done
+```
+
+#### 10:27 PM 1/28/2019
+Tons of errors, and incomplete files. I feel like I have to scrap all the bam files and try again. I cancelled the remaining jobs just now.
 
 ### 01/23/2019
 #### Wed 23 Jan 2019 03:24:59 PM EST 

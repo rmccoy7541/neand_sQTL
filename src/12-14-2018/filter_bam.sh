@@ -5,7 +5,7 @@
 #SBATCH --nodes=1
 # number of tasks (processes) per node
 #SBATCH --ntasks-per-node=1
-#SBATCH --array=1-447%50
+#SBATCH --array=1-454%50
 
 # load samtools
 ml samtools
