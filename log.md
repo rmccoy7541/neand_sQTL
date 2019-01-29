@@ -29,7 +29,7 @@ java -jar picard.jar ValidateSamFile \
       MODE=SUMMARY
 ```
 
-re: LeafCutter steps, I already addressed this earlier in the log. I should just call an `interact` with a good amount of memory, maybe like 12 Ghz or something.
+re: LeafCutter steps, I already addressed this earlier in the log. I should just call an `interact` with a good amount of memory, maybe like 12 Gb or something.
 
 
 ### 01/28/2019
