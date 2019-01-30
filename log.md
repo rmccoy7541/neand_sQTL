@@ -13,6 +13,18 @@ also remember
 - CrossRef the GTEx file that contains all of our samples of interest
 - use samtools to convert cram files to bam files to use with leafcutter
 
+### 01/30/2019
+#### 9:18 AM 1/30/2019
+One of our jobs, 32327199_80, is taking 20+ hours to process, which is unusual because line 80 correpsonds to SRR1333462.sra in sralist.txt, so this means something strange is happening here. I only allotted 24 hours to each job so if it hits the wall, I might have to do it again manually.
+
+I reduced the time to 16 hours and job 80 hit the wall. I'm going to individually convert it on the dev node.
+
+```
+time {
+        ./sam-dump SRR1333462.sra | samtools view --threads 23 -bS - > SRR1333462.sra.bam
+}
+```
+
 ### 01/29/2019
 #### Tue 29 Jan 2019 10:27:19 AM EST 
 I've changed `sra2bam.sh` last night to both use 24 cores (`samtools` has multi-threaded capabilities) and 24 hours. This might be overkill, so I've set up a `time` wrapper to give us an idea of how long these jobs take. I'm guessing that both using 24 cores and 24 hours is too much, I could probably get away with just 16 hours, since the 50-or-so jobs that have finished so far have taken max 5 hours. That would help with the punishingly long wait in the priority queue. But I have time and I don't know how long these files will actually take to convert, just like I didn't know 20Gb was not enough to download all of the SRAs, so I'll just keep it this way and remember to tweak the script once I find out how long it really takes.
