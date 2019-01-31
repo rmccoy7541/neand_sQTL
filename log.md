@@ -43,6 +43,14 @@ java -jar picard.jar ValidateSamFile \
 
 re: LeafCutter steps, I already addressed this earlier in the log. I should just call an `interact` with a good amount of memory, maybe like 12 Gb or something.
 
+#### Wed 30 Jan 2019 03:47:30 PM EST 
+We got a ton of failed jobs that I have to start from the beginning. We got two different types of error messages and I ascertained which jobs they were using `grep "error" slurm-32327199_* | awk -F'[_.]' '{print $2}' > errorfailure.txt` and `grep "Home" slurm-32327199_* | awk -F'[_.]' '{print $2}' > homedirfailure.txt`. I determined they have no lines in common and concatenated them. I'm going to figure out how to make each line's number correspond to a line in another file and then replace them with the SRA file name. I'm also going to change `sra2bam.sh` not to use the `sra-tools` module and instead utilize a bin. 
+
+I replaced all of the numbers I concatenated into `failedjobs.txt` with the corresponding line in `sralist.txt` into a file `failedsras.txt`.
+`awk 'NR==FNR {a[FNR]=$0;next} {printf "%s\t%s\n", a[$1], $2}' sralist.txt failedjobs.txt > failedsras.txt`
+
+I've saved a new file called `failed_sra2bam.sh`.
+
 
 ### 01/28/2019
 #### 9:08 AM 1/28/2019
