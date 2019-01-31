@@ -13,6 +13,12 @@ also remember
 - CrossRef the GTEx file that contains all of our samples of interest
 - use samtools to convert cram files to bam files to use with leafcutter
 
+### 01/31/2019
+#### Thu 31 Jan 2019 11:56:16 AM EST 
+~~Very weird turn of events: I saw that by the time everything will be done, there will be *454* completed bams, but I forgot that the original number, *447* was the one without the sra's above 20Gb, not 454, so I thought I was missing some sra's so I extracted all of the SRR runs from~~ 
+
+I just ran around in a dumbass circle. **454** is the complete number of SRAs that we are doing. If you have any doubt, call `sacct --starttime 2019-01-28`. The jobs are finishing up. There are few of them left. Going to run `picard-tools` to validate them.
+
 ### 01/30/2019
 #### 9:18 AM 1/30/2019
 One of our jobs, 32327199_80, is taking 20+ hours to process, which is unusual because line 80 correpsonds to SRR1333462.sra in sralist.txt, so this means something strange is happening here. I only allotted 24 hours to each job so if it hits the wall, I might have to do it again manually.
