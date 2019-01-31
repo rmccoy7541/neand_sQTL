@@ -25,6 +25,17 @@ time {
 }
 ```
 
+#### Wed 30 Jan 2019 03:47:30 PM EST 
+We got a ton of failed jobs that I have to start from the beginning. We got two different types of error messages and I ascertained which jobs they were using `grep "error" slurm-32327199_* | awk -F'[_.]' '{print $2}' > errorfailure.txt` and `grep "Home" slurm-32327199_* | awk -F'[_.]' '{print $2}' > homedirfailure.txt`. I determined they have no lines in common and concatenated them. I'm going to figure out how to make each line's number correspond to a line in another file and then replace them with the SRA file name. I'm also going to change `sra2bam.sh` not to use the `sra-tools` module and instead utilize a bin. 
+
+I replaced all of the numbers I concatenated into `failedjobs.txt` with the corresponding line in `sralist.txt` into a file `failedsras.txt`.
+`awk 'NR==FNR {a[FNR]=$0;next} {printf "%s\t%s\n", a[$1], $2}' sralist.txt failedjobs.txt > failedsras.txt`
+
+I've saved a new file called `failed_sra2bam.sh`.
+
+#### Wed 30 Jan 2019 10:02:26 PM EST 
+I just tried to run this job because MARCC finally started working but the script would create files with filenames like `SRR660378.sra?.bam`. Using `cat -A` revealed that the names were actually like `SRR660378.sra^I$`, so I did this: `cat -A failedsras.txt | sed 's/...$//' > failedsrascorrected.txt` to fix it. Now I have to update the script `failed_sra2bam.sh`. Let's see if it works. It works.
+
 ### 01/29/2019
 #### Tue 29 Jan 2019 10:27:19 AM EST 
 I've changed `sra2bam.sh` last night to both use 24 cores (`samtools` has multi-threaded capabilities) and 24 hours. This might be overkill, so I've set up a `time` wrapper to give us an idea of how long these jobs take. I'm guessing that both using 24 cores and 24 hours is too much, I could probably get away with just 16 hours, since the 50-or-so jobs that have finished so far have taken max 5 hours. That would help with the punishingly long wait in the priority queue. But I have time and I don't know how long these files will actually take to convert, just like I didn't know 20Gb was not enough to download all of the SRAs, so I'll just keep it this way and remember to tweak the script once I find out how long it really takes.
@@ -42,15 +53,6 @@ java -jar picard.jar ValidateSamFile \
 ```
 
 re: LeafCutter steps, I already addressed this earlier in the log. I should just call an `interact` with a good amount of memory, maybe like 12 Gb or something.
-
-#### Wed 30 Jan 2019 03:47:30 PM EST 
-We got a ton of failed jobs that I have to start from the beginning. We got two different types of error messages and I ascertained which jobs they were using `grep "error" slurm-32327199_* | awk -F'[_.]' '{print $2}' > errorfailure.txt` and `grep "Home" slurm-32327199_* | awk -F'[_.]' '{print $2}' > homedirfailure.txt`. I determined they have no lines in common and concatenated them. I'm going to figure out how to make each line's number correspond to a line in another file and then replace them with the SRA file name. I'm also going to change `sra2bam.sh` not to use the `sra-tools` module and instead utilize a bin. 
-
-I replaced all of the numbers I concatenated into `failedjobs.txt` with the corresponding line in `sralist.txt` into a file `failedsras.txt`.
-`awk 'NR==FNR {a[FNR]=$0;next} {printf "%s\t%s\n", a[$1], $2}' sralist.txt failedjobs.txt > failedsras.txt`
-
-I've saved a new file called `failed_sra2bam.sh`.
-
 
 ### 01/28/2019
 #### 9:08 AM 1/28/2019

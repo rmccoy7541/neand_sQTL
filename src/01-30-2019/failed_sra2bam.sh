@@ -13,6 +13,6 @@
 line=`sed "${SLURM_ARRAY_TASK_ID}q;d" failedsras.txt`
 
 time {
-      	./sam-dump $line | ./samtools view --threads 23 -bS - > ${line}.bam
+      	./sam-dump $line | ./samtools view --threads 23 -bS - > "${line}.bam"
 }
 
