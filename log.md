@@ -13,6 +13,30 @@ also remember
 - CrossRef the GTEx file that contains all of our samples of interest
 - use samtools to convert cram files to bam files to use with leafcutter
 
+### 02/01/2019
+#### Fri 01 Feb 2019 08:24:27 AM EST 
+The conversion is complete. Need to validate bam files now.
+
+`samtools quickcheck -v *bam`
+
+```
+SRR1333462.sra.bam was missing EOF block when one should be present.
+SRR1333462.sra.bam
+SRR607018.sra.bam had no targets in header.
+SRR607018.sra.bam
+```
+
+Only 2? That's impressive.
+
+`./sam-dump SRR1333462.sra | ./samtools view --threads 23 -bS - > "SRR1333462.sra.bam"`
+`./sam-dump SRR607018.sra | ./samtools view --threads 23 -bS - > "SRR607018.sra.bam"`
+
+I just ran these two commands on the dev node. I'll check back in a few hours to make sure they went through.
+
+#### Fri 01 Feb 2019 02:59:06 PM EST 
+`SRR1333462.sra.bam` is not yet done, but all other bams are complete and valid according to `samtools quickcheck`.
+
+
 ### 01/31/2019
 #### Thu 31 Jan 2019 11:56:16 AM EST 
 ~~Very weird turn of events: I saw that by the time everything will be done, there will be *454* completed bams, but I forgot that the original number, *447* was the one without the sra's above 20Gb, not 454, so I thought I was missing some sra's so I extracted all of the SRR runs from~~ 

@@ -32,6 +32,9 @@ ls *.sra >> sralist.txt
 # submit batch job, return stdout in $RES
 #jid1=$(sbatch --wait ${homeDir}/ncbi/src/12-14-2018/sra2bam.sh)
 jid1=$(sbatch --wait ${homeDir}/Ne-sQTL/src/12-14-2018/sra2bam.sh)
+
+## samtools quickcheck to validate bams
+
 # list of bams to be filtered 
 ls *.bam >> bamlist.txt
 # bring bed file to current directory
