@@ -41,6 +41,9 @@ ls *.bam >> bamlist.txt
 cp ${homeDir}/Ne-sQTL/data/12-07-2018/GRCh37.bed $PWD
 # filter unplaced contigs
 jid2=$(sbatch --wait --dependency=afterok:${jid1##* } ${homeDir}/Ne-sQTL/src/12-14-2018/filter_bam.sh)
+
+## samtools quickcheck
+
 ls *.filt >> filtlist.txt
 # No longer renaming SRAs until after leafcutter
 ## maybe inclue an if-statement after each sbatch that would catch any non-zero exit codes and abort the program

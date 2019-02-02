@@ -39,6 +39,9 @@ I just ran these two commands on the dev node. I'll check back in a few hours to
 #### Fri 01 Feb 2019 06:55:55 PM EST 
 `SRR1333462.sra.bam` is still not done, but I think it's almost done because the original is like 6.4Gb and the bam is like a little more the 6.7 right now.
 
+#### Fri 01 Feb 2019 09:09:55 PM EST 
+Done. Going to filter the bams now. Changing `filter_bam.sh` on MARCC to not all load `samtools` as a module because MARCC can't handle it. Gonna call the executable instead, like I did for the conversion. Also setting `--threads 24`.
+
 ### 01/31/2019
 #### Thu 31 Jan 2019 11:56:16 AM EST 
 ~~Very weird turn of events: I saw that by the time everything will be done, there will be *454* completed bams, but I forgot that the original number, *447* was the one without the sra's above 20Gb, not 454, so I thought I was missing some sra's so I extracted all of the SRR runs from~~ 
