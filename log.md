@@ -36,6 +36,8 @@ I just ran these two commands on the dev node. I'll check back in a few hours to
 #### Fri 01 Feb 2019 02:59:06 PM EST 
 `SRR1333462.sra.bam` is not yet done, but all other bams are complete and valid according to `samtools quickcheck`.
 
+#### Fri 01 Feb 2019 06:55:55 PM EST 
+`SRR1333462.sra.bam` is still not done, but I think it's almost done because the original is like 6.4Gb and the bam is like a little more the 6.7 right now.
 
 ### 01/31/2019
 #### Thu 31 Jan 2019 11:56:16 AM EST 
