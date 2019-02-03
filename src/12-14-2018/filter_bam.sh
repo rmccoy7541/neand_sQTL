@@ -17,6 +17,6 @@ filt="${line}.filt"
 
 echo "Filtering $line"
 
-./samtools view --threads 23 -L GRCh37.bed $line > "$filt"
+./samtools view --threads 23 -b -L GRCh37.bed $line > "$filt"
 
 #samtools view -L GRCh37.bed $line > "$filt"

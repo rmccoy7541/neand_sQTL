@@ -1,24 +1,24 @@
 #!/bin/bash
 #SBATCH --job-name=bam2junccall
-#SBATCH --time=1:00:00
+#SBATCH --time=2:00:00
 #SBATCH --partition=shared
 #SBATCH --nodes=1
 # number of tasks (processes) per node
 #SBATCH --ntasks-per-node=1
-#SBATCH --array=1-454%50
+#SBATCH --array=1-454%25
 
 # creates list of filtered bam files for job array
 # ls *.filt >> filtbamlist.txt
 
-# each line is a bam file to be used as an input in the job array
+# each line is a filtered bam file to be used as an input in the job array
 line=`sed "${SLURM_ARRAY_TASK_ID}q;d" filtlist.txt`
 
 # load samtools
-ml samtools
+# ml samtools
+ml python/2.7-anaconda
 
 # converts each file to junc
 # Remember to set LeafCutter full path (leafCutterDir) in bam2junc.sh
-echo "Converting ${line} to ${line}.junc"
-sh ../../leafcutter/scripts/bam2junc.sh ${line} ${line}.junc
-# echo ${line}.junc >> test_juncfiles.txt
-# run the above line seperately AFTER the .junc extension has been stripped from the files
+echo "Converting ${line} to junc"
+sh /scratch/groups/rmccoy22/aseyedi2/leafcutter/scripts/bam2junc.sh ${line} ${line}.junc
+

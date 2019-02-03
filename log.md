@@ -13,6 +13,38 @@ also remember
 - CrossRef the GTEx file that contains all of our samples of interest
 - use samtools to convert cram files to bam files to use with leafcutter
 
+### 02/03/2019
+#### Sun 03 Feb 2019 08:30:24 AM EST 
+~~`filter_bam` is done running and quickcheck returned no errors.~~ `bam2junc` is done running.
+
+`interact -p shared -m 12G -t 180:0` for intron clustering.
+
+Done with intron clustering. Maybe do it on the dev node next time. Nothing bad happened but it could have.
+
+Submitted `QTLtools_filter.sh`.
+
+### 02/02/2019
+#### Sat 02 Feb 2019 08:26:52 AM EST 
+the `*.filt` files are done processing. The slurm files indicate no error but running `samtools quickcheck -v *filt` says all the files have no header like that's a bad thing. I'm going to keep going with the process. 
+
+~~I have to call `bam2junccall.sh` for the next step and I'm going to keep it as it is in terms of loading the modules as opposed to running the executables in the working directory. The reason for this is that I don't want to alter the LeafCutter script too much and make bugs, but also I don't know how LC handles these programs downstream. I don't want to slow down MARCC though so in `bam2junccall.sh` I made it so that only up to 25 jobs can run concurrently.~~ Nah you know what I'm just going to change LC to call the executable in its full path. `/scratch/groups/rmccoy22/Ne_sQTL/sra/samtools-1.9/samtools`. I'm still going to have to load python 2.7-anaconda though. Let's see if it works.
+
+The script ran fine, but now, all of the jobs gave me this warning: 
+```
+Converting SRR1345412.sra.bam.filt to junc
+[E::sam_parse1] missing SAM header
+[W::sam_read1] Parse error at line 1
+[main_samview] truncated file.
+```
+I guess something in the filtering step broke the files? because the `*.bam` were fine. 
+
+So I think it has to do something with the `*filt` files no longer being in bam format anymore? I can just view them with `head`, whereas the bam files I have to do `samtools view <bam> | head`. Don't know what to do.
+
+I figured out what the problem is. `samtools view -b` flag outputs as bed. I needed that when filtering those bad boys.
+
+#### Sat 02 Feb 2019 06:27:33 PM EST 
+The filter is done. Converting to junc now.
+
 ### 02/01/2019
 #### Fri 01 Feb 2019 08:24:27 AM EST 
 The conversion is complete. Need to validate bam files now.
