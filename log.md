@@ -13,6 +13,49 @@ also remember
 - CrossRef the GTEx file that contains all of our samples of interest
 - use samtools to convert cram files to bam files to use with leafcutter
 
+### 02/04/2019
+#### Mon 04 Feb 2019 11:09:54 AM EST 
+I'm going to just delete all lines in `tissue_table.txt` that contain non-whole blood information and see if that does anything.
+
+Okay I just found out `tissue_table.txt` was from the last run-through I did with the other guys. I'm going to download just the whole blood metadata, create `tissue_table.txt` from that and use that for `sraNameChangeSort.R`. Okay it works. Rajiv sent me the analysis freeze of all the samples that were used for the eQTL by GTEx. I just want to note that I have 454 samples but according to dbGaP, there are actually 465 samples. So I don't know what to do about that. Hopefully they're not all necessary.
+
+Research is so messy. Using `comm -3 smplessorted.txt havesorted.txt` to compare the SRR files I **have** to the SRR metadata, I apparently do not have these 11 files:
+```
+	SRR5125340
+	SRR5125341
+	SRR5125397
+	SRR5125398
+	SRR5125400
+	SRR5125401
+	SRR5125580
+	SRR5125581
+	SRR5125595
+	SRR5125596
+	SRR607214
+```
+
+So now I have to check to see if they were in the freeze.
+
+I don't know how to see if any of these SRRs that I didn't download are in the analysis freeze or not. I have that annotations file that I would have to use.
+
+```
+IFS=$'\n'       # make newlines the only separator
+for sample in $(cat remainingDL.txt)
+do
+    ./prefetch -X 50G --ascp-path '/software/apps/aspera/3.7.2.354/bin/ascp|/software/apps/aspera/3.7.2.354/etc/asperaweb_id_dsa.openssh' $sample
+done
+```
+
+I'm just going to ask this question online re: how to use the annotation file.
+
+I also have to play with this command a bit to get the information I want:
+
+`cat GTEx_v7_Annotations_SampleAttributesDS.txt | sed -e1,1d | awk -F '\t' '{if ($17 == "RNASEQ") print $1}' > gtex_v7_analysis_freeze.txt`
+
+#### Mon 04 Feb 2019 02:11:31 PM EST 
+Just met with Rajiv. I should go ahead and download those above files, and basically I'll just figure out for myself how to use the analysis freeze samples.
+
+
 ### 02/03/2019
 #### Sun 03 Feb 2019 08:30:24 AM EST 
 ~~`filter_bam` is done running and quickcheck returned no errors.~~ `bam2junc` is done running.
@@ -22,6 +65,9 @@ also remember
 Done with intron clustering. Maybe do it on the dev node next time. Nothing bad happened but it could have.
 
 Submitted `QTLtools_filter.sh`.
+
+#### Sun 03 Feb 2019 10:36:52 PM EST 
+Just ran `sraNameChangeSort.R`. Keep getting outputs of tissues other than just whole blood: amygdala, Lung, skin (sun-exposed), caudate, spinal cord. Not sure why this is; should only be whole blood. I will investiage this tomorrow.
 
 ### 02/02/2019
 #### Sat 02 Feb 2019 08:26:52 AM EST 

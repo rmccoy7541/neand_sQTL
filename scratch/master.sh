@@ -94,7 +94,7 @@ tar -xzf GTEx_Analysis_v7_eQTL_covariates.tar.gz
 ## Step 5 - QTLtools Preparation
 ################################################
 
-mv ${homeDir}/Ne-sQTL/data/01-22-2019/GTExTissueKey.txt $PWD
+mv ${homeDir}/Ne-sQTL/data/01-22-2019/GTExTissueKey.csv $PWD
 # get the tissue sites for each corresonding sra file
 Rscript --vanilla ${homeDir}/Ne-sQTL/src/01-09-2019/sraTissueExtract.R ${homeDir}/Ne-sQTL/data/SraRunTable.txt GTExTissueKey.csv
 
