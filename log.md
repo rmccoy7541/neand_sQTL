@@ -13,6 +13,30 @@ also remember
 - CrossRef the GTEx file that contains all of our samples of interest
 - use samtools to convert cram files to bam files to use with leafcutter
 
+### 02/05/2019
+#### Tue 05 Feb 2019 10:55:40 AM EST 
+I was working on my windows laptop last night and forgot to push the changes to GitHub, but I basically remember what I was stuck on. I have a file named `SRRs.sorted` which contains all of the SRR IDs with the GTEx sample IDs for all whole blood samples. What I want to do is compare those to the sample IDs that were used for eQTL analysis, get the matching GTEx IDs and turn those back into SRR IDs to then determine which of those I've already converted and if I need to convert any other files to `.junc`.
+
+Okay, so the analysis freeze is 11,688 samples big. I now have to extract all of the samples that match the sample IDs of the whole bloods I'm working with.
+
+`awk 'FNR==NR {a[$1]=$2; print a[$1]; next}; $1 in a {print a[$1]}' SRRGTEX.txt SRRs.txt`
+`919`
+
+Why 919? That's too many. There should be fewer than that.
+
+#### Tue 05 Feb 2019 12:40:51 PM EST 
+Rajiv and I have determined that there are some files that we cannot access that were used in the eQTL analysis. There are also several SRAs that correspond to some of the same samples.
+
+```
+GTEX-V955-0005-SM-3P5ZC	SRR5125400
+GTEX-V955-0005-SM-3P5ZC	SRR5125401
+GTEX-V955-0005-SM-3P5ZC	SRR810595
+```
+
+These guys are all duplicates.
+
+There is a new file called `samples_used.txt` in the `data/` directory. There, you will find our map for samples IDs/SRRs/subject IDs.
+
 ### 02/04/2019
 #### Mon 04 Feb 2019 11:09:54 AM EST 
 I'm going to just delete all lines in `tissue_table.txt` that contain non-whole blood information and see if that does anything.
