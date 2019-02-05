@@ -55,6 +55,15 @@ I also have to play with this command a bit to get the information I want:
 #### Mon 04 Feb 2019 02:11:31 PM EST 
 Just met with Rajiv. I should go ahead and download those above files, and basically I'll just figure out for myself how to use the analysis freeze samples.
 
+#### 6:31 PM 2/4/2019
+There is no column in the analysis freeze for SRR number, which means that I have to get the GTEx IDs for each of the SRA's, compare them to GTEx IDs as part of the freeze. I don't know.
+
+For the dbGaP metadata, Column 25 is the GTEx sample ID. Column 21 is SRR. 
+
+`while read line; do cut -f1 -d '.'; done < sraDL.txt > SRRs.txt`
+
+Above is how I got all of the SRR ID's of the files I have now. Now I need to get the full GTEx ID's for each of these guys using the whole blood metadata, and lastly see which of those sample IDs were **not** excluded from the eQTL analysis, then convert the GTEx samples that were not excluded back into SRR IDs, then move the corresponding SRRs to a seperate folder and do LC again. Fortunately, except for those 11 SRAs I forgot to download, I won't need to do much conversions.
+
 
 ### 02/03/2019
 #### Sun 03 Feb 2019 08:30:24 AM EST 
