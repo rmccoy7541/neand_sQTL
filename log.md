@@ -37,6 +37,59 @@ These guys are all duplicates.
 
 There is a new file called `samples_used.txt` in the `data/` directory. There, you will find our map for samples IDs/SRRs/subject IDs.
 
+```
+IFS=$'\n'       # make newlines the only separator
+for sample in $(cat samples_used.txt)
+do
+    echo $sample | cut -f3
+done
+```
+
+#### Tue 05 Feb 2019 01:29:15 PM EST 
+
+```
+[aseyedi2@jhu.edu@rmccoy22-dev Ne_sQTL]$ diff -y SRR_freezeSORT_bam.txt convertedbams.txt 
+...
+SRR5125340.sra.bam					      |	SRR2164650.sra.bam
+SRR5125397.sra.bam					      |	SRR2167857.sra.bam
+SRR5125400.sra.bam					      |	SRR2170217.sra.bam
+SRR5125580.sra.bam					      |	SRR2170696.sra.bam
+SRR5125595.sra.bam					      |	SRR2170864.sra.bam
+...
+```
+The files on the left are those that I have not already converted to `bam` but are required by the analysis freeze.
+
+```
+SRR5125340.sra
+SRR5125397.sra
+SRR5125400.sra
+SRR5125580.sra
+SRR5125595.sra
+```
+
+
+```
+#!/bin/bash
+#SBATCH --job-name=sra2bam
+#SBATCH --time=16:0:0
+#SBATCH --partition=shared
+#SBATCH --nodes=1
+# number of tasks (processes) per node
+#SBATCH --ntasks-per-node=24
+#SBATCH --array=1-5
+
+ml samtools
+ml sra-tools
+
+line=`sed "${SLURM_ARRAY_TASK_ID}q;d" to_convert_toBam.txt`
+
+time {
+	sam-dump $line | samtools view --threads 23 -bS - > ${line}.bam
+}
+```
+
+After they're done converting to bam, I have to filter and convert them to junc: `Reaminingto_filter.txt`
+
 ### 02/04/2019
 #### Mon 04 Feb 2019 11:09:54 AM EST 
 I'm going to just delete all lines in `tissue_table.txt` that contain non-whole blood information and see if that does anything.
