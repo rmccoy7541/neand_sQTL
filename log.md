@@ -64,6 +64,16 @@ For the dbGaP metadata, Column 25 is the GTEx sample ID. Column 21 is SRR.
 
 Above is how I got all of the SRR ID's of the files I have now. Now I need to get the full GTEx ID's for each of these guys using the whole blood metadata, and lastly see which of those sample IDs were **not** excluded from the eQTL analysis, then convert the GTEx samples that were not excluded back into SRR IDs, then move the corresponding SRRs to a seperate folder and do LC again. Fortunately, except for those 11 SRAs I forgot to download, I won't need to do much conversions.
 
+#### 8:22 PM 2/4/2019
+
+`awk '{ print $21, "\t",  $26 }' WholeBlood.txt > SRRGTEX.txt`
+
+I got the whole blood and SRR metadata.
+
+#### 8:47 PM 2/4/2019
+~~I'm stuck. I have `awk 'FNR==NR {a[$1]=$0; next}; $1 in a {print a[$1]}' SRRGTEX.txt SRRs.sorted`. `SRRGTEX` is the metadata, SRRs.sorted is what I have. I'm trying to get the GTEX ID's of the samples I have, match them to the GTEx~~
+
+I'm lost. I have the GTEx freeze samples, and I used that line that Rajiv gave me to get all of the samples used in eQTL analysis, but `wc -l` reveals that that's 11688 entries, which is all of the samples sequenced. All I want is the SRR's of the samples used in eQTL analysis. I can do this by finding the GTEx ID for all samples that are not excluded according to the annotation file, then matching those IDs to the corresponding SRRs, and then using those SRRs (which are like 367 or something) to determine which of the SRR files need to be converted/LC'd. Gotta meet with Rajiv tomorrow.
 
 ### 02/03/2019
 #### Sun 03 Feb 2019 08:30:24 AM EST 
