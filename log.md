@@ -13,6 +13,138 @@ also remember
 - CrossRef the GTEx file that contains all of our samples of interest
 - use samtools to convert cram files to bam files to use with leafcutter
 
+### 02/06/2019
+#### Wed 06 Feb 2019 07:37:21 AM EST 
+Our new friends are done converting. I'm going to catch them up along the pipeline.
+
+Filtering now.
+
+SRR5125340
+SRR5125397
+SRR5125400
+SRR5125580
+SRR5125595
+
+I'm right before the phenotype mapping step.
+
+
+SRR607214 got left behind; need to convert to bam, filt, junc.
+
+`./sam-dump SRR607214.sra | ./samtools view --threads 23 -bS - > SRR607214.sra.bam`
+
+Once I catch this last remaining file up to speed, I am ready to prepare phenotype table.
+
+#### Wed 06 Feb 2019 11:02:00 AM EST 
+Still processing.
+
+#### Wed 06 Feb 2019 12:13:38 PM EST 
+Done, and up to intron clustering step. Now I have to use `sorted_SRRsNeeded.txt` (n = 391) to do junc stuff.
+
+`python ../../../aseyedi2/leafcutter/clustering/leafcutter_cluster.py -j sorted_SRRsNeeded.txt -r intronclustering/ -m 50 -o Ne-sQTL -l 500000`
+
+
+Used this line to concatenate the whole blood samples:
+
+`for q in {1..22}; do echo "Chr $q..."; awk 'FNR==1 && NR!=1{next;}{print}' "${q}_WHLBLD.txt" >> WHLBLD.txt; done;`
+
+I did a bunch of stuff that I didn't log because it was a pain the the ass, but basically nothing out of the ordinary, I just followed the steps in the master script but applied them to just one tissue type. Now I'm running into a problem where I run `mergePCs.R` with both the GTEx-supplied covariates and the LC-generated covariates as inputs and I'm getting an essentially blank file with all of the appropriate headers as the output. I sent the inputs and the script over to Rajiv to get his insight. 
+
+-------
+
+Below are all the commands we ran yesterday. We did too much for me to keep perfect track of. I only included the most important ones.
+```
+cat GTEx_v7_Annotations_SampleAttributesDS.txt | awk -F '\t' '{if ($17 == "RNASEQ" && $7 == "Whole Blood") print $1}' | sort > whole_blood_analysis_freeze.txt
+
+cat WholeBlood.txt | cut -f21,23 | sed -e 1,1d | sort -k2,2 > srr2gtex_sampleid.txt
+
+join -1 2 -2 1 srr2gtex_sampleid.txt whole_blood_analysis_freeze.txt | awk '{print $1"\t"$2}' > matchedIDs.txt
+
+matchedIDs.txt | tr '-' '\t' | awk '{print $1"-"$2"\t"$1"-"$2"-"$3"-"$4"-"$5"\t"$6}' > subject_sample_srr.txt
+
+zcat GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz | head -1000 | grep '#' | tail -1 | cut -f10- | tr '\t' '\n' | sort > genotyped_subjects.txt
+
+cat subject_sample_srr.txt | awk -F"\t" '!_[$1]++' > samples_used.txt
+```
+
+
+
+### 02/05/2019
+#### Tue 05 Feb 2019 10:55:40 AM EST 
+I was working on my windows laptop last night and forgot to push the changes to GitHub, but I basically remember what I was stuck on. I have a file named `SRRs.sorted` which contains all of the SRR IDs with the GTEx sample IDs for all whole blood samples. What I want to do is compare those to the sample IDs that were used for eQTL analysis, get the matching GTEx IDs and turn those back into SRR IDs to then determine which of those I've already converted and if I need to convert any other files to `.junc`.
+
+Okay, so the analysis freeze is 11,688 samples big. I now have to extract all of the samples that match the sample IDs of the whole bloods I'm working with.
+
+`awk 'FNR==NR {a[$1]=$2; print a[$1]; next}; $1 in a {print a[$1]}' SRRGTEX.txt SRRs.txt`
+`919`
+
+Why 919? That's too many. There should be fewer than that.
+
+#### Tue 05 Feb 2019 12:40:51 PM EST 
+Rajiv and I have determined that there are some files that we cannot access that were used in the eQTL analysis. There are also several SRAs that correspond to some of the same samples.
+
+```
+GTEX-V955-0005-SM-3P5ZC	SRR5125400
+GTEX-V955-0005-SM-3P5ZC	SRR5125401
+GTEX-V955-0005-SM-3P5ZC	SRR810595
+```
+
+These guys are all duplicates.
+
+There is a new file called `samples_used.txt` in the `data/` directory. There, you will find our map for samples IDs/SRRs/subject IDs.
+
+```
+IFS=$'\n'       # make newlines the only separator
+for sample in $(cat samples_used.txt)
+do
+    echo $sample | cut -f3
+done
+```
+
+#### Tue 05 Feb 2019 01:29:15 PM EST 
+
+```
+[aseyedi2@jhu.edu@rmccoy22-dev Ne_sQTL]$ diff -y SRR_freezeSORT_bam.txt convertedbams.txt 
+...
+SRR5125340.sra.bam					      |	SRR2164650.sra.bam
+SRR5125397.sra.bam					      |	SRR2167857.sra.bam
+SRR5125400.sra.bam					      |	SRR2170217.sra.bam
+SRR5125580.sra.bam					      |	SRR2170696.sra.bam
+SRR5125595.sra.bam					      |	SRR2170864.sra.bam
+...
+```
+The files on the left are those that I have not already converted to `bam` but are required by the analysis freeze.
+
+```
+SRR5125340.sra
+SRR5125397.sra
+SRR5125400.sra
+SRR5125580.sra
+SRR5125595.sra
+```
+
+
+```
+#!/bin/bash
+#SBATCH --job-name=sra2bam
+#SBATCH --time=16:0:0
+#SBATCH --partition=shared
+#SBATCH --nodes=1
+# number of tasks (processes) per node
+#SBATCH --ntasks-per-node=24
+#SBATCH --array=1-5
+
+ml samtools
+ml sra-tools
+
+line=`sed "${SLURM_ARRAY_TASK_ID}q;d" to_convert_toBam.txt`
+
+time {
+	sam-dump $line | samtools view --threads 23 -bS - > ${line}.bam
+}
+```
+
+After they're done converting to bam, I have to filter and convert them to junc: `Reaminingto_filter.txt`
+
 ### 02/04/2019
 #### Mon 04 Feb 2019 11:09:54 AM EST 
 I'm going to just delete all lines in `tissue_table.txt` that contain non-whole blood information and see if that does anything.
