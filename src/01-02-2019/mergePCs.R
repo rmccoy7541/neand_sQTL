@@ -2,7 +2,6 @@
 require("data.table")
 # arg 1 is leafcutter PCs, arg 2 is GTEx covariate file for tissue
 args = commandArgs(trailingOnly=TRUE)
-library("data.table")
 leafcut <- fread(args[1])
 #leafcut <- fread("testNE_sQTL_perind.counts.gz.PCs")
 gtexPC <- fread(args[2])

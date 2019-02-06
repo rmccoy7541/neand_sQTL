@@ -57,7 +57,11 @@ cd juncfiles/
 # strip junc files - STILL WITH RUN ID 'SRR######'
 find -type f -name '*.sra.bam.filt.junc' | while read f; do mv "$f" "${f%.sra.bam.filt.junc}"; done
 # put all of the renamed junc files in a text
-ls SRR* >> juncfiles.txt
+
+## make it v7 Analysis freeze juncs ONLY
+# sorted_SRRsNeeded.txt
+
+#ls SRR* >> juncfiles.txt
 # intron clustering
 mkdir intronclustering/
 ### call an interactive session with a good deal of memory for this step
@@ -106,15 +110,22 @@ rm *Leukemia*
 #this code is problematic - I can't have any whitespaces in filenames, yet the that's all they have in tissue_table
 # getting the tissue names from metadata - 48 tissues in all
 cat tissue_table.txt | cut -f3 | awk '{if(NR>1)print}' |  awk '!seen[$0]++' > tissuenames.txt
-mkdir cattissues
+#mkdir cattissues
+mkdir WHLBLD/
+
 
 # concatenate all tissues from chr 1-22 such that all chromosomes are found in one file per tissue
-for i in {1..48}; do line=`sed "${i}q;d" tissuenames.txt`; echo "Concatenating $line..."; for q in {1..22}; do echo "Chr $q..."; awk 'FNR==1 && NR!=1{next;}{print}' "${q}_${line}.txt" > "${line}".txt; rm "${q}_${line}.txt" done; done #formerly cat "${q}_${line}.txt" >> ... let's see if this works ; did this to prevent writing the header multiple times
+#for i in {1..48}; do line=`sed "${i}q;d" tissuenames.txt`; echo "Concatenating $line..."; for q in {1..22}; do echo "Chr $q..."; awk 'FNR==1 && NR!=1{next;}{print}' "${q}_${line}.txt" > "${line}".txt; rm "${q}_${line}.txt" done; done #formerly cat "${q}_${line}.txt" >> ... let's see if this works ; did this to prevent writing the header multiple times
 
-mv 1-22_* cattissues/
+
+#specifically just for whole blood samples
+for q in {1..22}; do echo "Chr $q..."; awk 'FNR==1 && NR!=1{next;}{print}' "${q}_${line}.txt" >> WHLBLOOD.txt; done;
+
+
+mv WHLBLD.txt WHLBLD/
 
 # Parts of this next line may appear redundant. That's okay. it just creates a directory for each concatenated tissue phenotype file and moves it in there.
-for file in cattissues/*; do i=$(echo $file); q=$(basename "$i"); filename="${q%.*}"; filename=$(echo ${filename#*_}); mkdir tissues/"${filename}"; mv "$file" tissues/"${filename}"; done
+#for file in cattissues/*; do i=$(echo $file); q=$(basename "$i"); filename="${q%.*}"; filename=$(echo ${filename#*_}); mkdir tissues/"${filename}"; mv "$file" tissues/"${filename}"; done
 # at this point, you want to pass each tissue PC file and the leafcutter PC file as command-line arguments into an R script that concatenates the PCs by GTEX ID
 for tissue in GTEx_Analysis_v7_eQTL_covariates/*; do Rscript --vanilla $homeDir/src/12-21-2018/mergePCs.R Ne-sQTL_perind.counts.gz.PCs ${tissue}; echo "Concatenating ${tissue}"; done
 mv *covariates_* tissues/
@@ -157,42 +168,8 @@ cd tissues/
 
 ## Step 4 - Mapping sQTLs using QTLtools
 ################################################
+bgzip -f WHLBLD.txt
 
-find . -name "[1-22]*gz" -print0 | xargs -0 ls > phenpaths.txt
+tabix -p bed WHLBLD.txt.gz
 
-
-phenpaths=$(sed 's/ /\\ /g' <<< cat phenpaths.txt)
-
-IFS=$'\n'       # make newlines the only separator
-
-for tissue in $(cat ./phenpaths.txt)    
-do
-    phenpaths=$(sed 's/ /\\ /g' $tissue); echo $phenpaths 
-done
-
-# gets rid of duplicate headers, removes row numbers
-for tissue in $(cat ./phenpaths.txt)    
-do
-    awk '{ if($0 != header) { print; } if(header == "") { header=$0; } }' "$tissue" | sed 's/^[0-9][0-9]*[ \t]*//' | awk '$3!=""' > "$tissue"
-done
-
-for tissue in $(cat ./phenpaths.txt)    
-do
-    bgzip -f "${tissue}"
-done
-
-#same as before, but with .gz
-find . -name "1-22*" -print0 | xargs -0 ls > phenpaths.txt
-
-for tissue in $(cat ./phenpaths.txt)    
-do
-    tabix -p bed $tissue
-done
-
-for tissue in $(cat ./phenpaths.txt)    
-do
-    for chunk in {1..20}; do sbatch --export=tissue=$tissue,chunk=$chunk QTLtools-NomPass.sh; done
-done
-
-
-
+sbatch --export=tissue=WHLBLD.txt.gz QTLtools-NomPass.sh
