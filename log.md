@@ -31,6 +31,8 @@ Nevermind, I forgot that I'm changing the COVARIATE file.
 
 Okay I submitted `QTLtools-NomPass.sh`. I might finally be on the forefront of this project again.
 
+`zcat nominals.chunk*.txt.gz | gzip -c > nominals.all.chunks.txt.gz` to concatenate the outputs.
+
 ### 02/06/2019
 #### Wed 06 Feb 2019 07:37:21 AM EST 
 Our new friends are done converting. I'm going to catch them up along the pipeline.
