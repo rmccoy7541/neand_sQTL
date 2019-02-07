@@ -1,13 +1,13 @@
 #!/usr/bin/env Rscript
 require("data.table")
-# arg 1 is leafcutter PCs, arg 2 is GTEx covariate file for tissue
+# arg 1 is leafcutter PCs, arg 2 is GTEx covariate file for tissue, 3 is tissue_table.txt
 args = commandArgs(trailingOnly=TRUE)
 library("data.table")
-#leafcut <- fread(args[1])
-leafcut <- fread("Ne-sQTL_perind.counts.gz.PCs")
-#gtexPC <- fread(args[2])
-gtexPC <- fread("GTEx_Analysis_v7_eQTL_covariates/Whole_Blood.v7.covariates.txt")
-lookup <- fread("tissue_table.txt")
+leafcut <- fread(args[1])
+#leafcut <- fread("Ne-sQTL_perind.counts.gz.PCs")
+gtexPC <- fread(args[2])
+#gtexPC <- fread("GTEx_Analysis_v7_eQTL_covariates/Whole_Blood.v7.covariates.txt")
+lookup <- fread(args[3])
 # make the use of "id" header standard
 setnames(gtexPC, "ID", "id")
 

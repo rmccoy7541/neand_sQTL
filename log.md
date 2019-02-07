@@ -13,6 +13,24 @@ also remember
 - CrossRef the GTEx file that contains all of our samples of interest
 - use samtools to convert cram files to bam files to use with leafcutter
 
+### 02/07/2019
+#### Thu 07 Feb 2019 10:47:43 AM EST 
+Rajiv got the full list of SRAs that were used in the analysis including the ones with ambiguous IDs, so I have to figure out which ones they are (he sent me a table via slack) and then run LC again. Almost done. Don't forget. I also have to figure out how to change the headers on the final phenotype files for LC to the subject ID, but that's down the line.
+
+Apparently, none of the SRRs he sent me via slack in `whole_blood_analysis_freeze_genotyped.txt` match up with the ones I already have, which is a bit fishy. I messaged Rajiv about it, we'll see what he says.
+
+Okay the above road is a dead-end. We made a new file, `genotyped_samples_used.txt`. I'm using the SRRs from that because those include genotyped files. We are back to the step immediately following junc generation.
+
+Using `genotyped_samples.txt`, n = 355
+
+Okay, I'm at the point after getting `tissue_table.txt` but before `sraNameChangeSort.R`. 
+
+I found a file named just `.txt`. I don't know what it's from, but I have a hunch that it's from `sraNameChangeSort.R`. It's not blank. I will have to investigate this.
+
+Nevermind, I forgot that I'm changing the COVARIATE file.
+
+Okay I submitted `QTLtools-NomPass.sh`. I might finally be on the forefront of this project again.
+
 ### 02/06/2019
 #### Wed 06 Feb 2019 07:37:21 AM EST 
 Our new friends are done converting. I'm going to catch them up along the pipeline.
@@ -27,7 +45,6 @@ SRR5125595
 
 I'm right before the phenotype mapping step.
 
-
 SRR607214 got left behind; need to convert to bam, filt, junc.
 
 `./sam-dump SRR607214.sra | ./samtools view --threads 23 -bS - > SRR607214.sra.bam`
@@ -41,7 +58,6 @@ Still processing.
 Done, and up to intron clustering step. Now I have to use `sorted_SRRsNeeded.txt` (n = 391) to do junc stuff.
 
 `python ../../../aseyedi2/leafcutter/clustering/leafcutter_cluster.py -j sorted_SRRsNeeded.txt -r intronclustering/ -m 50 -o Ne-sQTL -l 500000`
-
 
 Used this line to concatenate the whole blood samples:
 
@@ -65,8 +81,6 @@ zcat GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz | head -1000 | grep '#' | tail -1
 
 cat subject_sample_srr.txt | awk -F"\t" '!_[$1]++' > samples_used.txt
 ```
-
-
 
 ### 02/05/2019
 #### Tue 05 Feb 2019 10:55:40 AM EST 
