@@ -116,7 +116,23 @@ mkdir WHLBLD/
 
 
 #specifically just for whole blood samples
-for q in {1..22}; do echo "Chr $q..."; awk 'FNR==1 && NR!=1{next;}{print}' "${q}_WHLBLD.txt" >> WHLBLD.txt; done;
+# compile phenotype file from chromosome-specific files
+# print the header once
+
+ml htslib
+head -1 1_WHLBLD.txt > phen_fastqtl.bed
+# print each chromosome file without the header
+for i in {1..22}
+do
+  cat ${i}_WHLBLD.txt | sed -e1,1d >> phen_fastqtl.bed
+done
+
+ml bedtools
+# INSERT CODE TO SWAP SRR FOR GTEX-SUBJECT ID HERE
+bedtools sort -header -i phen_fastqtl.bed > WHLBLD.pheno.bed
+bgzip WHLBLD.pheno.bed
+tabix -p bed WHLBLD.pheno.bed.gz
+rm WHLBLD_unsorted.pheno.bed phen_fastqtl.bed
 
 
 mv WHLBLD.txt WHLBLD/
@@ -132,7 +148,7 @@ tar -xzf GTEx_Analysis_v7_eQTL_covariates.tar.gz
 
 Rscript --vanilla ${homeDir}/src/01-02-2019/mergePCs.R ../Ne-sQTL_perind.counts.gz.PCs Whole_Blood.v7.covariates.txt ../tissue_table.txt
 
-echo "Concatenating Whole Blood"
+echo "Concatenating Whole Blood covariates..."
 
 # this code is an absolute mess. I need to clean it up.
 
@@ -176,11 +192,18 @@ echo "Concatenating Whole Blood"
 
 ## Step 4 - Mapping sQTLs using QTLtools
 ################################################
-bgzip -f WHLBLD.txt
-
-tabix -p bed WHLBLD.txt.gz
 
 
 mv ../GTEx_Analysis_v7_eQTL_covariates/Whole_Blood.v7.covariates.txt $PWD
 
-sbatch --export=tissue=WHLBLD.txt.gz QTLtools-NomPass.sh
+
+#for loop for QTLtools
+for i in {1..100}; do ./QTLtools_1.1_Ubuntu14.04_x86_64 cis \
+	--vcf  GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz \
+	--bed "WHLBLD.pheno.bed.gz" \
+	--cov  "Whole_Blood.v7.covariates_output.txt" \
+	--nominal 1  \
+	--chunk $i 100 \
+	--out "WHLBLD_nominals_chunk_${i}.txt"
+done
+#sbatch --export=tissue=WHLBLD.txt.gz QTLtools-NomPass.sh
