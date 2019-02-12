@@ -1,4 +1,4 @@
-﻿# Updates
+﻿#_Updates
 
 These updates are read from most recent date at the top to initial entry at the bottom.
 
@@ -16,6 +16,18 @@ also remember
 ### 02/12/2019
 #### Tue 12 Feb 2019 09:39:00 AM EST 
 The perm pass is taking way too dang long. I'm running it as a batch script now. Rajiv brought to my attention that `NomPassExtract.R` only produced 97 output files, whereas I need 100.
+
+biomart links to ensembl annotation to pull gene info
+
+what are the #s LC puts in phen table
+
+`PermPass.sh` did not have enough time. I upped it from 3 hrs to 12 hrs (just in case). Below is how I was able to extract the numbers for the chunks whose permutation pass failed.
+
+`sacct | grep "TIMEOUT" | awk '{ print $1 }' | cut -f2 -d _ > failedpermpass.txt`
+
+`awk -vORS=, '{ print $1 }' failedpermpass.txt | sed 's/,$/\n/'`
+
+`1,2,4,8,10,13,14,19,20,21,22,23,28,29,30,31,32,33,34,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,69,83,88`
 
 
 ### 02/11/2019
