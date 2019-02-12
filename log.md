@@ -13,6 +13,28 @@ also remember
 - CrossRef the GTEx file that contains all of our samples of interest
 - use samtools to convert cram files to bam files to use with leafcutter
 
+### 02/12/2019
+#### Tue 12 Feb 2019 09:39:00 AM EST 
+
+
+### 02/11/2019
+#### Mon 11 Feb 2019 03:14:59 PM EST 
+Did not document on Friday so not sure what happened. We are now concatenating the nominal pass files while Rajiv performs some manipulations in R to try to figure out how to pull Neandertal sQTLs from the final product.
+
+UCSC Genome Browser hg19
+
+GGV - geography of genetic variants
+
+mpi archaic genome browser
+
+#### Mon 11 Feb 2019 06:35:18 PM EST 
+We covered a lot of ground today. I'm going to go ahead and process the QTL nominal pass results with the script he gave me and go ahead with the proceeding steps of QTLtools.
+
+
+#### Mon 11 Feb 2019 08:49:17 PM EST 
+Made some progress. Started on the permutation pass, filtered out the Neanderthal sequences from the nominal pass. Going to take a break now.
+
+
 ### 02/07/2019
 #### Thu 07 Feb 2019 10:47:43 AM EST 
 Rajiv got the full list of SRAs that were used in the analysis including the ones with ambiguous IDs, so I have to figure out which ones they are (he sent me a table via slack) and then run LC again. Almost done. Don't forget. I also have to figure out how to change the headers on the final phenotype files for LC to the subject ID, but that's down the line.

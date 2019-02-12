@@ -196,8 +196,9 @@ echo "Concatenating Whole Blood covariates..."
 
 mv ../GTEx_Analysis_v7_eQTL_covariates/Whole_Blood.v7.covariates.txt $PWD
 
+cat WHLBLD_nominals_chunk_*.txt | gzip -c > nominals.all.chunks.txt.gz
 
-#for loop for QTLtools
+#for loop for QTLtools nominals
 for i in {1..100}; do ./QTLtools_1.1_Ubuntu14.04_x86_64 cis \
 	--vcf  GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz \
 	--bed "WHLBLD.pheno.bed.gz" \
@@ -207,3 +208,18 @@ for i in {1..100}; do ./QTLtools_1.1_Ubuntu14.04_x86_64 cis \
 	--out "WHLBLD_nominals_chunk_${i}.txt"
 done
 #sbatch --export=tissue=WHLBLD.txt.gz QTLtools-NomPass.sh
+
+ls WHLBLD_* | sort -V >> WHLBLD_chunks.txt
+
+sbatch --wait NomPassExtractCall.sh
+
+cat WHLBLD_nominals_chunk_*_out.txt | gzip -c > nominals.all.chunks.NE_only.txt.gz
+
+for i in {1..100}; do ./QTLtools_1.1_Ubuntu14.04_x86_64 cis \
+	--vcf  GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz \
+	--bed "WHLBLD.pheno.bed.gz" \
+	--cov  "Whole_Blood.v7.covariates_output.txt" \
+	--permute 1000  \
+	--chunk $i 100 \
+	--out "WHLBLD_permutations_chunk_${i}.txt"
+done
