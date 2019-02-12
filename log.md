@@ -15,6 +15,7 @@ also remember
 
 ### 02/12/2019
 #### Tue 12 Feb 2019 09:39:00 AM EST 
+The perm pass is taking way too dang long. I'm running it as a batch script now. Rajiv brought to my attention that `NomPassExtract.R` only produced 97 output files, whereas I need 100.
 
 
 ### 02/11/2019
