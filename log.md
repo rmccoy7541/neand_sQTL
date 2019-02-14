@@ -1,4 +1,4 @@
-﻿#_Updates
+﻿#Updates
 
 These updates are read from most recent date at the top to initial entry at the bottom.
 
@@ -12,6 +12,49 @@ NEW PIPELINE
 also remember
 - CrossRef the GTEx file that contains all of our samples of interest
 - use samtools to convert cram files to bam files to use with leafcutter
+
+### 02/14/2019
+#### Thu 14 Feb 2019 08:14:27 AM EST 
+I forced normal distro for perm pass and that apparently fixed the problem. I'm now re-running conditional pass.
+
+### 02/13/2019
+#### Wed 13 Feb 2019 09:36:34 AM EST 
+Produced a permutation pass. Doing FDR correction:
+
+`Rscript ../../../../../progs/QTLtools/script/runFDR_cis.R permutations_full.txt.gz 0.05 permuatations_full_FDR`
+
+```
+Processing fastQTL output
+  * Input  = [ permutations_full.txt.gz ]
+  * FDR    =  0.05 
+  * Output = [ permuatations_full_FDR ]
+
+Read Input data
+  * Number of molecular phenotypes = 99351 
+  * Number of NA lines = 0 
+  * Correlation between Beta approx. and Empirical p-values = 0.9703 
+
+Process Input data with Qvalue
+  * Proportion of significant phenotypes = 0 %
+
+Determine significance thresholds
+  * Corrected p-value threshold =  0.00494386 
+There were 50 or more warnings (use warnings() to see the first 50)
+There were 50 or more warnings (use warnings() to see the first 50)
+  * pval0 =  NaN  +/-  NA 
+  * test0 =  NaN  +/-  NA 
+  * corr0 =  NaN  +/-  NA 
+  * test1 =  NaN  +/-  NA 
+  * pval1 =  NaN  +/-  NA 
+
+Write significant hits in [ permuatations_full_FDR.significant.txt ]
+
+Write nominal thresholds in [ permuatations_full_FDR.thresholds.txt ]
+```
+
+#### Wed 13 Feb 2019 10:37:04 AM EST 
+According to Rajiv, we have a problematic distribution of p-values. However, LC forces QQ normalization for its phenotype outputs, so I have to force normal distribution for the permutation and conditional passes.
+
 
 ### 02/12/2019
 #### Tue 12 Feb 2019 09:39:00 AM EST 
@@ -28,6 +71,9 @@ what are the #s LC puts in phen table
 `awk -vORS=, '{ print $1 }' failedpermpass.txt | sed 's/,$/\n/'`
 
 `1,2,4,8,10,13,14,19,20,21,22,23,28,29,30,31,32,33,34,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,69,83,88`
+
+#### Tue 12 Feb 2019 06:33:18 PM EST 
+I messed up `PermPass.sh`. Fixed it, check out version history.
 
 
 ### 02/11/2019
