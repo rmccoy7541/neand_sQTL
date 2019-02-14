@@ -223,4 +223,6 @@ cat WHLBLD_permutations_chunk_*.txt | gzip -c > permutations_full.txt.gz
 
 Rscript ../../../../../progs/QTLtools/script/runFDR_cis.R permutations_full.txt.gz 0.05 permuatations_full_FDR
 
+cat WHLBLD_conditional_chunk_*.txt | gzip -c > conditional_full.txt.gz
 
+echo "done"

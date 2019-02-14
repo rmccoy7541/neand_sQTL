@@ -17,6 +17,8 @@ also remember
 #### Thu 14 Feb 2019 08:14:27 AM EST 
 I forced normal distro for perm pass and that apparently fixed the problem. I'm now re-running conditional pass.
 
+Conditional pass done. Finally, the results for this project have been generated. Time for the analysis.
+
 ### 02/13/2019
 #### Wed 13 Feb 2019 09:36:34 AM EST 
 Produced a permutation pass. Doing FDR correction:
