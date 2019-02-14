@@ -19,6 +19,9 @@ I forced normal distro for perm pass and that apparently fixed the problem. I'm 
 
 Conditional pass done. Finally, the results for this project have been generated. Time for the analysis.
 
+#### Thu 14 Feb 2019 01:58:55 PM EST 
+I want to experiment with keeping all of the scripts I use in the pipeline just floating around the `/src` directory and see if that makes writing the pipeline any easier.
+
 ### 02/13/2019
 #### Wed 13 Feb 2019 09:36:34 AM EST 
 Produced a permutation pass. Doing FDR correction:
