@@ -1,4 +1,4 @@
-﻿# Updates
+﻿#Updates
 
 These updates are read from most recent date at the top to initial entry at the bottom.
 
@@ -12,6 +12,112 @@ NEW PIPELINE
 also remember
 - CrossRef the GTEx file that contains all of our samples of interest
 - use samtools to convert cram files to bam files to use with leafcutter
+
+### 02/14/2019
+#### Thu 14 Feb 2019 08:14:27 AM EST 
+I forced normal distro for perm pass and that apparently fixed the problem. I'm now re-running conditional pass.
+
+Conditional pass done. Finally, the results for this project have been generated. Time for the analysis.
+
+#### Thu 14 Feb 2019 01:58:55 PM EST 
+I want to experiment with keeping all of the scripts I use in the pipeline just floating around the `/src` directory and see if that makes writing the pipeline any easier.
+
+### 02/13/2019
+#### Wed 13 Feb 2019 09:36:34 AM EST 
+Produced a permutation pass. Doing FDR correction:
+
+`Rscript ../../../../../progs/QTLtools/script/runFDR_cis.R permutations_full.txt.gz 0.05 permuatations_full_FDR`
+
+```
+Processing fastQTL output
+  * Input  = [ permutations_full.txt.gz ]
+  * FDR    =  0.05 
+  * Output = [ permuatations_full_FDR ]
+
+Read Input data
+  * Number of molecular phenotypes = 99351 
+  * Number of NA lines = 0 
+  * Correlation between Beta approx. and Empirical p-values = 0.9703 
+
+Process Input data with Qvalue
+  * Proportion of significant phenotypes = 0 %
+
+Determine significance thresholds
+  * Corrected p-value threshold =  0.00494386 
+There were 50 or more warnings (use warnings() to see the first 50)
+There were 50 or more warnings (use warnings() to see the first 50)
+  * pval0 =  NaN  +/-  NA 
+  * test0 =  NaN  +/-  NA 
+  * corr0 =  NaN  +/-  NA 
+  * test1 =  NaN  +/-  NA 
+  * pval1 =  NaN  +/-  NA 
+
+Write significant hits in [ permuatations_full_FDR.significant.txt ]
+
+Write nominal thresholds in [ permuatations_full_FDR.thresholds.txt ]
+```
+
+#### Wed 13 Feb 2019 10:37:04 AM EST 
+According to Rajiv, we have a problematic distribution of p-values. However, LC forces QQ normalization for its phenotype outputs, so I have to force normal distribution for the permutation and conditional passes.
+
+
+### 02/12/2019
+#### Tue 12 Feb 2019 09:39:00 AM EST 
+The perm pass is taking way too dang long. I'm running it as a batch script now. Rajiv brought to my attention that `NomPassExtract.R` only produced 97 output files, whereas I need 100.
+
+biomart links to ensembl annotation to pull gene info
+
+what are the #s LC puts in phen table
+
+`PermPass.sh` did not have enough time. I upped it from 3 hrs to 12 hrs (just in case). Below is how I was able to extract the numbers for the chunks whose permutation pass failed.
+
+`sacct | grep "TIMEOUT" | awk '{ print $1 }' | cut -f2 -d _ > failedpermpass.txt`
+
+`awk -vORS=, '{ print $1 }' failedpermpass.txt | sed 's/,$/\n/'`
+
+`1,2,4,8,10,13,14,19,20,21,22,23,28,29,30,31,32,33,34,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,69,83,88`
+
+#### Tue 12 Feb 2019 06:33:18 PM EST 
+I messed up `PermPass.sh`. Fixed it, check out version history.
+
+
+### 02/11/2019
+#### Mon 11 Feb 2019 03:14:59 PM EST 
+Did not document on Friday so not sure what happened. We are now concatenating the nominal pass files while Rajiv performs some manipulations in R to try to figure out how to pull Neandertal sQTLs from the final product.
+
+UCSC Genome Browser hg19
+
+GGV - geography of genetic variants
+
+mpi archaic genome browser
+
+#### Mon 11 Feb 2019 06:35:18 PM EST 
+We covered a lot of ground today. I'm going to go ahead and process the QTL nominal pass results with the script he gave me and go ahead with the proceeding steps of QTLtools.
+
+
+#### Mon 11 Feb 2019 08:49:17 PM EST 
+Made some progress. Started on the permutation pass, filtered out the Neanderthal sequences from the nominal pass. Going to take a break now.
+
+
+### 02/07/2019
+#### Thu 07 Feb 2019 10:47:43 AM EST 
+Rajiv got the full list of SRAs that were used in the analysis including the ones with ambiguous IDs, so I have to figure out which ones they are (he sent me a table via slack) and then run LC again. Almost done. Don't forget. I also have to figure out how to change the headers on the final phenotype files for LC to the subject ID, but that's down the line.
+
+Apparently, none of the SRRs he sent me via slack in `whole_blood_analysis_freeze_genotyped.txt` match up with the ones I already have, which is a bit fishy. I messaged Rajiv about it, we'll see what he says.
+
+Okay the above road is a dead-end. We made a new file, `genotyped_samples_used.txt`. I'm using the SRRs from that because those include genotyped files. We are back to the step immediately following junc generation.
+
+Using `genotyped_samples.txt`, n = 355
+
+Okay, I'm at the point after getting `tissue_table.txt` but before `sraNameChangeSort.R`. 
+
+I found a file named just `.txt`. I don't know what it's from, but I have a hunch that it's from `sraNameChangeSort.R`. It's not blank. I will have to investigate this.
+
+Nevermind, I forgot that I'm changing the COVARIATE file.
+
+Okay I submitted `QTLtools-NomPass.sh`. I might finally be on the forefront of this project again.
+
+`zcat nominals.chunk*.txt.gz | gzip -c > nominals.all.chunks.txt.gz` to concatenate the outputs.
 
 ### 02/06/2019
 #### Wed 06 Feb 2019 07:37:21 AM EST 
@@ -27,7 +133,6 @@ SRR5125595
 
 I'm right before the phenotype mapping step.
 
-
 SRR607214 got left behind; need to convert to bam, filt, junc.
 
 `./sam-dump SRR607214.sra | ./samtools view --threads 23 -bS - > SRR607214.sra.bam`
@@ -41,7 +146,6 @@ Still processing.
 Done, and up to intron clustering step. Now I have to use `sorted_SRRsNeeded.txt` (n = 391) to do junc stuff.
 
 `python ../../../aseyedi2/leafcutter/clustering/leafcutter_cluster.py -j sorted_SRRsNeeded.txt -r intronclustering/ -m 50 -o Ne-sQTL -l 500000`
-
 
 Used this line to concatenate the whole blood samples:
 
@@ -68,8 +172,6 @@ zcat GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz | head -1000 | grep '#' | tail -1
 
 cat subject_sample_srr.txt | awk -F"\t" '!_[$1]++' > samples_used.txt
 ```
-
-
 
 ### 02/05/2019
 #### Tue 05 Feb 2019 10:55:40 AM EST 

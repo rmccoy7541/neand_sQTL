@@ -1,0 +1,3 @@
+# 10-17-2018
+
+I realized that the merged Neanderthal x Altrans data in ./data/10-15-2018 had column headers that were off-position. R generated a column of row IDs that fell under the column title "rsID". I spent far too long writing an R script (`ColumnReorder.R`) to fix it before I finally spoke to Rajiv and he gave me a simple Bash script (`ColumnHeaders.sh`) that took care of the problem by inserting the column header `"RowID"` at the beginning of each file.

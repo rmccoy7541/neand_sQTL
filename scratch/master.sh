@@ -58,8 +58,7 @@ cd juncfiles/
 find -type f -name '*.sra.bam.filt.junc' | while read f; do mv "$f" "${f%.sra.bam.filt.junc}"; done
 # put all of the renamed junc files in a text
 
-## make it v7 Analysis freeze juncs ONLY
-# sorted_SRRsNeeded.txt
+## make it v7 Analysis freeze juncs ONLY && GENOTYPED
 
 #ls SRR* >> juncfiles.txt
 # intron clustering
@@ -91,9 +90,7 @@ ls *.qtltools >> qtltools-input.txt
 # generate the corresponding tbi files
 rm Ne*tbi
 for i in {1..22}; do tabix -p bed Ne-sQTL_perind.counts.gz.qqnorm_chr${i}.gz.qtltools; echo "Bedding chromosome $i"; done
-# download genotype covariates
-wget https://storage.googleapis.com/gtex_analysis_v7/single_tissue_eqtl_data/GTEx_Analysis_v7_eQTL_covariates.tar.gz
-tar -xzf GTEx_Analysis_v7_eQTL_covariates.tar.gz
+
 
 ## Step 5 - QTLtools Preparation
 ################################################
@@ -119,7 +116,23 @@ mkdir WHLBLD/
 
 
 #specifically just for whole blood samples
-for q in {1..22}; do echo "Chr $q..."; awk 'FNR==1 && NR!=1{next;}{print}' "${q}_${line}.txt" >> WHLBLOOD.txt; done;
+# compile phenotype file from chromosome-specific files
+# print the header once
+
+ml htslib
+head -1 1_WHLBLD.txt > phen_fastqtl.bed
+# print each chromosome file without the header
+for i in {1..22}
+do
+  cat ${i}_WHLBLD.txt | sed -e1,1d >> phen_fastqtl.bed
+done
+
+ml bedtools
+# INSERT CODE TO SWAP SRR FOR GTEX-SUBJECT ID HERE
+bedtools sort -header -i phen_fastqtl.bed > WHLBLD.pheno.bed
+bgzip WHLBLD.pheno.bed
+tabix -p bed WHLBLD.pheno.bed.gz
+rm WHLBLD_unsorted.pheno.bed phen_fastqtl.bed
 
 
 mv WHLBLD.txt WHLBLD/
@@ -127,9 +140,20 @@ mv WHLBLD.txt WHLBLD/
 # Parts of this next line may appear redundant. That's okay. it just creates a directory for each concatenated tissue phenotype file and moves it in there.
 #for file in cattissues/*; do i=$(echo $file); q=$(basename "$i"); filename="${q%.*}"; filename=$(echo ${filename#*_}); mkdir tissues/"${filename}"; mv "$file" tissues/"${filename}"; done
 # at this point, you want to pass each tissue PC file and the leafcutter PC file as command-line arguments into an R script that concatenates the PCs by GTEX ID
-for tissue in GTEx_Analysis_v7_eQTL_covariates/*; do Rscript --vanilla $homeDir/src/12-21-2018/mergePCs.R Ne-sQTL_perind.counts.gz.PCs ${tissue}; echo "Concatenating ${tissue}"; done
-mv *covariates_* tissues/
-cd tissues/
+
+# download genotype covariates
+wget https://storage.googleapis.com/gtex_analysis_v7/single_tissue_eqtl_data/GTEx_Analysis_v7_eQTL_covariates.tar.gz
+tar -xzf GTEx_Analysis_v7_eQTL_covariates.tar.gz
+
+
+Rscript --vanilla ${homeDir}/src/01-02-2019/mergePCs.R ../Ne-sQTL_perind.counts.gz.PCs Whole_Blood.v7.covariates.txt ../tissue_table.txt
+
+echo "Concatenating Whole Blood covariates..."
+
+# this code is an absolute mess. I need to clean it up.
+
+#mv *covariates_* WHLBLD/
+#cd WHLBLD/
 
 # Moving covariates to corresponding directories
 ################################################
@@ -168,8 +192,37 @@ cd tissues/
 
 ## Step 4 - Mapping sQTLs using QTLtools
 ################################################
-bgzip -f WHLBLD.txt
 
-tabix -p bed WHLBLD.txt.gz
 
-sbatch --export=tissue=WHLBLD.txt.gz QTLtools-NomPass.sh
+mv ../GTEx_Analysis_v7_eQTL_covariates/Whole_Blood.v7.covariates.txt $PWD
+
+
+
+#for loop for QTLtools nominals
+for i in {1..100}; do ./QTLtools_1.1_Ubuntu14.04_x86_64 cis \
+	--vcf  GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz \
+	--bed "WHLBLD.pheno.bed.gz" \
+	--cov  "Whole_Blood.v7.covariates_output.txt" \
+	--nominal 1  \
+	--chunk $i 100 \
+	--out "WHLBLD_nominals_chunk_${i}.txt"
+done
+
+cat WHLBLD_nominals_chunk_*.txt | gzip -c > nominals.all.chunks.txt.gz
+#sbatch --export=tissue=WHLBLD.txt.gz QTLtools-NomPass.sh
+
+ls WHLBLD_* | sort -V >> WHLBLD_chunks.txt
+
+sbatch --wait NomPassExtractCall.sh
+
+cat WHLBLD_nominals_chunk_*_out.txt | gzip -c > nominals.all.chunks.NE_only.txt.gz
+
+sbatch --wait PermPass.sh
+
+cat WHLBLD_permutations_chunk_*.txt | gzip -c > permutations_full.txt.gz
+
+Rscript ../../../../../progs/QTLtools/script/runFDR_cis.R permutations_full.txt.gz 0.05 permuatations_full_FDR
+
+cat WHLBLD_conditional_chunk_*.txt | gzip -c > conditional_full.txt.gz
+
+echo "done"
