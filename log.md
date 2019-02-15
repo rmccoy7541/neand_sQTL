@@ -49,6 +49,9 @@ Used this line to concatenate the whole blood samples:
 
 I did a bunch of stuff that I didn't log because it was a pain the the ass, but basically nothing out of the ordinary, I just followed the steps in the master script but applied them to just one tissue type. Now I'm running into a problem where I run `mergePCs.R` with both the GTEx-supplied covariates and the LC-generated covariates as inputs and I'm getting an essentially blank file with all of the appropriate headers as the output. I sent the inputs and the script over to Rajiv to get his insight. 
 
+#### 3:22 PM 2/6/2019
+Okay the problem is that I use different ID schemes in the two PC files, so the GTEx one is in subject ID whereas the LC one is in SRR. pretty obvious in hindsight. I have to convert the headers to the subject ID to match the GTEx scheme.
+
 -------
 
 Below are all the commands we ran yesterday. We did too much for me to keep perfect track of. I only included the most important ones.
