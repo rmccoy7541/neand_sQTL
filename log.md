@@ -13,6 +13,12 @@ also remember
 - CrossRef the GTEx file that contains all of our samples of interest
 - use samtools to convert cram files to bam files to use with leafcutter
 
+### 02/19/2019
+#### Tue 19 Feb 2019 02:55:46 PM EST 
+We did it. We went from beginning to end on one set of tissues (whole blood). I'm going to do this again but for brain tissues and testis, and I'm going to split them up by brain region.
+
+UPDATE: Okay dbGaP is broken. For the time being, I'm going to rerun leafcutter but with a threshold of 0% for the intron excision filter. Okay, I'm running `sraNameChangeSort.R` right now but on a ton of different introns.
+
 ### 02/14/2019
 #### Thu 14 Feb 2019 08:14:27 AM EST 
 I forced normal distro for perm pass and that apparently fixed the problem. I'm now re-running conditional pass.
