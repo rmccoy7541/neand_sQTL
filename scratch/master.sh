@@ -31,7 +31,7 @@ cd ncbi/sra
 ls *.sra >> sralist.txt
 # submit batch job, return stdout in $RES
 #jid1=$(sbatch --wait ${homeDir}/ncbi/src/12-14-2018/sra2bam.sh)
-jid1=$(sbatch --wait ${homeDir}/Ne-sQTL/src/12-14-2018/sra2bam.sh)
+jid1=$(sbatch --wait ${homeDir}/Ne-sQTL/src/sh/sra2bam.sh)
 
 ## samtools quickcheck to validate bams
 
