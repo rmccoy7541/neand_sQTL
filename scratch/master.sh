@@ -82,6 +82,13 @@ sbatch --wait ${homeDir}/Ne-sQTL/src/12-18-2018/bcf_tools.sh $homeDir
 # index our friend with tabix
 echo "Indexing our friend..."
 tabix -p vcf GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz
+
+
+
+## Step 5 - QTLtools Preparation
+################################################
+
+
 # prepare files for QTLtools
 ls *qqnorm*.gz >> leafcutterphenotypes.txt 
 # important: render these files compatible with QTLtools
@@ -90,10 +97,6 @@ ls *.qtltools >> qtltools-input.txt
 # generate the corresponding tbi files
 rm Ne*tbi
 for i in {1..22}; do tabix -p bed Ne-sQTL_perind.counts.gz.qqnorm_chr${i}.gz.qtltools; echo "Bedding chromosome $i"; done
-
-
-## Step 5 - QTLtools Preparation
-################################################
 
 mv ${homeDir}/Ne-sQTL/data/01-22-2019/GTExTissueKey.csv $PWD
 # get the tissue sites for each corresonding sra file
@@ -132,10 +135,9 @@ ml bedtools
 bedtools sort -header -i phen_fastqtl.bed > WHLBLD.pheno.bed
 bgzip WHLBLD.pheno.bed
 tabix -p bed WHLBLD.pheno.bed.gz
-rm WHLBLD_unsorted.pheno.bed phen_fastqtl.bed
+rm phen_fastqtl.bed
 
-
-mv WHLBLD.txt WHLBLD/
+mv *_WHLBLD.txt WHLBLD/
 
 # Parts of this next line may appear redundant. That's okay. it just creates a directory for each concatenated tissue phenotype file and moves it in there.
 #for file in cattissues/*; do i=$(echo $file); q=$(basename "$i"); filename="${q%.*}"; filename=$(echo ${filename#*_}); mkdir tissues/"${filename}"; mv "$file" tissues/"${filename}"; done
@@ -193,6 +195,8 @@ echo "Concatenating Whole Blood covariates..."
 ## Step 4 - Mapping sQTLs using QTLtools
 ################################################
 
+
+##### Make this part useable for any tissue and not just whole blood
 
 mv ../GTEx_Analysis_v7_eQTL_covariates/Whole_Blood.v7.covariates.txt $PWD
 

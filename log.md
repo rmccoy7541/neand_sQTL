@@ -13,6 +13,17 @@ also remember
 - CrossRef the GTEx file that contains all of our samples of interest
 - use samtools to convert cram files to bam files to use with leafcutter
 
+### 02/21/2019
+#### Thu 21 Feb 2019 12:56:35 PM EST 
+I haven't been great at keeping up with the log lately, but basically we're redoing the WHLBLD pipeline but filtering out NO introns for `prepare_phenotype_table.py`. 
+
+I just submitted `QTLtools-Filter.sh` on the WHLBLD samples. While I have that going on, in parallel, I want to convert - Okay, the sra -> bam conversions for the cerebellum sra's were all broken pretty much:
+
+```
+[aseyedi2@jhu.edu@bc-login01 brain_cerebellum]$ egrep -L -I "err|fail" slurm-32611501_* | wc -l
+129
+```
+
 ### 02/19/2019
 #### Tue 19 Feb 2019 02:55:46 PM EST 
 We did it. We went from beginning to end on one set of tissues (whole blood). I'm going to do this again but for brain tissues and testis, and I'm going to split them up by brain region.
