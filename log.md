@@ -24,6 +24,19 @@ I just submitted `QTLtools-Filter.sh` on the WHLBLD samples. While I have that g
 129
 ```
 
+Moving testis over to the project directory. Shifting gears back to WHLBLD.
+
+Two files did not survive the conversion to bam.
+```
+SRR2135355.sra.bam had no targets in header.
+SRR2135374.sra.bam had no targets in header.
+
+```
+I'm just going to get rid of them since I've already tried to make them work.
+
+Running QTLtools nominal pass on the full set of introns for whole blood. 
+
+
 ### 02/19/2019
 #### Tue 19 Feb 2019 02:55:46 PM EST 
 We did it. We went from beginning to end on one set of tissues (whole blood). I'm going to do this again but for brain tissues and testis, and I'm going to split them up by brain region.

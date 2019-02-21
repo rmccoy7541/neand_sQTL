@@ -3,7 +3,10 @@
 ##########################################################################################################################################
 # This is the master script that prepares and submits all jobs for LeafCutter								 #
 # At the highest directory, it is assumed that the files are arranged as such:								 #
-# ncbi/		leafcutter/		Ne-sQTL/		master.sh								 #
+# Ne_sQTL/		aseyedi2/leafcutter/		aseyedi2/neand_sQTL/		master.sh					 #
+#																	 #
+# Don't ask why the git project name and the ncbi folder name (Ne_sQTL) are so similar. I messed up and am too afraid to fix it.	 #
+#																	 #
 # It is also assumed that the GTEx VCF file for the whole genome has already been downloaded and resides in ncbi/files/ 		 #
 # 	(see Documentation for details)													 #
 # Finally, please make sure that you have also downloaded the SRA files in ncbi/sra/ AND their corresponding SRA metadata 		 #
@@ -20,18 +23,23 @@ ml htslib
 ml R
 # ml qtltools - once MARCC guys install it
 ml
+
+# were are at ~ right now, which is /home-1/aseyedi2@jhu.edu
+cd work/
+mv aseyedi2/neand_sQTL/master.sh $PWD
+
 # the directory of master.sh
-homeDir = $(pwd -P)
+homeDir=$(pwd -P)
+scripts=$("/home-1/aseyedi2@jhu.edu/work/aseyedi2/neand_sQTL/src/Primary/")
 
 ## Step 1 - Conversion
 ################################################
 # convert .sra to .bam files
-cd ncbi/sra
+cd Ne_sQTL/sra
 # store all .sra names into text file for job array
 ls *.sra >> sralist.txt
 # submit batch job, return stdout in $RES
-#jid1=$(sbatch --wait ${homeDir}/ncbi/src/12-14-2018/sra2bam.sh)
-jid1=$(sbatch --wait ${homeDir}/Ne-sQTL/src/sh/sra2bam.sh)
+jid1=$(sbatch --wait ${homeDir}/aseyedi2/neand_sQTL/src/sh/sra2bam.sh)
 
 ## samtools quickcheck to validate bams
 
@@ -104,7 +112,7 @@ Rscript --vanilla ${homeDir}/Ne-sQTL/src/01-09-2019/sraTissueExtract.R ${homeDir
 
 
 # submit each LF phenotype file to sraNameChangeSort as command line variable as well as tissue_table.txt
-for phen in *qqnorm*.gz.qtltools; do Rscript --vanilla ${homeDir}/Ne-sQTL/src/01-15-2019/sraNameChangeSort.R $phen tissue_table.txt ; done
+for phen in *qqnorm*.gz.qtltools; do Rscript ${homeDir}/Ne-sQTL/src/01-15-2019/sraNameChangeSort.R $phen tissue_table.txt ; done
 rm *Leukemia*
 
 #this code is problematic - I can't have any whitespaces in filenames, yet the that's all they have in tissue_table
@@ -154,52 +162,11 @@ echo "Concatenating Whole Blood covariates..."
 
 # this code is an absolute mess. I need to clean it up.
 
-#mv *covariates_* WHLBLD/
-#cd WHLBLD/
-
-# Moving covariates to corresponding directories
-################################################
-#for i in *.txt;
-#do
-#  string=$i
-#  until_dot=${string%%.*}
-#  echo "$until_dot"
-#
-#  # Replace all non-alphabetic characters by the glob *
-#  glob_pattern=${until_dot//[^[:alpha:]]/*}
-#  echo "$glob_pattern"
-#
-#  # Use nullglob to have non matching glob expand to nothing
-#  shopt -s nullglob
-#  # DO NOT USE QUOTES IN THE FOLLOWING EXPANSION:
-#  # the variable is actually a glob!
-#  # Could also do dirs=( $glob_pattern*/ ) to check if directory
-#  dirs=( $glob_pattern/ )
-#
-#  # Now check how many matches there are:
-#  if ((${#dirs[@]} == 0)); then
-#      echo >&2 "No matches for $glob_pattern"
-#  elif ((${#dirs[@]} > 1)); then
-#      echo >&2 "More than one matches for $glob_pattern: ${dirs[@]}"
-#  else
-#      echo "All good"
-#      # Remove the echo to actually perform the move
-#      echo mv "$string" "${dirs[0]}"
-#  fi;
-#done
-
-
-## This doesn't work as it should - just going to do it manually
-
-
 ## Step 4 - Mapping sQTLs using QTLtools
 ################################################
 
 
 ##### Make this part useable for any tissue and not just whole blood
-
-mv ../GTEx_Analysis_v7_eQTL_covariates/Whole_Blood.v7.covariates.txt $PWD
-
 
 
 #for loop for QTLtools nominals
