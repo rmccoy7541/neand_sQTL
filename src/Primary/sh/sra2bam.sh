@@ -11,5 +11,5 @@
 line=`sed "${SLURM_ARRAY_TASK_ID}q;d" ${sraListPath}sralist.txt`
 
 time {
-	${homeDir}/progs/sra-tools/bin/sam-dump $line | ${homeDir}/progs/samtools-1.9/samtools view --threads 23 -bS - > ${line}.bam
+	${homeDir}progs/sra-tools/bin/sam-dump $line | ${homeDir}progs/samtools-1.9/samtools view --threads 23 -bS - > ${line}.bam
 }
