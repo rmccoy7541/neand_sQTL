@@ -39,7 +39,7 @@ cd Ne_sQTL/sra
 # store all .sra names into text file for job array
 ls *.sra >> sralist.txt
 # submit batch job, return stdout in $RES
-sbatch --wait --export=sraListPath=$PWD ${scripts}sh/sra2bam.sh
+sbatch --wait --export=sraListPath=$PWD,homeDIR=$homeDir ${scripts}/sh/sra2bam.sh
 
 ## samtools quickcheck to validate bams
 

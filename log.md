@@ -36,6 +36,7 @@ I'm just going to get rid of them since I've already tried to make them work.
 
 Running QTLtools nominal pass on the full set of introns for whole blood. 
 
+Okay, I'm going to head out. Cerebellum files have been converted except for those two files, testis files are now converting to bam, and we're doing a nominal pass for the whole blood but with all introns ever. I'm going to throw the cerebellum and testis files together after this step.
 
 ### 02/19/2019
 #### Tue 19 Feb 2019 02:55:46 PM EST 
