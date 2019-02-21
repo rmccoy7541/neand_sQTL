@@ -25,7 +25,7 @@ ml R
 ml
 
 # were are at ~ right now, which is /home-1/aseyedi2@jhu.edu
-cd work/
+cd ~/work/
 mv aseyedi2/neand_sQTL/master.sh $PWD
 
 # the directory of master.sh
@@ -39,7 +39,7 @@ cd Ne_sQTL/sra
 # store all .sra names into text file for job array
 ls *.sra >> sralist.txt
 # submit batch job, return stdout in $RES
-sbatch --wait ${scripts}/sh/sra2bam.sh
+sbatch --wait --export=sraListPath=$PWD ${scripts}/sh/sra2bam.sh
 
 ## samtools quickcheck to validate bams
 
