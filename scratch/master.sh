@@ -30,7 +30,7 @@ mv aseyedi2/neand_sQTL/master.sh $PWD
 
 # the directory of master.sh
 homeDir=$(pwd -P)
-scripts=$("/home-1/aseyedi2@jhu.edu/work/aseyedi2/neand_sQTL/src/Primary/")
+scripts=$(echo /home-1/aseyedi2@jhu.edu/work/aseyedi2/neand_sQTL/src/Primary/)
 
 ## Step 1 - Conversion
 ################################################
@@ -39,7 +39,7 @@ cd Ne_sQTL/sra
 # store all .sra names into text file for job array
 ls *.sra >> sralist.txt
 # submit batch job, return stdout in $RES
-sbatch --wait --export=sraListPath=$PWD ${scripts}/sh/sra2bam.sh
+sbatch --wait --export=sraListPath=$PWD ${scripts}sh/sra2bam.sh
 
 ## samtools quickcheck to validate bams
 
