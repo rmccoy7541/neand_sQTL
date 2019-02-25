@@ -13,6 +13,18 @@ also remember
 - CrossRef the GTEx file that contains all of our samples of interest
 - use samtools to convert cram files to bam files to use with leafcutter
 
+### 02/25/2019
+#### Mon 25 Feb 2019 11:32:00 AM EST 
+WHLBLD is done with its nominal pass. Concatting now.
+
+The testis bam conversion still didn't work.
+
+I figured out what the problem was: I misnamed the directories to be exported into the script, which is a shame because this script takes forever.
+
+Still concatting WHLBLD nominals. Just finished.
+
+
+
 ### 02/21/2019
 #### Thu 21 Feb 2019 12:56:35 PM EST 
 I haven't been great at keeping up with the log lately, but basically we're redoing the WHLBLD pipeline but filtering out NO introns for `prepare_phenotype_table.py`. 

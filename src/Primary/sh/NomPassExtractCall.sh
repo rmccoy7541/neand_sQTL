@@ -14,9 +14,9 @@
 ml R
 
 # Consider passing WHLBLD_chunks as a command line var
-line=`sed "${SLURM_ARRAY_TASK_ID}q;d" WHLBLD_chunks.txt`
+line=`sed "${SLURM_ARRAY_TASK_ID}q;d" ${listPath}WHLBLD_chunks.txt`
 
-Rscript --vanilla NomPassExtract.R ${line} "tag_snps.neand.EUR.bed"
+Rscript NomPassExtract.R ${line} "${data}02-11-2019/tag_snps.neand.EUR.bed"
 
 
 

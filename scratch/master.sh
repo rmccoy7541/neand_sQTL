@@ -31,6 +31,7 @@ mv aseyedi2/neand_sQTL/master.sh $PWD
 # the directory of master.sh
 homeDir=$(pwd -P)
 scripts=$(echo /home-1/aseyedi2@jhu.edu/work/aseyedi2/neand_sQTL/src/Primary/)
+data=$(echo /home-1/aseyedi2@jhu.edu/work/aseyedi2/neand_sQTL/data/)
 
 ## Step 1 - Conversion
 ################################################
@@ -39,7 +40,7 @@ cd Ne_sQTL/sra
 # store all .sra names into text file for job array
 ls *.sra >> sralist.txt
 # submit batch job, return stdout in $RES
-sbatch --wait --export=sraListPath=$PWD,homeDIR=$homeDir ${scripts}/sh/sra2bam.sh
+sbatch --wait --export=sraListPath=$PWD,homeDir=$homeDir ${scripts}/sh/sra2bam.sh
 
 ## samtools quickcheck to validate bams
 
@@ -184,7 +185,7 @@ cat WHLBLD_nominals_chunk_*.txt | gzip -c > nominals.all.chunks.txt.gz
 
 ls WHLBLD_* | sort -V >> WHLBLD_chunks.txt
 
-sbatch --wait NomPassExtractCall.sh
+sbatch --wait --export=listPath=$PWD,data=$data NomPassExtractCall.sh
 
 cat WHLBLD_nominals_chunk_*_out.txt | gzip -c > nominals.all.chunks.NE_only.txt.gz
 
