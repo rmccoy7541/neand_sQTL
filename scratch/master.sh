@@ -170,7 +170,7 @@ echo "Concatenating Whole Blood covariates..."
 ##### Make this part useable for any tissue and not just whole blood
 
 
-#for loop for QTLtools nominals
+#for loop for QTLtools nominals - Make this into a batch script
 for i in {1..100}; do ./QTLtools_1.1_Ubuntu14.04_x86_64 cis \
 	--vcf  GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz \
 	--bed "WHLBLD.pheno.bed.gz" \
@@ -181,14 +181,15 @@ for i in {1..100}; do ./QTLtools_1.1_Ubuntu14.04_x86_64 cis \
 done
 
 cat WHLBLD_nominals_chunk_*.txt | gzip -c > nominals.all.chunks.txt.gz
-#sbatch --export=tissue=WHLBLD.txt.gz QTLtools-NomPass.sh
 
 ls WHLBLD_* | sort -V >> WHLBLD_chunks.txt
 
+#Extract Neanderthal sequences
 sbatch --wait --export=listPath=$PWD,data=$data NomPassExtractCall.sh
 
 cat WHLBLD_nominals_chunk_*_out.txt | gzip -c > nominals.all.chunks.NE_only.txt.gz
 
+#Call permuatation pass
 sbatch --wait PermPass.sh
 
 cat WHLBLD_permutations_chunk_*.txt | gzip -c > permutations_full.txt.gz

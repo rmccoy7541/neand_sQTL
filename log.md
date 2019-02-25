@@ -21,7 +21,9 @@ The testis bam conversion still didn't work.
 
 I figured out what the problem was: I misnamed the directories to be exported into the script, which is a shame because this script takes forever.
 
-Still concatting WHLBLD nominals. Just finished.
+Still concatting WHLBLD nominals. Just finished. Now I'm trying to extract the Neanderthal sequences. 
+
+Okay, we're trying the testis sra -> bam conversion once again as well as the nominal pass extract call. We'll see what happens; MARCC has been frustratingly slow today.
 
 
 
