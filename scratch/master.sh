@@ -185,7 +185,8 @@ cat WHLBLD_nominals_chunk_*.txt | gzip -c > nominals.all.chunks.txt.gz
 ls WHLBLD_* | sort -V >> WHLBLD_chunks.txt
 
 #Extract Neanderthal sequences
-sbatch --wait --export=listPath=$PWD,data=$data NomPassExtractCall.sh
+cp ${data}02-11-2019/tag_snps.neand.EUR.bed $PWD
+sbatch --wait --export=listPath=$PWD NomPassExtractCall.sh
 
 cat WHLBLD_nominals_chunk_*_out.txt | gzip -c > nominals.all.chunks.NE_only.txt.gz
 
