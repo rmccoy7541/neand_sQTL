@@ -25,6 +25,8 @@ Still concatting WHLBLD nominals. Just finished. Now I'm trying to extract the N
 
 Okay, we're trying the testis sra -> bam conversion once again as well as the nominal pass extract call. We'll see what happens; MARCC has been frustratingly slow today.
 
+#### Mon 25 Feb 2019 05:51:55 PM EST 
+`NomPassExtract.R` didn't work because of some technicality. I fixed it, I hope. I'm just trying to generalize this pipeline as much as possible so that it requires the least amount of manual input but it's not quite that easy.
 
 
 ### 02/21/2019
