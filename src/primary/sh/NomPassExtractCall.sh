@@ -4,9 +4,8 @@
 #SBATCH --job-name=NomPassExtractCall
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --cpus-per-task=1
+#SBATCH --cpus-per-task=2
 #SBATCH --array=1-100%50
-#SBATCH --mem=10GB
 
 ######################
 # Begin work section #
