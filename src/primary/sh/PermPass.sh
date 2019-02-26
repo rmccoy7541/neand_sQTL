@@ -13,7 +13,8 @@
 ######################
 
 /home-1/aseyedi2@jhu.edu/work/progs/QTLtools/QTLtools_1.1_Ubuntu14.04_x86_64 cis \
-  --vcf  GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz \
+  --vcf  $VCF \
+  # MAKE GENERALIZABLE
   --bed "WHLBLD.pheno.bed.gz" \
   --cov  "Whole_Blood.v7.covariates_output.txt" \
   --permute 1000  \

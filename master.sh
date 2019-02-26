@@ -32,6 +32,7 @@ mv aseyedi2/neand_sQTL/master.sh $PWD
 homeDir=$(pwd -P)
 scripts=$(echo /home-1/aseyedi2@jhu.edu/work/aseyedi2/neand_sQTL/src/primary/)
 data=$(echo /home-1/aseyedi2@jhu.edu/work/aseyedi2/neand_sQTL/data/)
+ncbiFiles=$(echo /scratch/groups/rmccoy22/Ne_sQTL/files/)
 
 ## Step 1 - Conversion
 ################################################
@@ -174,6 +175,7 @@ echo "Concatenating Whole Blood covariates..."
 for i in {1..100}; do ./QTLtools_1.1_Ubuntu14.04_x86_64 cis \
 	--vcf  GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz \
 	--bed "WHLBLD.pheno.bed.gz" \
+	# NOTE TO SELF - MAKE THIS WHOLE PART GENERALIZABLE
 	--cov  "Whole_Blood.v7.covariates_output.txt" \
 	--nominal 1  \
 	--chunk $i 100 \
@@ -191,7 +193,7 @@ sbatch --wait --export=listPath=$PWD ${scripts}sh/NomPassExtractCall.sh
 cat WHLBLD_nominals_chunk_*_out.txt | gzip -c > nominals.all.chunks.NE_only.txt.gz
 
 #Call permuatation pass
-sbatch --wait ${scripts}/sh/PermPass.sh
+sbatch --wait --export=VCF=$ncbiFiles/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz ${scripts}/sh/PermPass.sh
 
 cat WHLBLD_permutations_chunk_*.txt | gzip -c > permutations_full.txt.gz
 
