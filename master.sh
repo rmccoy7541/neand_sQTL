@@ -191,7 +191,7 @@ sbatch --wait --export=listPath=$PWD ${scripts}sh/NomPassExtractCall.sh
 cat WHLBLD_nominals_chunk_*_out.txt | gzip -c > nominals.all.chunks.NE_only.txt.gz
 
 #Call permuatation pass
-sbatch --wait PermPass.sh
+sbatch --wait ${scripts}/sh/PermPass.sh
 
 cat WHLBLD_permutations_chunk_*.txt | gzip -c > permutations_full.txt.gz
 

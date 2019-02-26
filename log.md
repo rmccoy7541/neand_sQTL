@@ -34,7 +34,11 @@ Not sure what that means because I don't recall there being any problem with dow
 
 I think `NomPassExtract` worked... But got some OOM errors. None of the memory flags work for SLURM anymore so I'm going to resubmit the job with multiple cores per array task. Fingers crossed. Okay, no matter what I do, I can't seem to avoid an OOM error for `NomPassExtract`. I sent an email to the MARCC help desk though I don't anticipate them being much help. Let's see what happens.
 
+Rajiv downloaded that one file `SRR1069734.sra` for me and now I'm trying to do the sra2bam conversion independently on the dev node. Let's see how this will pan out. I'm sure there are other sra's that didn't fully convert.
 
+The `NomPassExtract` step is almost done; one file did not finish in the 1 hour of time that was allotted. I'm running chunk 32 separately [sp?] on the dev node screen.
+
+Strange; it took over an hour on SLURM but was over super quick on the dev node.
 
 ### 02/25/2019
 #### Mon 25 Feb 2019 11:32:00 AM EST 
