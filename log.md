@@ -13,6 +13,12 @@ also remember
 - CrossRef the GTEx file that contains all of our samples of interest
 - use samtools to convert cram files to bam files to use with leafcutter
 
+### 02/26/2019
+#### Tue 26 Feb 2019 11:23:16 AM EST 
+I'm still having major difficulty doing the sra2bam conversion in a stream-lined way, so I'm just trying that over and over again hoping something will eventually work. 
+
+The WHLBLD nom pass extract did NOT work, no package called 'tidyverse' also some other errors that I don't know what to do about.
+
 ### 02/25/2019
 #### Mon 25 Feb 2019 11:32:00 AM EST 
 WHLBLD is done with its nominal pass. Concatting now.
