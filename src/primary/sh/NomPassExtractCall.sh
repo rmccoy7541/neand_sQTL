@@ -1,12 +1,11 @@
 #!/bin/bash
 
-#SBATCH --partition=lrgmem
+#SBATCH --partition=shared
 #SBATCH --job-name=NomPassExtractCall
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --cpus-per-task=1
+#SBATCH --cpus-per-task=4
 #SBATCH --array=1-100%50
-#SBATCH --mem=20GB
 
 ######################
 # Begin work section #
