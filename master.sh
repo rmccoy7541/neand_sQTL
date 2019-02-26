@@ -30,7 +30,7 @@ mv aseyedi2/neand_sQTL/master.sh $PWD
 
 # the directory of master.sh
 homeDir=$(pwd -P)
-scripts=$(echo /home-1/aseyedi2@jhu.edu/work/aseyedi2/neand_sQTL/src/Primary/)
+scripts=$(echo /home-1/aseyedi2@jhu.edu/work/aseyedi2/neand_sQTL/src/primary/)
 data=$(echo /home-1/aseyedi2@jhu.edu/work/aseyedi2/neand_sQTL/data/)
 
 ## Step 1 - Conversion
