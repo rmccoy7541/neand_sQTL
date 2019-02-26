@@ -6,7 +6,7 @@
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=1
 #SBATCH --array=1-100%50
-#SBATCH --mem-per-cpu=7G
+#SBATCH --mem=7G
 
 ######################
 # Begin work section #
