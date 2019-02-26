@@ -32,7 +32,7 @@ Meanwhile, for the testis files, the conversion is finally working, but `SRR1069
 
 Not sure what that means because I don't recall there being any problem with downloading any of the testis files. I'm going to try downloading that file by itself and then running a conversion on the dev node.
 
-I think `NomPassExtract` worked...
+I think `NomPassExtract` worked... But got some OOM errors. None of the memory flags work for SLURM anymore so I'm going to resubmit the job with multiple cores per array task. Fingers crossed. Okay, no matter what I do, I can't seem to avoid an OOM error for `NomPassExtract`. I sent an email to the MARCC help desk though I don't anticipate them being much help. Let's see what happens.
 
 
 
