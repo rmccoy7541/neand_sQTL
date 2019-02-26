@@ -17,7 +17,22 @@ also remember
 #### Tue 26 Feb 2019 11:23:16 AM EST 
 I'm still having major difficulty doing the sra2bam conversion in a stream-lined way, so I'm just trying that over and over again hoping something will eventually work. 
 
-The WHLBLD nom pass extract did NOT work, no package called 'tidyverse' also some other errors that I don't know what to do about.
+The WHLBLD nom pass extract did NOT work, no package called 'tidyverse' also some other errors that I don't know what to do about. I tried fixing it by loading `gcc`. Let's see if that works.
+
+Meanwhile, for the testis files, the conversion is finally working, but `SRR1069734.sra` is having trouble converting. I'm getting the following error:
+
+```
+...
+2019-02-26T17:10:12 sam-dump.2.9.2 err: unknown while creating file within file system module - unknown system error 'Cannot send after transport endpoint shutdown (108)'
+2019-02-26T17:10:12 sam-dump.2.9.2 err: unknown while creating file within file system module - error with https open 'https://sra-download.ncbi.nlm.nih.gov/traces/refseq/NC_000011.9'
+2019-02-26T17:10:12 sam-dump.2.9.2 int: unknown while creating file within file system module - VCursorCellDataDirect( row#1921079 . idx#3 . READ ) char_ptr failed
+[W::sam_read1] Parse error at line 39693787
+[main_samview] truncated file.
+```
+
+Not sure what that means because I don't recall there being any problem with downloading any of the testis files. I'm going to try downloading that file by itself and then running a conversion on the dev node.
+
+
 
 ### 02/25/2019
 #### Mon 25 Feb 2019 11:32:00 AM EST 
