@@ -32,6 +32,8 @@ Meanwhile, for the testis files, the conversion is finally working, but `SRR1069
 
 Not sure what that means because I don't recall there being any problem with downloading any of the testis files. I'm going to try downloading that file by itself and then running a conversion on the dev node.
 
+I think `NomPassExtract` worked...
+
 
 
 ### 02/25/2019
