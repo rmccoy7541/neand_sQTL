@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=filter_bam
-#SBATCH --time=3:00:00
+#SBATCH --time=4:00:00
 #SBATCH --partition=shared
 #SBATCH --nodes=1
 # number of tasks (processes) per node
