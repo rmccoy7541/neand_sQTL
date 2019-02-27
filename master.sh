@@ -197,6 +197,8 @@ sbatch --wait --export=listPath=$PWD ${scripts}sh/NomPassExtractCall.sh
 
 cat WHLBLD_nominals_chunk_*_out.txt | gzip -c > nominals.all.chunks.NE_only.txt.gz
 
+mkdir nominals; mv *_nominals_* nominals/
+
 #Call permuatation pass
 sbatch --wait --export=VCF=$ncbiFiles/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz,pheno=$pheno ${scripts}/sh/PermPass.sh
 
