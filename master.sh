@@ -34,7 +34,7 @@ scripts=$(echo /home-1/aseyedi2@jhu.edu/work/aseyedi2/neand_sQTL/src/primary/)
 data=$(echo /home-1/aseyedi2@jhu.edu/work/aseyedi2/neand_sQTL/data/)
 ncbiFiles=$(echo /scratch/groups/rmccoy22/Ne_sQTL/files/)
 
-## Step 1 - Conversion
+## Step 1a - Conversion & Validation
 ################################################
 # convert .sra to .bam files
 cd Ne_sQTL/sra
@@ -43,14 +43,19 @@ ls *.sra >> sralist.txt
 # submit batch job, return stdout in $RES
 sbatch --wait --export=sraListPath=$PWD,homeDir=$homeDir ${scripts}/sh/sra2bam.sh
 
-## samtools quickcheck to validate bams
+samtools quickcheck *bam
+
+### break here - deal accordingly with the bams
+
+## Step 1b - Filtration
+################################################
 
 # list of bams to be filtered 
 ls *.bam >> bamlist.txt
 # bring bed file to current directory
-cp ${homeDir}/Ne-sQTL/data/12-07-2018/GRCh37.bed $PWD
+cp ${data}/12-07-2018/GRCh37.bed $PWD
 # filter unplaced contigs
-jid2=$(sbatch --wait --dependency=afterok:${jid1##* } ${homeDir}/Ne-sQTL/src/12-14-2018/filter_bam.sh)
+sbatch --wait ${scripts}/sh/filter_bam.sh
 
 ## samtools quickcheck
 
@@ -143,7 +148,7 @@ done
 ml bedtools
 # INSERT CODE TO SWAP SRR FOR GTEX-SUBJECT ID HERE
 bedtools sort -header -i phen_fastqtl.bed > WHLBLD.pheno.bed
-bgzip WHLBLD.pheno.bed
+pheno=$(bgzip WHLBLD.pheno.bed)
 tabix -p bed WHLBLD.pheno.bed.gz
 rm phen_fastqtl.bed
 
@@ -155,12 +160,13 @@ mv *_WHLBLD.txt WHLBLD/
 
 # download genotype covariates
 wget https://storage.googleapis.com/gtex_analysis_v7/single_tissue_eqtl_data/GTEx_Analysis_v7_eQTL_covariates.tar.gz
-tar -xzf GTEx_Analysis_v7_eQTL_covariates.tar.gz
+cov=$(tar -xzf GTEx_Analysis_v7_eQTL_covariates.tar.gz)
 
 
-Rscript --vanilla ${homeDir}/src/01-02-2019/mergePCs.R ../Ne-sQTL_perind.counts.gz.PCs Whole_Blood.v7.covariates.txt ../tissue_table.txt
+# Come up with a way to select the covariates being concatenated
+covOut=$(Rscript --vanilla ${scripts}/R/mergePCs.R Ne-sQTL_perind.counts.gz.PCs $cov/Whole_Blood.v7.covariates.txt tissue_table.txt)
 
-echo "Concatenating Whole Blood covariates..."
+echo "Concatenating covariates..."
 
 # this code is an absolute mess. I need to clean it up.
 
@@ -174,8 +180,7 @@ echo "Concatenating Whole Blood covariates..."
 #for loop for QTLtools nominals - Make this into a batch script
 for i in {1..100}; do ./QTLtools_1.1_Ubuntu14.04_x86_64 cis \
 	--vcf  GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz \
-	--bed "WHLBLD.pheno.bed.gz" \
-	# NOTE TO SELF - MAKE THIS WHOLE PART GENERALIZABLE
+	--bed "$pheno" \
 	--cov  "Whole_Blood.v7.covariates_output.txt" \
 	--nominal 1  \
 	--chunk $i 100 \
@@ -193,13 +198,13 @@ sbatch --wait --export=listPath=$PWD ${scripts}sh/NomPassExtractCall.sh
 cat WHLBLD_nominals_chunk_*_out.txt | gzip -c > nominals.all.chunks.NE_only.txt.gz
 
 #Call permuatation pass
-sbatch --wait --export=VCF=$ncbiFiles/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz ${scripts}/sh/PermPass.sh
+sbatch --wait --export=VCF=$ncbiFiles/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz,pheno=$pheno ${scripts}/sh/PermPass.sh
 
 cat WHLBLD_permutations_chunk_*.txt | gzip -c > permutations_full.txt.gz
 
 Rscript ${homeDir}/progs/QTLtools/script/runFDR_cis.R permutations_full.txt.gz 0.05 permuatations_full_FDR
 
-sbatch --wait ${scripts}/sh/CondPass.sh
+sbatch --wait --export=VCF=$ncbiFiles/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz,pheno=$pheno ${scripts}/sh/CondPass.sh
 
 cat WHLBLD_conditional_chunk_*.txt | gzip -c > conditional_full.txt.gz
 

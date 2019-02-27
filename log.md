@@ -19,6 +19,23 @@ All of the SLURM jobs are done.
 
 For the permutation pass, I got an error - minor stuff. Fixed it and am trying it again.
 
+I need to figure out how to streamline the concatenating of the covariates part.
+
+As for the testis files, I got several errors and 5 broken files according to `samtools quickcheck`:
+```
+[aseyedi2@jhu.edu@compute0195 testis]$ samtools quickcheck *bam
+SRR2135285.sra.bam had no targets in header.
+SRR2135301.sra.bam had no targets in header.
+SRR2135302.sra.bam had no targets in header.
+SRR2135320.sra.bam had no targets in header.
+SRR2135354.sra.bam had no targets in header.
+SRR2135377.sra.bam had no targets in header.
+```
+
+I just tried converting these files independently and still same error. Going to delete them and include a quickcheck step in the master script.
+
+
+
 ### 02/26/2019
 #### Tue 26 Feb 2019 11:23:16 AM EST 
 I'm still having major difficulty doing the sra2bam conversion in a stream-lined way, so I'm just trying that over and over again hoping something will eventually work. 

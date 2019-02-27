@@ -13,8 +13,8 @@
 ######################
 
 ./QTLtools_1.1_Ubuntu14.04_x86_64 cis \
-	--vcf  GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz \
-	--bed "WHLBLD.pheno.bed.gz" \
+	--vcf  $VCF \
+	--bed "$pheno" \
 	--cov  "Whole_Blood.v7.covariates_output.txt" \
 	--mapping "permuatations_full_FDR.thresholds.txt" \
 	--chunk ${SLURM_ARRAY_TASK_ID} 100 \
