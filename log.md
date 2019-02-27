@@ -13,6 +13,12 @@ also remember
 - CrossRef the GTEx file that contains all of our samples of interest
 - use samtools to convert cram files to bam files to use with leafcutter
 
+### 02/27/2019
+#### Wed 27 Feb 2019 10:41:07 AM EST 
+All of the SLURM jobs are done. 
+
+For the permutation pass, I got an error - minor stuff. Fixed it and am trying it again.
+
 ### 02/26/2019
 #### Tue 26 Feb 2019 11:23:16 AM EST 
 I'm still having major difficulty doing the sra2bam conversion in a stream-lined way, so I'm just trying that over and over again hoping something will eventually work. 
