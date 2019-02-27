@@ -29,7 +29,7 @@ cd ~/work/
 mv aseyedi2/neand_sQTL/master.sh $PWD
 
 # the directory of master.sh
-homeDir=$(pwd -P)
+homeDir=$(echo ~/work/)
 scripts=$(echo /home-1/aseyedi2@jhu.edu/work/aseyedi2/neand_sQTL/src/primary/)
 data=$(echo /home-1/aseyedi2@jhu.edu/work/aseyedi2/neand_sQTL/data/)
 ncbiFiles=$(echo /scratch/groups/rmccoy22/Ne_sQTL/files/)
