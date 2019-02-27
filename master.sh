@@ -148,7 +148,11 @@ done
 ml bedtools
 # INSERT CODE TO SWAP SRR FOR GTEX-SUBJECT ID HERE
 bedtools sort -header -i phen_fastqtl.bed > WHLBLD.pheno.bed
-pheno=$(bgzip WHLBLD.pheno.bed)
+
+bgzip WHLBLD.pheno.bed
+
+pheno=$(echo $PWD/WHLBLD.pheno.bed.gz)
+
 tabix -p bed WHLBLD.pheno.bed.gz
 rm phen_fastqtl.bed
 

@@ -34,7 +34,20 @@ SRR2135377.sra.bam had no targets in header.
 
 I just tried converting these files independently and still same error. Going to delete them and include a quickcheck step in the master script.
 
+Rajiv just told me to try my best to have the same set of files used in the analysis v7 freeze, so I will try my dangest to get those files.
 
+Okay, I've tried redownloading those files and the problem is that they're each only a few dozen MB in size and I get the same file each time I download. So this is a problem. I'm going to email NCBI.
+
+Meanwhile, I got the analysis freeze for the cerebellum and testis files: 
+
+`wget https://storage.googleapis.com/gtex_analysis_v7/annotations/GTEx_v7_Annotations_SampleAttributesDS.txt`
+`cat GTEx_v7_Annotations_SampleAttributesDS.txt | awk -F '\t' '{if ($17 == "RNASEQ" && $7 == "Brain - Cerebellum" || $7 == "Testis") print $1, $7}' | sort > gtex_cerebellum_testis.txt`
+
+I probably have to include a seperate part for extracting the tissues of interest.
+
+I'm going to try redownloading the files for both cerebellum and testis and see if that helps with the problem. Didn't work.
+
+I emailed NLM about this problem so I guess I'll have to wait until they get back to me. I guess I could continue with the pipeline and hope the files are not in the analysis freeze downstream. PermPass is still running.
 
 ### 02/26/2019
 #### Tue 26 Feb 2019 11:23:16 AM EST 
