@@ -208,6 +208,8 @@ sbatch --wait --export=VCF=$ncbiFiles/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz,
 
 cat WHLBLD_permutations_chunk_*.txt | gzip -c > permutations_full.txt.gz
 
+mkdir permutations; mv *_permutations_* permutations/
+
 Rscript ${homeDir}/progs/QTLtools/script/runFDR_cis.R permutations_full.txt.gz 0.05 permuatations_full_FDR
 
 sbatch --wait --export=VCF=$ncbiFiles/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz,pheno=$pheno ${scripts}/sh/CondPass.sh

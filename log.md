@@ -13,6 +13,12 @@ also remember
 - CrossRef the GTEx file that contains all of our samples of interest
 - use samtools to convert cram files to bam files to use with leafcutter
 
+### 02/28/2019
+#### Thu 28 Feb 2019 11:36:08 AM EST 
+I'm not sure if I can really do anything when it comes to the cerebellum and testis files. Again, I'm sure I could just find out which among those files were and were not included in the v7 analysis freeze, and if none of them are the corrupted files, I could move ahead with the process.
+
+I'm doing conditional pass for the whole blood samples now.
+
 ### 02/27/2019
 #### Wed 27 Feb 2019 10:41:07 AM EST 
 All of the SLURM jobs are done. 
