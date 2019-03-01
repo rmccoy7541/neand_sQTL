@@ -13,11 +13,25 @@ also remember
 - CrossRef the GTEx file that contains all of our samples of interest
 - use samtools to convert cram files to bam files to use with leafcutter
 
+### 03/01/2019
+#### Fri 01 Mar 2019 10:56:52 AM EST 
+I'm going to try to qqplot the results. Rajiv gave me a script I could use in service of that mission.
+
+`cat GTEx_v7_Annotations_SampleAttributesDS.txt | awk -F '\t' '{if ($17 == "RNASEQ" && ($7 == "Brain - Cerebellum" || $7 == "Testis")) print $1, $7}' | sort > gtex_cerebellum_testis.txt`
+
+`join -1 2 -2 1 dbgap_rnaseq_manifest.txt gtex_cerebellum_testis.txt | awk '{$7=$8=$9=""; print $0}' | awk '{gsub("Testis", "", $5); print $0}'`
+
+Rajiv made the file that contains all of the rna-seq samples from the dbgap manifest. I used it to extract SRRs and am right now converting an SRA that was not converting initially. We're just plowing ahead, and since the corrupted files were not in the analysis freeze, we wouldn't have included them anyway.
+
+SRR1358260.sra.bam doesn't work
+
 ### 02/28/2019
 #### Thu 28 Feb 2019 11:36:08 AM EST 
 I'm not sure if I can really do anything when it comes to the cerebellum and testis files. Again, I'm sure I could just find out which among those files were and were not included in the v7 analysis freeze, and if none of them are the corrupted files, I could move ahead with the process.
 
 I'm doing conditional pass for the whole blood samples now.
+
+Done. I have the results for the whole blood samples.
 
 ### 02/27/2019
 #### Wed 27 Feb 2019 10:41:07 AM EST 
