@@ -66,7 +66,7 @@ ls *.filt >> filtlist.txt
 ## Step 2 - Intron Clustering
 ################################################
 mkdir juncfiles
-sbatch --wait --dependency=afterok:${jid2##* } ${homeDir}/Ne-sQTL/src/12-10-2018/bam2junccall.sh
+sbatch --wait ${scripts}/sh/bam2junccall.sh
 mv *.junc juncfiles/
 cd juncfiles/
 # strip junc files - STILL WITH RUN ID 'SRR######'
