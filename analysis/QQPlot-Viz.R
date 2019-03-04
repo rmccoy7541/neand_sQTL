@@ -4,10 +4,9 @@ library(Homo.sapiens)
 library(qqman)
 library(qvalue)
 
-setwd("/scratch/groups/rmccoy22/Ne_sQTL/sra/juncfiles/intronclustering/WHLBLD")
+setwd("/scratch/groups/rmccoy22/aseyedi2/QTLtoolsResults-WHLBLD")
 
-dt <- do.call(rbind, lapply(1:100, function(x) tryCatch(fread(paste0("WHLBLD_nominals_chunk_", x, "_out.txt")), 
-                                                        error = function(e) NULL))) %>%
+dt <- fread("nominals.all.chunks.NE_only.txt.gz") %>%
   setnames(., c("intron_cluster", "chrom", "pheno_start", "pheno_end", 
                 "strand", "total_cis", "distance", "variant_id", "variant_chrom", 
                 "var_start", "var_end", "p", "beta", "is_top_variant", "drop")) %>%
@@ -15,7 +14,7 @@ dt <- do.call(rbind, lapply(1:100, function(x) tryCatch(fread(paste0("WHLBLD_nom
 
 dt[, drop := NULL]
 
-dt[is_top_variant == TRUE]
+head(dt[is_top_variant == TRUE])
 
 gene_list <- genes(TxDb.Hsapiens.UCSC.hg19.knownGene) %>%
   as.data.table()
@@ -44,8 +43,7 @@ qq(dt$p)
 
 #########
 
-gtp <- do.call(rbind, lapply(1:100, function(x) tryCatch(fread(paste0("realperm/WHLBLD_permutations_chunk_", x, ".txt")), 
-                                                         error = function(e) NULL))) %>%
+gtp <- fread("permutations_full.txt.gz") %>%
   setnames(., c("intron_cluster", "chrom", "pheno_start", "pheno_end", 
                 "strand", "total_cis", "distance", "variant_id", "variant_chrom", 
                 "var_start", "var_end", "df", "dummy", "param_1", "param_2",
@@ -54,7 +52,7 @@ gtp <- do.call(rbind, lapply(1:100, function(x) tryCatch(fread(paste0("realperm/
 
 gtp[, qval := qvalue(gtp$adj_p)$qvalue]
 
-neand <- fread("tag_snps.neand.EUR.bed") %>%
+neand <- fread("/scratch/groups/rmccoy22/Ne_sQTL/sra/juncfiles/intronclustering/WHLBLD/tag_snps.neand.EUR.bed") %>%
   mutate(., var_id_1 = paste(V1, V3, V4, V5, "b37", sep = "_")) %>%
   mutate(., var_id_2 = paste(V1, V3, V5, V4, "b37", sep = "_")) %>%
   as.data.table()

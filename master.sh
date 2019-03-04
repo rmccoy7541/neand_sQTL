@@ -66,6 +66,8 @@ ls *.filt >> filtlist.txt
 ## Step 2 - Intron Clustering
 ################################################
 mkdir juncfiles
+## IMPORTANT: changed leafcutter's bam2junc.sh to directly call
+## the bin for samtools
 sbatch --wait ${scripts}/sh/bam2junccall.sh
 mv *.junc juncfiles/
 cd juncfiles/

@@ -19,6 +19,9 @@ ml python/2.7-anaconda
 
 # converts each file to junc
 # Remember to set LeafCutter full path (leafCutterDir) in bam2junc.sh
+
+# IMPORTANT: changed bam2junc.sh in leafcutter/scripts/ to directly call the
+# bin file for samtools 
 echo "Converting ${line} to junc"
 sh /scratch/groups/rmccoy22/aseyedi2/leafcutter/scripts/bam2junc.sh ${line} ${line}.junc
 
