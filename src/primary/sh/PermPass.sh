@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --partition=shared
-#SBATCH --job-name=PermPass
+#SBATCH --job-name=NomPass
 #SBATCH --nodes=1
 #SBATCH --time=8:0:0
 #SBATCH --ntasks-per-node=1

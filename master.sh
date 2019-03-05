@@ -119,58 +119,46 @@ cp ${data}/01-22-2019/GTExTissueKey.csv $PWD
 # get the tissue sites for each corresonding sra file
 Rscript ${scripts}/R/sraTissueExtract.R ${data}/SraRunTable.txt GTExTissueKey.csv
 
-
 # submit each LF phenotype file to sraNameChangeSort as command line variable as well as tissue_table.txt
 for phen in *qqnorm*.gz.qtltools; do Rscript ${scripts}/R/sraNameChangeSort.R $phen tissue_table.txt ; done
-rm *Leukemia*
 
-#this code is problematic - I can't have any whitespaces in filenames, yet the that's all they have in tissue_table
-# getting the tissue names from metadata - 48 tissues in all
 cat tissue_table.txt | cut -f3 | awk '{if(NR>1)print}' |  awk '!seen[$0]++' > tissuenames.txt
-#mkdir cattissues
-mkdir WHLBLD/
 
+#mkdir WHLBLD/
 
-# concatenate all tissues from chr 1-22 such that all chromosomes are found in one file per tissue
-#for i in {1..48}; do line=`sed "${i}q;d" tissuenames.txt`; echo "Concatenating $line..."; for q in {1..22}; do echo "Chr $q..."; awk 'FNR==1 && NR!=1{next;}{print}' "${q}_${line}.txt" > "${line}".txt; rm "${q}_${line}.txt" done; done #formerly cat "${q}_${line}.txt" >> ... let's see if this works ; did this to prevent writing the header multiple times
+# figure out how to make this part generalizable, but for now make a directory for each type of tissue processed
 
-
-#specifically just for whole blood samples
-# compile phenotype file from chromosome-specific files
-# print the header once
-
+## figure out how to make this part generalizable too
 ml htslib
-head -1 1_WHLBLD.txt > phen_fastqtl.bed
+head -1 1_TESTIS.txt > phen_fastqtl.bed
 # print each chromosome file without the header
 for i in {1..22}
 do
-  cat ${i}_WHLBLD.txt | sed -e1,1d >> phen_fastqtl.bed
+  cat ${i}_TESTIS.txt | sed -e1,1d >> phen_fastqtl.bed
 done
 
 ml bedtools
-# INSERT CODE TO SWAP SRR FOR GTEX-SUBJECT ID HERE
-bedtools sort -header -i phen_fastqtl.bed > WHLBLD.pheno.bed
 
-bgzip WHLBLD.pheno.bed
+bedtools sort -header -i phen_fastqtl.bed > TESTIS.pheno.bed
 
-pheno=$(echo $PWD/WHLBLD.pheno.bed.gz)
+bgzip TESTIS.pheno.bed
 
-tabix -p bed WHLBLD.pheno.bed.gz
+pheno=$(echo $PWD/TESTIS.pheno.bed.gz)
+
+tabix -p bed TESTIS.pheno.bed.gz
 rm phen_fastqtl.bed
 
-mv *_WHLBLD.txt WHLBLD/
+mkdir sepfiles/
 
-# Parts of this next line may appear redundant. That's okay. it just creates a directory for each concatenated tissue phenotype file and moves it in there.
-#for file in cattissues/*; do i=$(echo $file); q=$(basename "$i"); filename="${q%.*}"; filename=$(echo ${filename#*_}); mkdir tissues/"${filename}"; mv "$file" tissues/"${filename}"; done
-# at this point, you want to pass each tissue PC file and the leafcutter PC file as command-line arguments into an R script that concatenates the PCs by GTEX ID
+mv *_TESTIS.txt sepfiles/
 
 # download genotype covariates
 wget https://storage.googleapis.com/gtex_analysis_v7/single_tissue_eqtl_data/GTEx_Analysis_v7_eQTL_covariates.tar.gz
 cov=$(tar -xzf GTEx_Analysis_v7_eQTL_covariates.tar.gz)
 
 
-# Come up with a way to select the covariates being concatenated
-covOut=$(Rscript --vanilla ${scripts}/R/mergePCs.R Ne-sQTL_perind.counts.gz.PCs $cov/Whole_Blood.v7.covariates.txt tissue_table.txt)
+# Make generalizeable
+Rscript ${scripts}/R/mergePCs.R Ne-sQTL_perind.counts.gz.PCs Testis.v7.covariates.txt tissue_table.txt
 
 echo "Concatenating covariates..."
 
@@ -181,18 +169,21 @@ echo "Concatenating covariates..."
 
 
 ##### Make this part useable for any tissue and not just whole blood
+VCF=$(echo /scratch/groups/rmccoy22/Ne_sQTL/files/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz)
 
-
-#for loop for QTLtools nominals - Make this into a batch script
-for i in {1..100}; do ./QTLtools_1.1_Ubuntu14.04_x86_64 cis \
-	--vcf  GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz \
+#for loop for QTLtools nominals - Make this into a batch script -MAKE GENERALIZABLE
+for i in {1..100}; do /scratch/groups/rmccoy22/progs/QTLtools/QTLtools_1.1_Ubuntu14.04_x86_64 cis \
+	--vcf  $VCF \
 	--bed "$pheno" \
-	--cov  "Whole_Blood.v7.covariates_output.txt" \
+	--cov  "Brain_Cerebellum.v7.covariates_output.txt" \
 	--nominal 1  \
 	--chunk $i 100 \
-	--out "WHLBLD_nominals_chunk_${i}.txt"
+	--out "BRNCHA_nominals_chunk_${i}.txt"
 done
 
+
+
+# MAKE GENERALIZEABLE
 cat WHLBLD_nominals_chunk_*.txt | gzip -c > nominals.all.chunks.txt.gz
 
 ls WHLBLD_* | sort -V >> WHLBLD_chunks.txt

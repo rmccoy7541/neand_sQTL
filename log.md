@@ -2,20 +2,18 @@
 
 These updates are read from most recent date at the top to initial entry at the bottom.
 
-NEW PIPELINE
-- Generate LeafCutter phenotypes without renaming the SRAs
-- Massive chr 1-22 tables with all across all samples
-- Use dbGaP metadata to segregate all columns by tissue, create a new table for those samples in tissue directory
-- put covariate file in tissue directories
-- Change the column header in each tissue directory's folder to the full GTEX sample ID
-- Run QTLtools for each tissue
-also remember
-- CrossRef the GTEx file that contains all of our samples of interest
-- use samtools to convert cram files to bam files to use with leafcutter
+REMEMBER
+- You need to make the pipeline generalizable, especially the part after separating the phenotype table by tissue.
 
 ### 03/05/2019
 #### Tue 05 Mar 2019 11:15:07 AM EST 
 Working on `sraNameChangeSort.sh`.
+
+Done.
+
+I need to figure out how to make the part all after separating the samples by tissue generalizeable. Right now it's all just being done manually in the interest of time. But this is something I need to remember to do.
+
+QTLtools nominal pass is running right now on both the brain - cerebellum as well as testis files on the dev node. It's very important that I remember to figure out how to make this generalized because right now I'm doing it manually. Going to check back in a few hours and do the permutation pass, which also needs to be generalized. Maybe some sort of user input?
 
 ### 03/04/2019
 #### Mon 04 Mar 2019 06:38:28 PM EST
