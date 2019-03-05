@@ -13,6 +13,10 @@ also remember
 - CrossRef the GTEx file that contains all of our samples of interest
 - use samtools to convert cram files to bam files to use with leafcutter
 
+### 03/04/2019
+#### Mon 04 Mar 2019 06:38:28 PM EST
+Forgot to write in here all day but it's okay. `sraNameChangeSort.sh` doesn't work; I feed it only cerebellum and testes tissue samples and it gives me samples matching to every tissue, which isn't oky.
+
 ### 03/01/2019
 #### Fri 01 Mar 2019 10:56:52 AM EST 
 I'm going to try to qqplot the results. Rajiv gave me a script I could use in service of that mission.

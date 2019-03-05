@@ -77,16 +77,16 @@ find -type f -name '*.sra.bam.filt.junc' | while read f; do mv "$f" "${f%.sra.ba
 
 ## make it v7 Analysis freeze juncs ONLY && GENOTYPED
 
-#ls SRR* >> juncfiles.txt
+ls SRR* >> juncfiles.txt
 # intron clustering
 mkdir intronclustering/
 ### call an interactive session with a good deal of memory for this step
-python $homeDir/leafcutter/clustering/leafcutter_cluster.py -j juncfiles.txt -r intronclustering/ -m 50 -o Ne-sQTL -l 500000 # no option for parallelization
+python $homeDir/aseyedi2/leafcutter/clustering/leafcutter_cluster.py -j juncfiles.txt -r intronclustering/ -m 50 -o Ne-sQTL -l 500000 # no option for parallelization
 cd intronclustering/
 
 ## Step 3 - PCA calculation
 ################################################
-python $homeDir/leafcutter/scripts/prepare_phenotype_table.py Ne-sQTL_perind.counts.gz -p 10 # works fine; also no option for parallelization
+python $homeDir/aseyedi2/leafcutter/scripts/prepare_phenotype_table.py Ne-sQTL_perind.counts.gz -p 10 # works fine; also no option for parallelization
 # indexing and bedding
 ml htslib; sh Ne-sQTL_perind.counts.gz_prepare.sh
 # about the above line: you need to remove all of the index files and generate new ones once you convert the beds to a QTLtools compatible format
@@ -95,7 +95,7 @@ ml htslib; sh Ne-sQTL_perind.counts.gz_prepare.sh
 ## Step 4 - Genotype & Covariates Preparation
 ################################################
 # filter the non-biallelic sites from genotype file using bcftools; see script for details
-sbatch --wait ${homeDir}/Ne-sQTL/src/12-18-2018/bcf_tools.sh $homeDir
+sbatch --wait ${scripts}/sh/bcf_tools.sh $homeDir
 # index our friend with tabix
 echo "Indexing our friend..."
 tabix -p vcf GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz
@@ -109,19 +109,19 @@ tabix -p vcf GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz
 # prepare files for QTLtools
 ls *qqnorm*.gz >> leafcutterphenotypes.txt 
 # important: render these files compatible with QTLtools
-sbatch --wait ${homeDir}/Ne-sQTL/src/12-18-2018/QTLtools-Filter.sh
+sbatch --wait ${homeDir}/sh/QTLtools-Filter.sh
 ls *.qtltools >> qtltools-input.txt
 # generate the corresponding tbi files
 rm Ne*tbi
 for i in {1..22}; do tabix -p bed Ne-sQTL_perind.counts.gz.qqnorm_chr${i}.gz.qtltools; echo "Bedding chromosome $i"; done
 
-mv ${homeDir}/Ne-sQTL/data/01-22-2019/GTExTissueKey.csv $PWD
+cp ${data}/01-22-2019/GTExTissueKey.csv $PWD
 # get the tissue sites for each corresonding sra file
-Rscript --vanilla ${homeDir}/Ne-sQTL/src/01-09-2019/sraTissueExtract.R ${homeDir}/Ne-sQTL/data/SraRunTable.txt GTExTissueKey.csv
+Rscript ${scripts}/R/sraTissueExtract.R ${data}/SraRunTable.txt GTExTissueKey.csv
 
 
 # submit each LF phenotype file to sraNameChangeSort as command line variable as well as tissue_table.txt
-for phen in *qqnorm*.gz.qtltools; do Rscript ${homeDir}/Ne-sQTL/src/01-15-2019/sraNameChangeSort.R $phen tissue_table.txt ; done
+for phen in *qqnorm*.gz.qtltools; do Rscript ${scripts}/R/sraNameChangeSort.R $phen tissue_table.txt ; done
 rm *Leukemia*
 
 #this code is problematic - I can't have any whitespaces in filenames, yet the that's all they have in tissue_table
