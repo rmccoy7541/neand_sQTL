@@ -182,7 +182,7 @@ ls WHLBLD_* | sort -V >> WHLBLD_chunks.txt
 
 #Extract Neanderthal sequences
 cp ${data}02-11-2019/tag_snps.neand.EUR.bed $PWD
-sbatch --wait --export=listPath=$PWD ${scripts}sh/NomPassExtractCall.sh
+sbatch --wait --export=listPath=$PWD,tissue=$(echo TESTIS) ${scripts}sh/NomPassExtractCall.sh
 
 cat WHLBLD_nominals_chunk_*_out.txt | gzip -c > nominals.all.chunks.NE_only.txt.gz
 
