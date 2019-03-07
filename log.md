@@ -5,6 +5,17 @@ These updates are read from most recent date at the top to initial entry at the 
 REMEMBER
 - You need to make the pipeline generalizable, especially the part after separating the phenotype table by tissue.
 
+### 03/06/2019
+#### Wed 06 Mar 2019 06:07:10 PM EST 
+I'm concatenating the QTLtools nominal outputs for testis and cerebellum and they're coming out to be massive files compared to whole blood. I'm going to have to look into this. For contrast, the total size for the concatenating nominals for WHLBLD were 54G. 
+
+Testis just stopped at around 130Gb, BRNCHA is still going at ~80Gb. I'm running Testis again just to be sure.
+
+Double the size isn't that bad though.
+
+I still absolutely need to find out how many files were included for each tissue in the analysis freeze.
+
+
 ### 03/05/2019
 #### Tue 05 Mar 2019 11:15:07 AM EST 
 Working on `sraNameChangeSort.sh`.

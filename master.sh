@@ -172,16 +172,8 @@ echo "Concatenating covariates..."
 VCF=$(echo /scratch/groups/rmccoy22/Ne_sQTL/files/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz)
 
 #for loop for QTLtools nominals - Make this into a batch script -MAKE GENERALIZABLE
-for i in {1..100}; do /scratch/groups/rmccoy22/progs/QTLtools/QTLtools_1.1_Ubuntu14.04_x86_64 cis \
-	--vcf  $VCF \
-	--bed "$pheno" \
-	--cov  "Brain_Cerebellum.v7.covariates_output.txt" \
-	--nominal 1  \
-	--chunk $i 100 \
-	--out "BRNCHA_nominals_chunk_${i}.txt"
-done
 
-
+sbatch --wait --export=VCF=$ncbiFiles/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz,pheno=$pheno ${scripts}/sh/NomPass.sh
 
 # MAKE GENERALIZEABLE
 cat WHLBLD_nominals_chunk_*.txt | gzip -c > nominals.all.chunks.txt.gz
