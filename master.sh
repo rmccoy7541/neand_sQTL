@@ -178,11 +178,11 @@ sbatch --wait --export=VCF=$ncbiFiles/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz,
 # MAKE GENERALIZEABLE
 cat WHLBLD_nominals_chunk_*.txt | gzip -c > nominals.all.chunks.txt.gz
 
-ls WHLBLD_* | sort -V >> WHLBLD_chunks.txt
+ls WHLBLD_* | sort -V >> WHLBLD_chunks_list.txt
 
 #Extract Neanderthal sequences
 cp ${data}02-11-2019/tag_snps.neand.EUR.bed $PWD
-sbatch --wait --export=listPath=$PWD,tissue=$(echo TESTIS),scripts=$scripts ${scripts}sh/NomPassExtractCall.sh
+sbatch --export=listPath=$PWD,tissue=$(echo BRNCHA),scripts=$scripts ${scripts}sh/NomPassExtractCall.sh
 
 cat WHLBLD_nominals_chunk_*_out.txt | gzip -c > nominals.all.chunks.NE_only.txt.gz
 

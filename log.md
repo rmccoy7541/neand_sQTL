@@ -5,6 +5,39 @@ These updates are read from most recent date at the top to initial entry at the 
 REMEMBER
 - You need to make the pipeline generalizable, especially the part after separating the phenotype table by tissue.
 
+### 03/07/2019
+#### Thu 07 Mar 2019 02:02:05 PM EST 
+I just finished concatting and compressing the nominals for TESTIS and BRNCHA. They're both at around ~120Gb, which is not bad but still big for the number of samples. I'm going to perform a sanity check aka I'm going to try to reproduce nominal chunk 50 for both tissues and if the `sha1sum` doesn't match up, I'm going to retrace my steps.
+
+`/scratch/groups/rmccoy22/progs/QTLtools/QTLtools_1.1_Ubuntu14.04_x86_64 cis --vcf $VCF --bed "../${pheno}" --cov  "../Brain_Cerebellum.v7.covariates_output.txt" --nominal 1 --chunk 50 100 --out "BRNCHA_nominals_chunk_50_SANITYCHECK.txt"`
+
+BRNCHA is good
+
+```
+[aseyedi2@jhu.edu@rmccoy22-dev sanitycheck]$ sha1sum BRNCHA_nominals_chunk_50_SANITYCHECK.txt 
+c47b1b6868b59868bfee98c29736aa618439b382  BRNCHA_nominals_chunk_50_SANITYCHECK.txt
+[aseyedi2@jhu.edu@rmccoy22-dev sanitycheck]$ sha1sum ../BRNCHA_nominals_chunk_50.txt 
+c47b1b6868b59868bfee98c29736aa618439b382  ../BRNCHA_nominals_chunk_50.txt
+[aseyedi2@jhu.edu@rmccoy22-dev sanitycheck]$ cd ../../TESTIS/
+
+```
+
+Going to try it again for TESTIS
+
+`/scratch/groups/rmccoy22/progs/QTLtools/QTLtools_1.1_Ubuntu14.04_x86_64 cis --vcf $VCF --bed "${pheno}" --cov  "../Testis.v7.covariates_output.txt" --nominal 1 --chunk 50 100 --out "TESTIS_nominals_chunk_50_SANITYCHECK.txt"`
+
+```
+[aseyedi2@jhu.edu@compute0003 sanitycheck]$ sha1sum TESTIS_nominals_chunk_50_SANITYCHECK.txt 
+821da43b75f23fe802f70d8521e618bf94ffd4f1  TESTIS_nominals_chunk_50_SANITYCHECK.txt
+[aseyedi2@jhu.edu@compute0003 sanitycheck]$ sha1sum ../TESTIS_nominals_chunk_50.txt 
+821da43b75f23fe802f70d8521e618bf94ffd4f1  ../TESTIS_nominals_chunk_50.txt
+
+```
+
+Okay, TESTIS is good too. There is no obvious problem. I'm going to call the nominal pass extract for BRNCHA now.
+
+Both of the NomPassExtractCalls are running. Now we wait.
+
 ### 03/06/2019
 #### Wed 06 Mar 2019 06:07:10 PM EST 
 I'm concatenating the QTLtools nominal outputs for testis and cerebellum and they're coming out to be massive files compared to whole blood. I'm going to have to look into this. For contrast, the total size for the concatenating nominals for WHLBLD were 54G. 

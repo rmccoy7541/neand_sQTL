@@ -12,7 +12,7 @@
 # Begin work section #
 ######################
 
-for i in {1..100}; do /scratch/groups/rmccoy22/progs/QTLtools/QTLtools_1.1_Ubuntu14.04_x86_64 cis \
+/scratch/groups/rmccoy22/progs/QTLtools/QTLtools_1.1_Ubuntu14.04_x86_64 cis \
 	--vcf  $VCF \
 	--bed "$pheno" \
 	--cov  "Brain_Cerebellum.v7.covariates_output.txt" \
