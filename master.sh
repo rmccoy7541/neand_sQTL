@@ -184,12 +184,12 @@ ls WHLBLD_* | sort -V >> WHLBLD_chunks_list.txt
 cp ${data}02-11-2019/tag_snps.neand.EUR.bed $PWD
 sbatch --export=listPath=$PWD,tissue=$(echo BRNCHA),scripts=$scripts ${scripts}sh/NomPassExtractCall.sh
 
-cat TESTIS_nominals_chunk_*_out.txt | gzip -c > TESTIS.nominals.all.chunks.NE_only.txt.gz
+cat BRNCHA_nominals_chunk_*_out.txt | gzip -c > BRNCHA.nominals.all.chunks.NE_only.txt.gz
 
 mkdir nominals; mv *_nominals_* nominals/
 
 #Call permuatation pass
-sbatch --wait --export=VCF=$ncbiFiles/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz,pheno=$pheno,tissue=$(echo TESTIS),covariate=$(echo Testis.v7.covariates_output.txt) ${scripts}/sh/PermPass.sh
+sbatch --wait --export=VCF=$VCF,pheno=$pheno,tissue=$(echo BRNCHA),covariate=$(echo Brain_Cerebellum.v7.covariates_output.txt) ${scripts}/sh/PermPass.sh
 
 cat WHLBLD_permutations_chunk_*.txt | gzip -c > permutations_full.txt.gz
 
