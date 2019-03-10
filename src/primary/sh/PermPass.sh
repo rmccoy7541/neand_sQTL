@@ -3,7 +3,7 @@
 #SBATCH --partition=shared
 #SBATCH --job-name=PermPass
 #SBATCH --nodes=1
-#SBATCH --time=8:0:0
+#SBATCH --time=12:0:0
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=3
 #SBATCH --array=1-100
@@ -20,3 +20,4 @@
   --chunk ${SLURM_ARRAY_TASK_ID} 100 \
   --out "${tissue}_permutations_chunk_${SLURM_ARRAY_TASK_ID}.txt" \
   --normal
+
