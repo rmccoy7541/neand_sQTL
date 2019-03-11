@@ -18,4 +18,4 @@
 	--cov  "$covariates" \
 	--mapping "$permutations" \
 	--chunk ${SLURM_ARRAY_TASK_ID} 100 \
-	--out "WHLBLD_conditionals_chunk_${SLURM_ARRAY_TASK_ID}.txt"
+	--out "${tissue}_conditionals_chunk_${SLURM_ARRAY_TASK_ID}.txt"

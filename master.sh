@@ -199,7 +199,7 @@ ml gcc
 
 Rscript ~/work/progs/QTLtools/script/runFDR_cis.R BRNCHA.permutations_full.txt.gz 0.05 BRNCHA.permutations_full_FDR
 
-sbatch --wait --export=VCF=$VCF,pheno=$pheno,tissue=$(echo BRNCHA),covariate=$(echo Brain_Cerebellum.v7.covariates_output.txt),permutations=$(echo TESTIS.permutations_full_FDR.thresholds.txt) ${scripts}/sh/CondPass.sh
+sbatch --wait --export=VCF=$VCF,pheno=$pheno,tissue=$(echo TESTIS),covariate=$(echo Testis.v7.covariates_output.txt),permutations=$(echo TESTIS.permutations_full_FDR.thresholds.txt) ${scripts}/sh/CondPass.sh
 
 cat WHLBLD_conditionals_chunk_*.txt | gzip -c > conditional_full.txt.gz
 
