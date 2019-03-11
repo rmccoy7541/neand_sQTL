@@ -191,13 +191,15 @@ mkdir nominals; mv *_nominals_* nominals/
 #Call permuatation pass
 sbatch --wait --export=VCF=$VCF,pheno=$pheno,tissue=$(echo BRNCHA),covariate=$(echo Brain_Cerebellum.v7.covariates_output.txt) ${scripts}/sh/PermPass.sh
 
-cat WHLBLD_permutations_chunk_*.txt | gzip -c > permutations_full.txt.gz
+cat TESTIS_permutations_chunk_*.txt | gzip -c > TESTIS.permutations_full.txt.gz
 
 mkdir permutations; mv *_permutations_* permutations/
 
-Rscript ${homeDir}/progs/QTLtools/script/runFDR_cis.R permutations_full.txt.gz 0.05 permuatations_full_FDR
+ml gcc
 
-sbatch --wait --export=VCF=$ncbiFiles/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz,pheno=$pheno ${scripts}/sh/CondPass.sh
+Rscript ~/work/progs/QTLtools/script/runFDR_cis.R BRNCHA.permutations_full.txt.gz 0.05 BRNCHA.permutations_full_FDR
+
+sbatch --wait --export=VCF=$VCF,pheno=$pheno,tissue=$(echo BRNCHA),covariate=$(echo Brain_Cerebellum.v7.covariates_output.txt),permutations=$(echo TESTIS.permutations_full_FDR.thresholds.txt) ${scripts}/sh/CondPass.sh
 
 cat WHLBLD_conditionals_chunk_*.txt | gzip -c > conditional_full.txt.gz
 

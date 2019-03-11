@@ -5,6 +5,11 @@ These updates are read from most recent date at the top to initial entry at the 
 REMEMBER
 - You need to make the pipeline generalizable, especially the part after separating the phenotype table by tissue.
 
+### 03/11/2019
+#### Mon 11 Mar 2019 10:58:20 AM EDT 
+I forgot to write about it but basically I finished the permutation step for both tissues. Finished concatting for BRNCHA, now gotta do the same for TESTIS. Then I'm going to pull the FDR for BRNCHA.
+
+
 ### 03/07/2019
 #### Thu 07 Mar 2019 02:02:05 PM EST 
 I just finished concatting and compressing the nominals for TESTIS and BRNCHA. They're both at around ~120Gb, which is not bad but still big for the number of samples. I'm going to perform a sanity check aka I'm going to try to reproduce nominal chunk 50 for both tissues and if the `sha1sum` doesn't match up, I'm going to retrace my steps.
