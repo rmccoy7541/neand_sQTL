@@ -9,6 +9,12 @@ REMEMBER
 #### Mon 11 Mar 2019 10:58:20 AM EDT 
 I forgot to write about it but basically I finished the permutation step for both tissues. Finished concatting for BRNCHA, now gotta do the same for TESTIS. Then I'm going to pull the FDR for BRNCHA.
 
+```
+sbatch --export=VCF=$VCF,pheno=$pheno,tissue=$(echo TESTIS),covariates=$(echo Testis.v7.covariates_output.txt),permutations=$(echo TESTIS.permutations_full_FDR.thresholds.txt) ${scripts}/sh/CondPass.sh
+
+sbatch --export=VCF=$VCF,pheno=$(echo BRNCHA.pheno.bed.gz),tissue=$(echo BRNCHA),covariates=$(echo Brain_Cerebellum.v7.covariates_output.txt),permutations=$(echo BRNCHA.permutations_full_FDR.thresholds.txt) ${scripts}/sh/CondPass.sh
+```
+
 
 ### 03/07/2019
 #### Thu 07 Mar 2019 02:02:05 PM EST 

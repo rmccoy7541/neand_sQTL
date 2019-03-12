@@ -4,9 +4,11 @@ library(Homo.sapiens)
 library(qqman)
 library(qvalue)
 
-setwd("/scratch/groups/rmccoy22/aseyedi2/QTLtoolsResults-WHLBLD")
+cmdArgs = commandArgs(trailingOnly=TRUE)
+# cmdArgs[1] is wd, [2] is NE nominals, [3] is permutations, [4] is tag_snps
+setwd(cmdArgs[1])
 
-dt <- fread("nominals.all.chunks.NE_only.txt.gz") %>%
+dt <- fread(cmdArgs[2]) %>%
   setnames(., c("intron_cluster", "chrom", "pheno_start", "pheno_end", 
                 "strand", "total_cis", "distance", "variant_id", "variant_chrom", 
                 "var_start", "var_end", "p", "beta", "is_top_variant", "drop")) %>%
@@ -43,7 +45,7 @@ qq(dt$p)
 
 #########
 
-gtp <- fread("permutations_full.txt.gz") %>%
+gtp <- fread(cmdArgs[3]) %>%
   setnames(., c("intron_cluster", "chrom", "pheno_start", "pheno_end", 
                 "strand", "total_cis", "distance", "variant_id", "variant_chrom", 
                 "var_start", "var_end", "df", "dummy", "param_1", "param_2",
@@ -52,7 +54,7 @@ gtp <- fread("permutations_full.txt.gz") %>%
 
 gtp[, qval := qvalue(gtp$adj_p)$qvalue]
 
-neand <- fread("/scratch/groups/rmccoy22/Ne_sQTL/sra/juncfiles/intronclustering/WHLBLD/tag_snps.neand.EUR.bed") %>%
+neand <- fread("/home-1/aseyedi2@jhu.edu/work/aseyedi2/neand_sQTL/data/02-11-2019/tag_snps.neand.EUR.bed") %>%
   mutate(., var_id_1 = paste(V1, V3, V4, V5, "b37", sep = "_")) %>%
   mutate(., var_id_2 = paste(V1, V3, V5, V4, "b37", sep = "_")) %>%
   as.data.table()
