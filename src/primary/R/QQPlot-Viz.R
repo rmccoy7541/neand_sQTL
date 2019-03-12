@@ -45,7 +45,7 @@ qq(dt$p)
 dev.off()
 
 #########
-pdf("permutation.pdf")
+
 gtp <- fread(cmdArgs[3]) %>%
   setnames(., c("intron_cluster", "chrom", "pheno_start", "pheno_end", 
                 "strand", "total_cis", "distance", "variant_id", "variant_chrom", 
@@ -80,5 +80,7 @@ gtp <- gtp[olaps, on = "queryHits", nomatch = 0]
 gtp <- gtp[gene_list, on = "subjectHits", nomatch = 0]
 
 setorder(gtp, adj_p)
-gtp[qval < 0.1 & is_neand == TRUE]
-dev.off()
+table <- gtp[qval < 0.1 & is_neand == TRUE]
+
+write.table(table, "permutation_table_NE.txt", row.names=F, quote=F, sep="\t")
+
