@@ -6,7 +6,8 @@ REMEMBER
 - You need to make the pipeline generalizable, especially the part after separating the phenotype table by tissue.
 
 ### 03/12/2019
-#### 
+#### Tue 12 Mar 2019 12:03:20 PM EDT 
+My computer crashed but basically the BRNCHA and TESTIS are done and am gathering analysis now.
 
 ### 03/11/2019
 #### Mon 11 Mar 2019 10:58:20 AM EDT 
