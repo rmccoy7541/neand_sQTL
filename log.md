@@ -5,6 +5,9 @@ These updates are read from most recent date at the top to initial entry at the 
 REMEMBER
 - You need to make the pipeline generalizable, especially the part after separating the phenotype table by tissue.
 
+### 03/12/2019
+#### 
+
 ### 03/11/2019
 #### Mon 11 Mar 2019 10:58:20 AM EDT 
 I forgot to write about it but basically I finished the permutation step for both tissues. Finished concatting for BRNCHA, now gotta do the same for TESTIS. Then I'm going to pull the FDR for BRNCHA.

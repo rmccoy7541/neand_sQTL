@@ -5,7 +5,7 @@ library(qqman)
 library(qvalue)
 
 cmdArgs = commandArgs(trailingOnly=TRUE)
-# cmdArgs[1] is wd, [2] is NE nominals, [3] is permutations, [4] is tag_snps
+# cmdArgs[1] is wd, [2] is NE nominals, [3] is permutations
 setwd(cmdArgs[1])
 
 dt <- fread(cmdArgs[2]) %>%
@@ -13,7 +13,7 @@ dt <- fread(cmdArgs[2]) %>%
                 "strand", "total_cis", "distance", "variant_id", "variant_chrom", 
                 "var_start", "var_end", "p", "beta", "is_top_variant", "drop")) %>%
   setorder(., p)
-
+pdf("Nominals_NE.pdf")
 dt[, drop := NULL]
 
 head(dt[is_top_variant == TRUE])
@@ -42,9 +42,10 @@ dt <- dt[gene_list, on = "subjectHits", nomatch = 0]
 setorder(dt, p)
 
 qq(dt$p)
+dev.off()
 
 #########
-
+pdf("permutation.pdf")
 gtp <- fread(cmdArgs[3]) %>%
   setnames(., c("intron_cluster", "chrom", "pheno_start", "pheno_end", 
                 "strand", "total_cis", "distance", "variant_id", "variant_chrom", 
@@ -80,3 +81,4 @@ gtp <- gtp[gene_list, on = "subjectHits", nomatch = 0]
 
 setorder(gtp, adj_p)
 gtp[qval < 0.1 & is_neand == TRUE]
+dev.off()
