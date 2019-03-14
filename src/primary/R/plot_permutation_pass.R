@@ -8,10 +8,6 @@ install.packages("Homo.sapiens", "qqman", "qvalue")
 
 setwd("/home/arta/Documents/GitHub/Ne-sQTL/data/QTLTools_Results/")
 
-
-# installing/loading the latest installr package:
-install.packages("installr"); library(installr) # install+load installr
-
 updateR() # updating R.
 
 gene_list <- genes(TxDb.Hsapiens.UCSC.hg19.knownGene) %>%
