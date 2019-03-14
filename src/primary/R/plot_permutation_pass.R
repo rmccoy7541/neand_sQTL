@@ -8,7 +8,7 @@ commVars = commandArgs(trailingOnly=TRUE)
 
 
 setwd(commVars[1])
-
+# setwd("D:/qtlres")
 
 
 gene_list <- genes(TxDb.Hsapiens.UCSC.hg19.knownGene) %>%
@@ -57,7 +57,9 @@ gtp <- gtp[olaps, on = "queryHits", nomatch = 0]
 
 gtp <- gtp[gene_list, on = "subjectHits", nomatch = 0]
 
-setorder(gtp, adj_p)
+print(setorder(gtp, adj_p))
 gtp[qval < 0.1 & is_neand == TRUE]
 
-setorder(gtp, symbol)
+print(setorder(gtp, symbol))
+
+write.table(gtp, file = paste0("WHLBLD_BRNCHA_TESTIS_permpassFDRNeand.txt"), quote = F, col.names = F, row.names = F)
