@@ -4,9 +4,7 @@ library(Homo.sapiens)
 library(qqman)
 library(qvalue)
 
-install.packages("Homo.sapiens", "qqman", "qvalue")
-
-setwd("/home/arta/Documents/GitHub/Ne-sQTL/data/QTLTools_Results/")
+# set wd
 
 updateR() # updating R.
 
