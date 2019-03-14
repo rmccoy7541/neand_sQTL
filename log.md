@@ -5,6 +5,10 @@ These updates are read from most recent date at the top to initial entry at the 
 REMEMBER
 - You need to make the pipeline generalizable, especially the part after separating the phenotype table by tissue.
 
+### 03/13/2019
+#### Wed 13 Mar 2019 12:59:37 PM EDT 
+I'm going to start with liver and frontal lobe tissues. I downloaded a cart file with 144 liver files and 122 frontal cortex samples. However, that's less than the supposed amount according to sample attributes DS. I'm going to talk to Rajiv about this.
+
 ### 03/12/2019
 #### Tue 12 Mar 2019 12:03:20 PM EDT 
 My computer crashed but basically the BRNCHA and TESTIS are done and am gathering analysis now.

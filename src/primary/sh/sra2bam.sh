@@ -6,7 +6,7 @@
 # number of tasks (processes) per node
 #SBATCH --ntasks-per-node=24
 ## YOU MUST ENTER ARRAY RANGE
-#SBATCH --array=1-212%100
+#SBATCH --array=1-266%100
 
 line=`sed "${SLURM_ARRAY_TASK_ID}q;d" ${sraListPath}/sralist.txt`
 

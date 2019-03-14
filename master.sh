@@ -26,7 +26,6 @@ ml
 
 # were are at ~ right now, which is /home-1/aseyedi2@jhu.edu
 cd ~/work/
-mv aseyedi2/neand_sQTL/master.sh $PWD
 
 # the directory of master.sh
 homeDir=$(echo ~/work/)
@@ -34,14 +33,17 @@ scripts=$(echo /home-1/aseyedi2@jhu.edu/work/aseyedi2/neand_sQTL/src/primary/)
 data=$(echo /home-1/aseyedi2@jhu.edu/work/aseyedi2/neand_sQTL/data/)
 ncbiFiles=$(echo /scratch/groups/rmccoy22/Ne_sQTL/files/)
 
+# input directory with sra files here
+sra=$(echo /scratch/groups/rmccoy22/Ne_sQTL/sra/liver_and_frontal_lobe)
+
 ## Step 1a - Conversion & Validation
 ################################################
 # convert .sra to .bam files
-cd Ne_sQTL/sra
+cd $sra
 # store all .sra names into text file for job array
 ls *.sra >> sralist.txt
 # submit batch job, return stdout in $RES
-sbatch --wait --export=sraListPath=$PWD,homeDir=$homeDir ${scripts}/sh/sra2bam.sh
+sbatch --wait --export=sraListPath=$sra,homeDir=$homeDir ${scripts}/sh/sra2bam.sh
 
 samtools quickcheck *bam
 
@@ -207,6 +209,6 @@ cat WHLBLD_conditionals_chunk_*.txt | gzip -c > conditional_full.txt.gz
 
 mkdir conditionals; mv *_conditionals_* conditionals/
 
-Rscript 
+Rscript ${scripts}/R/QQPlot-Viz.R /home-1/aseyedi2@jhu.edu/work/aseyedi2/sQTL/WHLBLD WHLBLD.nominals.all.chunks.NE_only.txt.gz WHLBLD.permutations_full.txt.gz
 
 echo "done"
