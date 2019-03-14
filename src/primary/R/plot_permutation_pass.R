@@ -3,10 +3,13 @@ library(tidyverse)
 library(Homo.sapiens)
 library(qqman)
 library(qvalue)
+# 1 is wd of the permutation pass folders, 2 is EUR tag snps
+commVars = commandArgs(trailingOnly=TRUE)
 
-# set wd
 
-updateR() # updating R.
+setwd(commVars[1])
+
+
 
 gene_list <- genes(TxDb.Hsapiens.UCSC.hg19.knownGene) %>%
   as.data.table()
@@ -30,7 +33,7 @@ read_tissue_results <- function(tissue_id) {
 
 gtp <- do.call(rbind, lapply(c("BRNCHA", "TESTIS", "WHLBLD"), function(x) read_tissue_results(x)))
 
-neand <- fread("tag_snps/tag_snps.neand.EUR.bed") %>%
+neand <- fread(commVars[2]) %>%
   mutate(., var_id_1 = paste(V1, V3, V4, V5, "b37", sep = "_")) %>%
   mutate(., var_id_2 = paste(V1, V3, V5, V4, "b37", sep = "_")) %>%
   as.data.table()
