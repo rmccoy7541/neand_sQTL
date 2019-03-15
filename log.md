@@ -5,6 +5,26 @@ These updates are read from most recent date at the top to initial entry at the 
 REMEMBER
 - You need to make the pipeline generalizable, especially the part after separating the phenotype table by tissue.
 
+### 03/14/2019
+#### Fri 15 Mar 2019 11:25:03 AM EDT 
+The sra's were successfully converted to bam files for the liver and frontal cortex samples. Skeletal muscle samples finished downloading, 479 of them.
+
+The following sra's failed in conversion:
+```
+SRR1384049.sra.bam was missing EOF block when one should be present.
+SRR2135317.sra.bam had no targets in header.
+SRR2135333.sra.bam had no targets in header.
+SRR2135349.sra.bam had no targets in header.
+SRR2135358.sra.bam had no targets in header.
+SRR2135365.sra.bam had no targets in header.
+SRR2135366.sra.bam had no targets in header.
+SRR2135380.sra.bam had no targets in header.
+SRR2135387.sra.bam had no targets in header.
+```
+
+`samtools quickcheck *bam 2> quickcheckfail.txt`
+`cat quickcheckfail.txt | cut -d' ' -f1 | cut -d'.' -f1,2 > failedbamconversions.txt`
+
 ### 03/13/2019
 #### Wed 13 Mar 2019 12:59:37 PM EDT 
 I'm going to start with liver and frontal lobe tissues. I downloaded a cart file with 144 liver files and 122 frontal cortex samples. However, that's less than the supposed amount according to sample attributes DS. I'm going to talk to Rajiv about this.
