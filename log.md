@@ -25,6 +25,8 @@ SRR2135387.sra.bam had no targets in header.
 `samtools quickcheck *bam 2> quickcheckfail.txt`
 `cat quickcheckfail.txt | cut -d' ' -f1 | cut -d'.' -f1,2 > failedbamconversions.txt`
 
+Still getting the same error. These files are just broken or something. Doing the bam conversions for skeletal muscle right now. 
+
 ### 03/13/2019
 #### Wed 13 Mar 2019 12:59:37 PM EDT 
 I'm going to start with liver and frontal lobe tissues. I downloaded a cart file with 144 liver files and 122 frontal cortex samples. However, that's less than the supposed amount according to sample attributes DS. I'm going to talk to Rajiv about this.
