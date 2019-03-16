@@ -34,11 +34,11 @@ data=$(echo /home-1/aseyedi2@jhu.edu/work/aseyedi2/neand_sQTL/data/)
 ncbiFiles=$(echo /scratch/groups/rmccoy22/Ne_sQTL/files/)
 
 # IF YOU ALREADY HAVE NON-BIALLELIC INDEXED VCF, uncomment below
-#VCF=$(echo /scratch/groups/rmccoy22/Ne_sQTL/files/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz)
+VCF=$(echo /scratch/groups/rmccoy22/Ne_sQTL/files/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz)
 
 # input directory with sra files here
 # Do this step for each separate batch of tissue samples you are trying to process concurrently
-sra=$(echo /scratch/groups/rmccoy22/Ne_sQTL/sra/liver_and_frontal_lobe)
+sra=$(echo /scratch/groups/rmccoy22/Ne_sQTL/sra/frontallobe_liver_muscle)
 
 ## Step 1a - Conversion & Validation
 ################################################

@@ -5,7 +5,36 @@ These updates are read from most recent date at the top to initial entry at the 
 REMEMBER
 - You need to make the pipeline generalizable, especially the part after separating the phenotype table by tissue.
 
-### 03/14/2019
+### 03/16/2019
+#### Sat 16 Mar 2019 06:16:56 PM EDT 
+Just finished bamming the muscle files. `samtools quickcheck` reveals three bams that are corrupt:
+```
+[aseyedi2@jhu.edu@compute0036 skeletal_muscle]$ samtools quickcheck *bam
+SRR2135308.sra.bam had no targets in header.
+SRR2135331.sra.bam had no targets in header.
+SRR2135378.sra.bam had no targets in header.
+```
+There's probably just something wrong with those files. The sizes for those sra's are only a few dozen MB. I removed the bams and put all of the bams in a single folder to continue with (as I intended).
+
+After moving them all into one folder, I did another `quickcheck` just to be sure. Some of the files that I tried to reprocess are still there and broken. I'm going to remove them.
+
+```
+[aseyedi2@jhu.edu@compute0036 frontallobe_liver_muscle]$ cat quickcheckfail.txt | cut -d' ' -f1 | cut -d'.' -f1,2,3 > failedbamconversions.txt 
+[aseyedi2@jhu.edu@compute0036 frontallobe_liver_muscle]$ cat failedbamconversions.txt 
+SRR2135317.sra.bam
+SRR2135333.sra.bam
+SRR2135349.sra.bam
+SRR2135358.sra.bam
+SRR2135365.sra.bam
+SRR2135366.sra.bam
+SRR2135380.sra.bam
+SRR2135387.sra.bam
+
+```
+
+Between frontal lobe, skeletal muscle and liver tissues, there are 734 samples. 
+
+### 03/15/2019
 #### Fri 15 Mar 2019 11:25:03 AM EDT 
 The sra's were successfully converted to bam files for the liver and frontal cortex samples. Skeletal muscle samples finished downloading, 479 of them.
 

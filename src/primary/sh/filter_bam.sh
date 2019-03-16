@@ -5,7 +5,7 @@
 #SBATCH --nodes=1
 # number of tasks (processes) per node
 #SBATCH --ntasks-per-node=24
-#SBATCH --array=1-354%50
+#SBATCH --array=1-734
 
 # bamlist.txt is list of bam files generated from sra's using `ls >> bamlist.txt`
 line=`sed "${SLURM_ARRAY_TASK_ID}q;d" bamlist.txt`
