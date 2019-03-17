@@ -5,6 +5,9 @@ These updates are read from most recent date at the top to initial entry at the 
 REMEMBER
 - You need to make the pipeline generalizable, especially the part after separating the phenotype table by tissue.
 
+### Sun 17 Mar 2019 06:45:59 PM EDT 
+Gonna do bam -> junc. I did it once and it worked but I forgot to up the number from 318 to 734, so I'm going to do it again.
+
 ### 03/16/2019
 #### Sat 16 Mar 2019 06:16:56 PM EDT 
 Just finished bamming the muscle files. `samtools quickcheck` reveals three bams that are corrupt:
