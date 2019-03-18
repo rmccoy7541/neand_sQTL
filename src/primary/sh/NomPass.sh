@@ -15,8 +15,8 @@
 /scratch/groups/rmccoy22/progs/QTLtools/QTLtools_1.1_Ubuntu14.04_x86_64 cis \
 	--vcf  $VCF \
 	--bed "$pheno" \
-	--cov  "Brain_Cerebellum.v7.covariates_output.txt" \
+	--cov  "$covariates" \
 	--nominal 1  \
-	--chunk $i 100 \
-	--out "BRNCHA_nominals_chunk_${i}.txt"
+	--chunk $SLURM_ARRAY_TASK_ID 100 \
+	--out "${tissue}_nominals_chunk_${SLURM_ARRAY_TASK_ID}.txt"
 done

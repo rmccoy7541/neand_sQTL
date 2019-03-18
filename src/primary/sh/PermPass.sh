@@ -15,7 +15,7 @@
 /home-1/aseyedi2@jhu.edu/work/progs/QTLtools/QTLtools_1.1_Ubuntu14.04_x86_64 cis \
   --vcf  $VCF \
   --bed "$pheno" \
-  --cov  "${covariate}" \
+  --cov  "${covariates}" \
   --permute 1000  \
   --chunk ${SLURM_ARRAY_TASK_ID} 100 \
   --out "${tissue}_permutations_chunk_${SLURM_ARRAY_TASK_ID}.txt" \
