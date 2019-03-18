@@ -98,14 +98,17 @@ ml htslib; sh Ne-sQTL_perind.counts.gz_prepare.sh
 # about the above line: you need to remove all of the index files and generate new ones once you convert the beds to a QTLtools compatible format
 
 
+############ Separate sh
+
 ## Step 4 - Genotype & Covariates Preparation
 ################################################
 # filter the non-biallelic sites from genotype file using bcftools; see script for details
 sbatch --wait ${scripts}/sh/bcf_tools.sh $homeDir
 # index our friend with tabix
 echo "Indexing our friend..."
-tabix -p vcf GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz
+ml htslib; tabix -p vcf GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz
 
+############ Separate sh
 
 
 ## Step 5 - QTLtools Preparation

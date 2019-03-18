@@ -6,6 +6,8 @@
 # number of tasks (processes) per node
 #SBATCH --array=1-22
 
+ml htslib
+
 # get the phenotype files
 line=`sed "${SLURM_ARRAY_TASK_ID}q;d" leafcutterphenotypes.txt`
 # convert
