@@ -1,8 +1,11 @@
 #!/usr/bin/env Rscript
 require("data.table")
-# arg 1 is leafcutter PCs, arg 2 is GTEx covariate file for tissue, 3 is tissue_table.txt
+# arg 1 is leafcutter PCs, arg 2 is GTEx covariate file for tissue, 3 is tissue_table.txt, 4 is wd
 args = commandArgs(trailingOnly=TRUE)
 library("data.table")
+
+setwd(args[4])
+
 leafcut <- fread(args[1], colClasses = "character")
 #leafcut <- fread(as.character("Ne-sQTL_perind.counts.gz.PCs"))
 gtexPC <- fread(args[2], colClasses = "character")

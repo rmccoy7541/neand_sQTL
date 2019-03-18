@@ -180,11 +180,24 @@ done
 
 # download genotype covariates
 wget https://storage.googleapis.com/gtex_analysis_v7/single_tissue_eqtl_data/GTEx_Analysis_v7_eQTL_covariates.tar.gz
-cov=$(tar -xzf GTEx_Analysis_v7_eQTL_covariates.tar.gz)
 
+tar -xvf GTEx_Analysis_v7_eQTL_covariates.tar.gz
 
-# Make generalizeable
-Rscript ${scripts}/R/mergePCs.R Ne-sQTL_perind.counts.gz.PCs Testis.v7.covariates.txt tissuetable/tissue_table.txt
+cp $data/Metadata/GTExCovKey.csv .
+
+# Moves covariates to corresponding directory
+for line in $(cat GTExCovKey.csv)
+do
+   full=$(echo $line | awk -F',' '{print $1}')
+   abb=$(echo $line | awk -F',' '{print $2}')
+   if grep "$abb" tissuesused.txt; then
+      cp GTEx_Analysis_v7_eQTL_covariates/$full.v7.covariates.txt $abb
+      Rscript ${scripts}/R/mergePCs.R Ne-sQTL_perind.counts.gz.PCs $abb/$full.v7.covariates.txt tissuetable/tissue_table.txt
+   fi
+done
+
+for line in $(cat tissuesused.txt)
+do
 
 echo "Concatenating covariates..."
 
