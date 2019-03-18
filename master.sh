@@ -158,6 +158,17 @@ do
    done
 done
 
+for line in $(cat tissuesused.txt)
+do
+   head -1 $line/1_$line.txt > $line/$line.phen_fastqtl.bed
+   echo "$line/1_$line.txt > $line/$line.phen_fastqtl.bed"
+   for file in $(ls $line/*)
+   do
+      echo "$file goes into $line/$line.phen_fastqtl.bed"
+      cat $file | sed -e1,1d | head
+   done
+done
+
 ml bedtools
 
 for line in $(cat tissuesused.txt)
