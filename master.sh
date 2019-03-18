@@ -118,7 +118,7 @@ ml htslib; tabix -p vcf GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz
 # prepare files for QTLtools
 ls *qqnorm*.gz >> leafcutterphenotypes.txt 
 # important: render these files compatible with QTLtools
-sbatch --wait ${homeDir}/sh/QTLtools-Filter.sh
+sbatch --wait ${scripts}/sh/QTLtools-Filter.sh
 ls *.qtltools >> qtltools-input.txt
 # generate the corresponding tbi files
 rm Ne*tbi
@@ -126,40 +126,50 @@ for i in {1..22}; do tabix -p bed Ne-sQTL_perind.counts.gz.qqnorm_chr${i}.gz.qtl
 
 cp ${data}/01-22-2019/GTExTissueKey.csv $PWD
 # get the tissue sites for each corresonding sra file
-Rscript ${scripts}/R/sraTissueExtract.R ${data}/SraRunTable.txt GTExTissueKey.csv
+Rscript ${scripts}/R/sraTissueExtract.R ${data}/Metadata/SraRunTable.txt GTExTissueKey.csv
 
 # submit each LF phenotype file to sraNameChangeSort as command line variable as well as tissue_table.txt
 for phen in *qqnorm*.gz.qtltools; do Rscript ${scripts}/R/sraNameChangeSort.R $phen tissue_table.txt ; done
 
 cat tissue_table.txt | cut -f3 | awk '{if(NR>1)print}' |  awk '!seen[$0]++' > tissuenames.txt
 
-#mkdir WHLBLD/
+mkdir tissuetable/
+mv tissue_table.txt tissuetable/
+# make directories for each type of tissue
+for i in 1_*.txt; do echo $i | cut -d'_' -f 2| cut -d'.' -f 1 | xargs mkdir; done
+
+# save tissue types in a file
+for i in 1_*.txt; do echo $i | cut -d'_' -f 2| cut -d'.' -f 1 > tissuesused.txt; done
+
+# moves each outputted file into its respective tissue folder
+for i in *_*.txt; do echo $i | awk -F'[_.]' '{print $2}' | xargs -I '{}' mv $i '{}' ; done
 
 # figure out how to make this part generalizable, but for now make a directory for each type of tissue processed
 
 ## figure out how to make this part generalizable too
 ml htslib
-head -1 1_TESTIS.txt > phen_fastqtl.bed
-# print each chromosome file without the header
-for i in {1..22}
+for line in $(cat tissuesused.txt)
 do
-  cat ${i}_TESTIS.txt | sed -e1,1d >> phen_fastqtl.bed
+   head -1 $line/1_$line.txt > $line/$line.phen_fastqtl.bed
+   echo "Concatenating $line phenotypes..."
+   for file in $(ls $line/*)
+   do
+      cat $file | sed -e1,1d >> $line/$line.phen_fastqtl.bed
+   done
 done
 
 ml bedtools
 
-bedtools sort -header -i phen_fastqtl.bed > TESTIS.pheno.bed
-
-bgzip TESTIS.pheno.bed
-
-pheno=$(echo $PWD/TESTIS.pheno.bed.gz)
-
-tabix -p bed TESTIS.pheno.bed.gz
-rm phen_fastqtl.bed
-
-mkdir sepfiles/
-
-mv *_TESTIS.txt sepfiles/
+for line in $(cat tissuesused.txt)
+do
+   bedtools sort -header -i $line/$line.phen_fastqtl.bed > $line/$line.pheno.bed 
+   bgzip $line/$line.pheno.bed
+   #figure out where tabix outputs
+   tabix -p bed $line/$line.pheno.bed.gz
+   rm $line/$line.pheno.bed
+   mkdir $line/sepfiles/
+   mv $line/*_$line.txt $line/sepfiles/
+done
 
 # download genotype covariates
 wget https://storage.googleapis.com/gtex_analysis_v7/single_tissue_eqtl_data/GTEx_Analysis_v7_eQTL_covariates.tar.gz
@@ -167,7 +177,7 @@ cov=$(tar -xzf GTEx_Analysis_v7_eQTL_covariates.tar.gz)
 
 
 # Make generalizeable
-Rscript ${scripts}/R/mergePCs.R Ne-sQTL_perind.counts.gz.PCs Testis.v7.covariates.txt tissue_table.txt
+Rscript ${scripts}/R/mergePCs.R Ne-sQTL_perind.counts.gz.PCs Testis.v7.covariates.txt tissuetable/tissue_table.txt
 
 echo "Concatenating covariates..."
 

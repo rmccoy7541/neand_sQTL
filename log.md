@@ -5,6 +5,11 @@ These updates are read from most recent date at the top to initial entry at the 
 REMEMBER
 - You need to make the pipeline generalizable, especially the part after separating the phenotype table by tissue.
 
+### Mon 18 Mar 2019 12:23:25 PM EDT 
+Everything is coming along very well. I'm making the pipeline generalizeable with minimum intervention. Here are the lines of code I used to try to make the covariate files useable:
+
+`for i in GTEx_Analysis_v7_eQTL_covariates/*; do echo $i | awk -F'[./]' '{print $2}' >> GTExCovNames.txt; done`
+
 ### Sun 17 Mar 2019 06:45:59 PM EDT 
 Gonna do bam -> junc. I did it once and it worked but I forgot to up the number from 318 to 734, so I'm going to do it again.
 
