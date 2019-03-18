@@ -193,13 +193,10 @@ do
    if grep "$abb" tissuesused.txt; then
       cp GTEx_Analysis_v7_eQTL_covariates/$full.v7.covariates.txt $abb
       Rscript ${scripts}/R/mergePCs.R Ne-sQTL_perind.counts.gz.PCs $abb/$full.v7.covariates.txt tissuetable/tissue_table.txt
+      mv $full.v7.covariates_output.txt $abb
    fi
 done
 
-for line in $(cat tissuesused.txt)
-do
-
-echo "Concatenating covariates..."
 
 # this code is an absolute mess. I need to clean it up.
 

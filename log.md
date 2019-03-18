@@ -39,6 +39,8 @@ done
 
 I figured it out. The for-loop would recur on the concatted file because of `ls $line/*`. Should be `ls $line/*_*.txt`.
 
+Okay, I was able to get up to the QTLtools part of things. I'm almost finished.
+
 ### Sun 17 Mar 2019 06:45:59 PM EDT 
 Gonna do bam -> junc. I did it once and it worked but I forgot to up the number from 318 to 734, so I'm going to do it again.
 
