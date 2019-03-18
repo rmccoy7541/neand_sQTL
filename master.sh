@@ -152,20 +152,10 @@ for line in $(cat tissuesused.txt)
 do
    head -1 $line/1_$line.txt > $line/$line.phen_fastqtl.bed
    echo "Concatenating $line phenotypes..."
-   for file in $(ls $line/*)
+   for file in $(ls $line/*_*.txt)
    do
+      echo "Adding $file..."
       cat $file | sed -e1,1d >> $line/$line.phen_fastqtl.bed
-   done
-done
-
-for line in $(cat tissuesused.txt)
-do
-   head -1 $line/1_$line.txt > $line/$line.phen_fastqtl.bed
-   echo "$line/1_$line.txt > $line/$line.phen_fastqtl.bed"
-   for file in $(ls $line/*)
-   do
-      echo "$file goes into $line/$line.phen_fastqtl.bed"
-      cat $file | sed -e1,1d | head
    done
 done
 
@@ -173,13 +163,19 @@ ml bedtools
 
 for line in $(cat tissuesused.txt)
 do
+   echo "Sorting $line.phen_fastqtl.bed to $line/$line.pheno.bed..."
    bedtools sort -header -i $line/$line.phen_fastqtl.bed > $line/$line.pheno.bed 
+   echo "bgzipping $line/$line.pheno.bed..."
    bgzip $line/$line.pheno.bed
    #figure out where tabix outputs
+   echo "Indexing $line/$line.pheno.bed.gz..."
    tabix -p bed $line/$line.pheno.bed.gz
-   rm $line/$line.pheno.bed
-   mkdir $line/sepfiles/
-   mv $line/*_$line.txt $line/sepfiles/
+done
+
+for line in $(cat tissuesused.txt)
+do
+   mkdir $line/sepfiles
+   mv $line/*_${line}.txt $line/sepfiles/
 done
 
 # download genotype covariates

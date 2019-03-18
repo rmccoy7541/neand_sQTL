@@ -10,6 +10,35 @@ Everything is coming along very well. I'm making the pipeline generalizeable wit
 
 `for i in GTEx_Analysis_v7_eQTL_covariates/*; do echo $i | awk -F'[./]' '{print $2}' >> GTExCovNames.txt; done`
 
+For some reason, this for loop doesn't work:
+```
+for line in $(cat tissuesused.txt)
+do
+   head -1 $line/1_$line.txt > $line/$line.phen_fastqtl.bed
+   echo "Concatenating $line phenotypes..."
+   for file in $(ls $line/*)
+   do
+      cat $file | sed -e1,1d >> $line/$line.phen_fastqtl.bed
+   done
+done
+```
+
+What happens is that I end up with an enormous, 700Gb+ file in BRNCTXB. Each one of the files is a few dozen Mb. I feel like there's a recursion problem happening but I can't figure it out.
+```
+for line in $(cat tissuesused.txt)
+do
+   head -1 $line/1_$line.txt > $line/$line.phen_fastqtl.bed
+   echo "$line/1_$line.txt > $line/$line.phen_fastqtl.bed"
+   for file in $(ls $line/*)
+   do
+      echo "$file goes into $line/$line.phen_fastqtl.bed"
+      cat $file | sed -e1,1d | head
+   done
+done
+```
+
+I figured it out. The for-loop would recur on the concatted file because of `ls $line/*`. Should be `ls $line/*_*.txt`.
+
 ### Sun 17 Mar 2019 06:45:59 PM EDT 
 Gonna do bam -> junc. I did it once and it worked but I forgot to up the number from 318 to 734, so I'm going to do it again.
 
