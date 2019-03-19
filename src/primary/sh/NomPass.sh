@@ -3,7 +3,7 @@
 #SBATCH --partition=shared
 #SBATCH --job-name=NomPass
 #SBATCH --nodes=1
-#SBATCH --time=8:0:0
+#SBATCH --time=4:0:0
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=3
 #SBATCH --array=1-100
@@ -19,4 +19,3 @@
 	--nominal 1  \
 	--chunk $SLURM_ARRAY_TASK_ID 100 \
 	--out "${tissue}_nominals_chunk_${SLURM_ARRAY_TASK_ID}.txt"
-done

@@ -14,7 +14,7 @@
 # 	(again, please see Documentation for details)											 #
 ##########################################################################################################################################
 
-interact -p unlimited -t 4-0:0:0 -c 8
+interact -p unlimited -t 7-0:0:0 -c 24
 
 # load modules
 ml samtools
@@ -26,20 +26,18 @@ ml R
 ml gcc
 ml
 
-# were are at ~ right now, which is /home-1/aseyedi2@jhu.edu
-cd ~/work/
-
-# the directory of master.sh
+# top-level directory, above ncbi/
 homeDir=$(echo ~/work/)
+# this project's scripts dir
 scripts=$(echo /home-1/aseyedi2@jhu.edu/work/aseyedi2/neand_sQTL/src/primary/)
+# data dir
 data=$(echo /home-1/aseyedi2@jhu.edu/work/aseyedi2/neand_sQTL/data/)
+# ncbi/files/
 ncbiFiles=$(echo /scratch/groups/rmccoy22/Ne_sQTL/files/)
-
-# IF YOU ALREADY HAVE NON-BIALLELIC INDEXED VCF, uncomment below
+# IF YOU ALREADY HAVE NON-BIALLELIC INDEXED VCF
 VCF=$(echo /scratch/groups/rmccoy22/Ne_sQTL/files/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz)
-
 # input directory with sra files here
-sra=$('')
+sra=$(echo /scratch/groups/rmccoy22/Ne_sQTL/sra/frontallobe_liver_muscle)
 
 ## Step 1a - Conversion & Validation
 ################################################
@@ -57,7 +55,7 @@ cat samtools_err_bam.txt | cut -d'.' -f1,2,3 > failedbams.txt
 
 for i in $(cat failedbams.txt)
 do
-   echo "$i is broken, removing now..." > log.out
+   echo "$i is broken, removing now..." 
    rm $i
 done
 
@@ -69,6 +67,7 @@ ls *.bam >> bamlist.txt
 # bring bed file to current directory
 cp ${data}/12-07-2018/GRCh37.bed $PWD
 # filter unplaced contigs
+echo "Filtering unplaced contigs..."
 sbatch --wait ${scripts}/sh/filter_bam.sh
 
 ls *.filt >> filtlist.txt
@@ -89,24 +88,28 @@ done
 mkdir juncfiles
 ## IMPORTANT: changed leafcutter's bam2junc.sh to directly call
 ## the bin for samtools
+echo "Converting bam files to junc..."
 sbatch --wait ${scripts}/sh/bam2junccall.sh
 mv *.junc juncfiles/
 cd juncfiles/
 # strip junc files - STILL WITH RUN ID 'SRR######'
 find -type f -name '*.sra.bam.filt.junc' | while read f; do mv "$f" "${f%.sra.bam.filt.junc}"; done
-# put all of the renamed junc files in a text
 
+# put all of the renamed junc files in a text
 ls SRR* >> juncfiles.txt
 # intron clustering
 mkdir intronclustering/
-
+echo "Intron clustering..."
 # intron clustering
 python $homeDir/aseyedi2/leafcutter/clustering/leafcutter_cluster.py -j juncfiles.txt -r intronclustering/ -m 50 -o Ne-sQTL -l 500000 # no option for parallelization
 cd intronclustering/
 
 ## Step 3 - PCA calculation
 ################################################
-python $homeDir/aseyedi2/leafcutter/scripts/prepare_phenotype_table.py Ne-sQTL_perind.counts.gz -p 10 # works fine; also no option for parallelization
+# IMPORTANT: altered to remove 0 samples with NA's
+echo "Preparing phenotype table..."
+python $homeDir/aseyedi2/leafcutter/scripts/prepare_phenotype_table.py Ne-sQTL_perind.counts.gz -p 10 
+
 # indexing and bedding
 ml htslib; sh Ne-sQTL_perind.counts.gz_prepare.sh
 # about the above line: you need to remove all of the index files and generate new ones once you convert the beds to a QTLtools compatible format
@@ -115,13 +118,12 @@ ml htslib; sh Ne-sQTL_perind.counts.gz_prepare.sh
 ## Step 4 - VCF Preparation (optional, see doc for details)
 ################################################
 
-
-
 ## Step 5 - QTLtools Preparation
 ################################################
 # prepare files for QTLtools
 ls *qqnorm*.gz >> leafcutterphenotypes.txt 
 # important: render these files compatible with QTLtools
+echo "Making phenotype files QTLtools compatible..."
 sbatch --wait ${scripts}/sh/QTLtools-Filter.sh
 ls *.qtltools >> qtltools-input.txt
 # generate the corresponding tbi files
@@ -134,7 +136,6 @@ Rscript ${scripts}/R/sraTissueExtract.R ${data}/Metadata/SraRunTable.txt GTExTis
 
 # submit each LF phenotype file to sraNameChangeSort as command line variable as well as tissue_table.txt
 for phen in *qqnorm*.gz.qtltools; do Rscript ${scripts}/R/sraNameChangeSort.R $phen tissue_table.txt ; done
-
 cat tissue_table.txt | cut -f3 | awk '{if(NR>1)print}' |  awk '!seen[$0]++' > tissuenames.txt
 
 mkdir tissuetable/
@@ -148,9 +149,7 @@ for i in 1_*.txt; do echo $i | cut -d'_' -f 2| cut -d'.' -f 1 > tissuesused.txt;
 # moves each outputted file into its respective tissue folder
 for i in *_*.txt; do echo $i | awk -F'[_.]' '{print $2}' | xargs -I '{}' mv $i '{}' ; done
 
-# figure out how to make this part generalizable, but for now make a directory for each type of tissue processed
-
-## figure out how to make this part generalizable too
+## Concatting the phenotype files
 ml htslib
 for line in $(cat tissuesused.txt)
 do
@@ -203,42 +202,41 @@ done
 
 ## Step 4 - Mapping sQTLs using QTLtools
 ################################################
-VCF=$(echo /scratch/groups/rmccoy22/Ne_sQTL/files/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz)
-
 for line in $(cat GTExCovKey.csv)
 do
    full=$(echo $line | awk -F',' '{print $1}')
    abb=$(echo $line | awk -F',' '{print $2}')
    if grep "$abb" tissuesused.txt; then
       # Nominal Pass
-      sbatch --export=VCF=$VCF,pheno=$(echo $abb/$abb.pheno.bed.gz),tissue=$(echo $abb),covariates=$(echo $full.v7.covariates_output.txt) ${scripts}/sh/NomPass.sh
-   
+      sbatch --wait --export=VCF=$VCF,pheno=$(echo $abb/$abb.pheno.bed.gz),tissue=$(echo $abb/$abb),covariates=$(echo $abb/$full.v7.covariates_output.txt) ${scripts}/sh/NomPass.sh
+
       cat $abb/${abb}_nominals_chunk_*.txt | gzip -c > $abb/$abb.nominals.all.chunks.txt.gz
       ls $abb/$abb_* | sort -V >> $abb/${abb}_chunks_list.txt
-      #Extract Neanderthal sequences
-      cp ${data}02-11-2019/tag_snps.neand.EUR.bed .
-      sbatch --export=listPath=$PWD,tissue=$(echo $abb),scripts=$scripts ${scripts}sh/NomPassExtractCall.sh
 
-      cat ${abb}_nominals_chunk_*_out.txt | gzip -c > $abb.nominals.all.chunks.NE_only.txt.gz
+      #Extract Neanderthal sequences
+      cp ${data}02-11-2019/tag_snps.neand.EUR.bed $abb
+      sbatch --wait --export=listPath=$PWD/$abb,tissue=$(echo $abb),scripts=$scripts ${scripts}sh/NomPassExtractCall.sh
+
+      cat ${abb}/${abb}_nominals_chunk_*_out.txt | gzip -c > ${abb}/$abb.nominals.all.chunks.NE_only.txt.gz
 
       mkdir $abb/nominals; mv $abb/*_nominals_* $abb/nominals/
 
       #Call permuatation pass
-      sbatch --wait --export=VCF=$VCF,pheno=$(echo $abb/$abb.pheno.bed.gz),tissue=$(echo $abb),covariates=$(echo $full.v7.covariates_output.txt) ${scripts}/sh/PermPass.sh
+      sbatch --wait --export=VCF=$VCF,pheno=$(echo $abb/$abb.pheno.bed.gz),tissue=$(echo $abb/$abb),covariates=$(echo $abb/$full.v7.covariates_output.txt) ${scripts}/sh/PermPass.sh
 
-      cat ${abb}_permutations_chunk_*.txt | gzip -c > ${abb}.permutations_full.txt.gz
+      cat $abb/${abb}_permutations_chunk_*.txt | gzip -c > $abb/${abb}.permutations_full.txt.gz
 
       mkdir ${abb}/permutations; mv ${abb}/*_permutations_* ${abb}/permutations/
 
-      Rscript ~/work/progs/QTLtools/script/runFDR_cis.R BRNCHA.permutations_full.txt.gz 0.05 BRNCHA.permutations_full_FDR
+      Rscript ~/work/progs/QTLtools/script/runFDR_cis.R $abb/$abb.permutations_full.txt.gz 0.05 $abb/$abb.permutations_full_FDR
 
-      sbatch --wait --export=VCF=$VCF,pheno=$(echo $abb/$abb.pheno.bed.gz),tissue=$(echo $abb),covariates=$(echo $full.v7.covariates_output.txt) ${scripts}/sh/CondPass.sh
+      sbatch --wait --export=VCF=$VCF,pheno=$(echo $abb/$abb.pheno.bed.gz),tissue=$(echo $abb/$abb),covariates=$(echo $abb/$full.v7.covariates_output.txt) ${scripts}/sh/CondPass.sh
 
-      cat ${abb}_conditionals_chunk_*.txt | gzip -c > ${abb}conditional_full.txt.gz
+      cat $abb/${abb}_conditionals_chunk_*.txt | gzip -c > $abb/${abb}conditional_full.txt.gz
 
       mkdir ${abb}/conditionals; mv ${abb}/*_conditionals_* ${abb}conditionals/
 
-      Rscript ${scripts}/R/QQPlot-Viz.R /home-1/aseyedi2@jhu.edu/work/aseyedi2/sQTL/$abb $abb.nominals.all.chunks.NE_only.txt.gz $abb.permutations_full.txt.gz
+      Rscript ${scripts}/R/QQPlot-Viz.R /home-1/aseyedi2@jhu.edu/work/aseyedi2/sQTL/$abb $abb/$abb.nominals.all.chunks.NE_only.txt.gz $abb/$abb.permutations_full.txt.gz
    fi
 done
 echo "Done"

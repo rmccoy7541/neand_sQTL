@@ -5,6 +5,9 @@ These updates are read from most recent date at the top to initial entry at the 
 REMEMBER
 - You need to make the pipeline generalizable, especially the part after separating the phenotype table by tissue.
 
+### Tue 19 Mar 2019 09:14:28 AM EDT 
+Running the QTLtools for-loop on the `unlimited` partition, let's see how this goes.
+
 ### Mon 18 Mar 2019 12:23:25 PM EDT 
 Everything is coming along very well. I'm making the pipeline generalizeable with minimum intervention. Here are the lines of code I used to try to make the covariate files useable:
 
@@ -40,6 +43,11 @@ done
 I figured it out. The for-loop would recur on the concatted file because of `ls $line/*`. Should be `ls $line/*_*.txt`.
 
 Okay, I was able to get up to the QTLtools part of things. I'm almost finished.
+
+I'm running into a problem now:
+
+I can run the QTLtool part with little problem except for this: blah blah blah something about a token near `done`.
+
 
 ### Sun 17 Mar 2019 06:45:59 PM EDT 
 Gonna do bam -> junc. I did it once and it worked but I forgot to up the number from 318 to 734, so I'm going to do it again.
