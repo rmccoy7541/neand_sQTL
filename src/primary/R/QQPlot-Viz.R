@@ -6,13 +6,14 @@ library(qvalue)
 
 cmdArgs = commandArgs(trailingOnly=TRUE)
 # cmdArgs[1] is wd, [2] is NE nominals, [3] is permutations
-setwd(cmdArgs[1])
+
 
 dt <- fread(cmdArgs[2]) %>%
   setnames(., c("intron_cluster", "chrom", "pheno_start", "pheno_end", 
                 "strand", "total_cis", "distance", "variant_id", "variant_chrom", 
                 "var_start", "var_end", "p", "beta", "is_top_variant", "drop")) %>%
   setorder(., p)
+setwd(cmdArgs[1])
 pdf("Nominals_NE.pdf")
 dt[, drop := NULL]
 
@@ -44,6 +45,8 @@ setorder(dt, p)
 qq(dt$p)
 dev.off()
 
+system("cd -")
+
 #########
 
 gtp <- fread(cmdArgs[3]) %>%
@@ -53,6 +56,7 @@ gtp <- fread(cmdArgs[3]) %>%
                 "p", "beta", "emp_p", "adj_p")) %>%
   setorder(., adj_p)
 
+system("cd -")
 gtp[, qval := qvalue(gtp$adj_p)$qvalue]
 
 neand <- fread("/home-1/aseyedi2@jhu.edu/work/aseyedi2/neand_sQTL/data/02-11-2019/tag_snps.neand.EUR.bed") %>%

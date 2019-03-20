@@ -14,8 +14,11 @@
 # 	(again, please see Documentation for details)											 #
 ##########################################################################################################################################
 
+NOW=$(date '+%F_%H:%M:%S')
 interact -p unlimited -t 7-0:0:0 -c 24
-
+screen
+# redirect std out/err
+{
 # load modules
 ml samtools
 ml sra-tools
@@ -230,9 +233,9 @@ do
 
       Rscript ~/work/progs/QTLtools/script/runFDR_cis.R $abb/$abb.permutations_full.txt.gz 0.05 $abb/$abb.permutations_full_FDR
 
-      sbatch --wait --export=VCF=$VCF,pheno=$(echo $abb/$abb.pheno.bed.gz),tissue=$(echo $abb/$abb),covariates=$(echo $abb/$full.v7.covariates_output.txt) ${scripts}/sh/CondPass.sh
+      sbatch --wait --export=VCF=$VCF,pheno=$(echo $abb/$abb.pheno.bed.gz),tissue=$(echo $abb/$abb),covariates=$(echo $abb/$full.v7.covariates_output.txt),permutations=$(echo $abb/$abb.permutations_full_FDR.thresholds.txt) ${scripts}/sh/CondPass.sh
 
-      cat $abb/${abb}_conditionals_chunk_*.txt | gzip -c > $abb/${abb}conditional_full.txt.gz
+      cat $abb/${abb}_conditionals_chunk_*.txt | gzip -c > $abb/${abb}.conditional_full.txt.gz
 
       mkdir ${abb}/conditionals; mv ${abb}/*_conditionals_* ${abb}conditionals/
 
@@ -241,3 +244,4 @@ do
 done
 echo "Done"
 exit
+} > /scratch/groups/rmccoy22/aseyedi2/logs/Ne_sQTL_$NOW.out 2> /scratch/groups/rmccoy22/aseyedi2/logs/Ne_sQTL_$NOW.err
