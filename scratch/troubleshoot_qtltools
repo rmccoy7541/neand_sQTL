@@ -1,0 +1,37 @@
+ml R
+ml gcc
+ml
+
+# top-level directory, above ncbi/
+homeDir=$(echo ~/work/)
+# this project's scripts dir
+scripts=$(echo /home-1/aseyedi2@jhu.edu/work/aseyedi2/neand_sQTL/src/primary/)
+# data dir
+data=$(echo /home-1/aseyedi2@jhu.edu/work/aseyedi2/neand_sQTL/data/)
+# ncbi/files/
+ncbiFiles=$(echo /scratch/groups/rmccoy22/Ne_sQTL/files/)
+# IF YOU ALREADY HAVE NON-BIALLELIC INDEXED VCF
+VCF=$(echo /scratch/groups/rmccoy22/Ne_sQTL/files/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz)
+# input directory with sra files here
+sra=$(echo /scratch/groups/rmccoy22/Ne_sQTL/sra/frontallobe_liver_muscle)
+# leafcutter directory here
+leafCutter=$(echo /scratch/groups/rmccoy22/aseyedi2/leafcutter)
+
+for line in $(cat GTExCovKey.csv)
+do
+   full=$(echo $line | awk -F',' '{print $1}')
+   abb=$(echo $line | awk -F',' '{print $2}')
+   if grep "$abb" tissuesused.txt; then
+      #Extract Neanderthal sequences
+      #sbatch --export=listPath=$PWD/$abb,tissue=$(echo $abb),scripts=$scripts ${scripts}sh/NomPassExtractCall.sh
+
+      #sbatch --export=VCF=$VCF,pheno=$(echo $abb/$abb.pheno.bed.gz),tissue=$(echo $abb/$abb),covariates=$(echo $abb/$full.v7.covariates_output.txt),permutations=$(echo $abb/$abb.permutations_full_FDR.thresholds.txt) ${scripts}/sh/CondPass.sh
+
+      Rscript ${scripts}/R/QQPlot-Viz.R $sra/juncfiles/intronclustering/$abb $abb/$abb.nominals.all.chunks.NE_only.txt.gz $abb/$abb.permutations_full.txt.gz ${data}02-11-2019/tag_snps.neand.EUR.bed
+   fi
+done
+
+      cat ${abb}/${abb}_nominals_chunk_*_out.txt | gzip -c > ${abb}/$abb.nominals.all.chunks.NE_only.txt.gz
+      mkdir $abb/nominals; mv $abb/*_nominals_* $abb/nominals/
+      cat $abb/${abb}_conditionals_chunk_*.txt | gzip -c > $abb/${abb}.conditional_full.txt.gz
+      mkdir ${abb}/conditionals; mv ${abb}/*_conditionals_* ${abb}conditionals/

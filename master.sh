@@ -1,23 +1,31 @@
 #!/bin/bash
-
+#
+#  ███╗   ██╗███████╗ █████╗ ███╗   ██╗██████╗ ███████╗██████╗ ████████╗██╗  ██╗ █████╗ ██╗         ███████╗ ██████╗ ████████╗██╗     
+#  ████╗  ██║██╔════╝██╔══██╗████╗  ██║██╔══██╗██╔════╝██╔══██╗╚══██╔══╝██║  ██║██╔══██╗██║         ██╔════╝██╔═══██╗╚══██╔══╝██║     
+#  ██╔██╗ ██║█████╗  ███████║██╔██╗ ██║██║  ██║█████╗  ██████╔╝   ██║   ███████║███████║██║         ███████╗██║   ██║   ██║   ██║     
+#  ██║╚██╗██║██╔══╝  ██╔══██║██║╚██╗██║██║  ██║██╔══╝  ██╔══██╗   ██║   ██╔══██║██╔══██║██║         ╚════██║██║▄▄ ██║   ██║   ██║     
+#  ██║ ╚████║███████╗██║  ██║██║ ╚████║██████╔╝███████╗██║  ██║   ██║   ██║  ██║██║  ██║███████╗    ███████║╚██████╔╝   ██║   ███████╗
+#  ╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═════╝ ╚══════╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝    ╚══════╝ ╚══▀▀═╝    ╚═╝   ╚══════╝
+#  
 ##########################################################################################################################################
-# This is the master script that prepares and submits all jobs for LeafCutter								 #
-# At the highest directory, it is assumed that the files are arranged as such:								 #
-# Ne_sQTL/		aseyedi2/leafcutter/		aseyedi2/neand_sQTL/		master.sh					 #
+# This is the master script that prepares and submits all jobs for LeafCutter - all you need to do is put the GTEx sra's in the sra/ path#
 #																	 #
-# Don't ask why the git project name and the ncbi folder name (Ne_sQTL) are so similar. I messed up and am too afraid to fix it.	 #
+# Fill out the variables below with the appropriate full paths for each of the corresponding directories.                                #
+# Also make sure to adjust the interactive session below for how long you think the whole pipeline will take. Err on the side of longer. #
 #																	 #
-# It is also assumed that the GTEx VCF file for the whole genome has already been downloaded and resides in ncbi/files/ 		 #
+# It is also assumed that the GTEx VCF file for the whole genome has already been downloaded (and processed) and resides in ncbi/files/	 #
 # 	(see Documentation for details)													 #
-# Finally, please make sure that you have also downloaded the SRA files in ncbi/sra/ AND their corresponding SRA metadata 		 #
-#														(SraRunTable.txt)	 #
-# 	(again, please see Documentation for details)											 #
+#																	 #
+# It's also worth mentioning that though I've made variables for the pipeline, many of the shell scripts use absolute paths when calling #
+# programs such as samtools, QTLtools, sra-tools etc. due to restraints in the HPC. I would recommend going through the shell scripts    #
+# adapting them to your specific situation.												 #
 ##########################################################################################################################################
 
 NOW=$(date '+%F_%H:%M:%S')
-interact -p unlimited -t 7-0:0:0 -c 24
+# adjust for the interactive session time length you might need here
+interact -p unlimited -t 14-0:0:0 -c 24
 screen
-# redirect std out/err
+# redirect std out/err bracket
 {
 # load modules
 ml samtools
@@ -40,7 +48,9 @@ ncbiFiles=$(echo /scratch/groups/rmccoy22/Ne_sQTL/files/)
 # IF YOU ALREADY HAVE NON-BIALLELIC INDEXED VCF
 VCF=$(echo /scratch/groups/rmccoy22/Ne_sQTL/files/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz)
 # input directory with sra files here
-sra=$(echo /scratch/groups/rmccoy22/Ne_sQTL/sra/frontallobe_liver_muscle)
+sra=$(/home-1/aseyedi2@jhu.edu/work/Ne_sQTL/sra/lung_skinEx_thy)
+# leafcutter directory here
+leafCutter=$(echo /scratch/groups/rmccoy22/aseyedi2/leafcutter)
 
 ## Step 1a - Conversion & Validation
 ################################################
@@ -48,7 +58,7 @@ sra=$(echo /scratch/groups/rmccoy22/Ne_sQTL/sra/frontallobe_liver_muscle)
 cd $sra
 # store all .sra names into text file for job array
 ls *.sra >> sralist.txt
-# submit batch job, return stdout in $RES
+# sra2bam, most computationally intensive step
 sbatch --wait --export=sraListPath=$PWD,homeDir=$homeDir ${scripts}/sh/sra2bam.sh
 
 ## samtools error check, remove broken bams
@@ -104,17 +114,17 @@ ls SRR* >> juncfiles.txt
 mkdir intronclustering/
 echo "Intron clustering..."
 # intron clustering
-python $homeDir/aseyedi2/leafcutter/clustering/leafcutter_cluster.py -j juncfiles.txt -r intronclustering/ -m 50 -o Ne-sQTL -l 500000 # no option for parallelization
+python $leafCutter/clustering/leafcutter_cluster.py -j juncfiles.txt -r intronclustering/ -m 50 -o Ne-sQTL -l 500000 # no option for parallelization
 cd intronclustering/
 
 ## Step 3 - PCA calculation
 ################################################
 # IMPORTANT: altered to remove 0 samples with NA's
 echo "Preparing phenotype table..."
-python $homeDir/aseyedi2/leafcutter/scripts/prepare_phenotype_table.py Ne-sQTL_perind.counts.gz -p 10 
+python $leafCutter/scripts/prepare_phenotype_table.py Ne-sQTL_perind.counts.gz -p 10 
 
 # indexing and bedding
-ml htslib; sh Ne-sQTL_perind.counts.gz_prepare.sh
+sh Ne-sQTL_perind.counts.gz_prepare.sh
 # about the above line: you need to remove all of the index files and generate new ones once you convert the beds to a QTLtools compatible format
 
 
@@ -219,6 +229,7 @@ do
       #Extract Neanderthal sequences
       cp ${data}02-11-2019/tag_snps.neand.EUR.bed $abb
       sbatch --wait --export=listPath=$PWD/$abb,tissue=$(echo $abb),scripts=$scripts ${scripts}sh/NomPassExtractCall.sh
+      rm $abb/tag_snps.neand.EUR.bed
 
       cat ${abb}/${abb}_nominals_chunk_*_out.txt | gzip -c > ${abb}/$abb.nominals.all.chunks.NE_only.txt.gz
 
@@ -238,6 +249,8 @@ do
       cat $abb/${abb}_conditionals_chunk_*.txt | gzip -c > $abb/${abb}.conditional_full.txt.gz
 
       mkdir ${abb}/conditionals; mv ${abb}/*_conditionals_* ${abb}conditionals/
+
+      mkdir ${leafCutter}/../sQTL/$abb
 
       Rscript ${scripts}/R/QQPlot-Viz.R /home-1/aseyedi2@jhu.edu/work/aseyedi2/sQTL/$abb $abb/$abb.nominals.all.chunks.NE_only.txt.gz $abb/$abb.permutations_full.txt.gz ${data}02-11-2019/tag_snps.neand.EUR.bed
    fi

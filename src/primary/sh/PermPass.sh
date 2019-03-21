@@ -3,7 +3,7 @@
 #SBATCH --partition=shared
 #SBATCH --job-name=PermPass
 #SBATCH --nodes=1
-#SBATCH --time=18:0:0
+#SBATCH --time=16:0:0
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=3
 #SBATCH --array=1-100

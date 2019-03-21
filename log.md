@@ -5,6 +5,19 @@ These updates are read from most recent date at the top to initial entry at the 
 REMEMBER
 - You need to make the pipeline generalizable, especially the part after separating the phenotype table by tissue.
 
+### Thu 21 Mar 2019 03:21:19 PM EDT 
+Fixed conditional pass and nompassextract and now they're about to run. My next step is to download all of the files for lung, thyroid and exposed skin and try to pipeline on them since the quota is about to run out. 
+
+```
+{
+for i in $(ls *krt)
+do 
+   /scratch/groups/rmccoy22/progs/sra-tools/bin/prefetch -O "/home-1/aseyedi2@jhu.edu/work/Ne_sQTL/sra/lung_skinEx_thy" -X 500G --ascp-path '/software/apps/aspera/3.7.2.354/bin/ascp|/software/apps/aspera/3.7.2.354/etc/asperaweb_id_dsa.openssh' $i
+done
+} > DL-prog.out 2> DL-prog.err
+```
+that should work. Going to change the sra variable to this location.
+
 ### Wed 20 Mar 2019 03:39:04 PM EDT 
 Conditional pass and NomPassExtract are failing because of some errors in the code that I have since fixed. 
 

@@ -13,8 +13,8 @@ dt <- fread(cmdArgs[2]) %>%
                 "strand", "total_cis", "distance", "variant_id", "variant_chrom", 
                 "var_start", "var_end", "p", "beta", "is_top_variant", "drop")) %>%
   setorder(., p)
-setwd(cmdArgs[1])
-pdf("Nominals_NE.pdf")
+
+pdf(paste0(cmdArgs[1],"/Nominals_NE.pdf")
 dt[, drop := NULL]
 
 head(dt[is_top_variant == TRUE])
@@ -44,8 +44,6 @@ setorder(dt, p)
 
 qq(dt$p)
 dev.off()
-
-system("cd -")
 
 #########
 
@@ -86,5 +84,5 @@ gtp <- gtp[gene_list, on = "subjectHits", nomatch = 0]
 setorder(gtp, adj_p)
 table <- gtp[qval < 0.1 & is_neand == TRUE]
 
-write.table(table, "permutation_table_NE.txt", row.names=F, quote=F, sep="\t")
+write.table(table, paste0(cmdArgs[1], "/permutation_table_NE.txt"), row.names=F, quote=F, sep="\t")
 
