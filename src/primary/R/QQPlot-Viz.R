@@ -5,7 +5,7 @@ library(qqman)
 library(qvalue)
 
 cmdArgs = commandArgs(trailingOnly=TRUE)
-# cmdArgs[1] is wd, [2] is NE nominals, [3] is permutations
+# cmdArgs[1] is wd, [2] is NE nominals, [3] is permutations, [4] tag snps for neanderthals
 
 
 dt <- fread(cmdArgs[2]) %>%
@@ -59,7 +59,7 @@ gtp <- fread(cmdArgs[3]) %>%
 system("cd -")
 gtp[, qval := qvalue(gtp$adj_p)$qvalue]
 
-neand <- fread("/home-1/aseyedi2@jhu.edu/work/aseyedi2/neand_sQTL/data/02-11-2019/tag_snps.neand.EUR.bed") %>%
+neand <- fread(cmdArgs[4]) %>%
   mutate(., var_id_1 = paste(V1, V3, V4, V5, "b37", sep = "_")) %>%
   mutate(., var_id_2 = paste(V1, V3, V5, V4, "b37", sep = "_")) %>%
   as.data.table()

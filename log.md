@@ -5,6 +5,9 @@ These updates are read from most recent date at the top to initial entry at the 
 REMEMBER
 - You need to make the pipeline generalizable, especially the part after separating the phenotype table by tissue.
 
+### Wed 20 Mar 2019 03:39:04 PM EDT 
+Conditional pass and NomPassExtract are failing because of some errors in the code that I have since fixed. 
+
 ### Tue 19 Mar 2019 09:14:28 AM EDT 
 Running the QTLtools for-loop on the `unlimited` partition, let's see how this goes.
 

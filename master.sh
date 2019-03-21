@@ -239,7 +239,7 @@ do
 
       mkdir ${abb}/conditionals; mv ${abb}/*_conditionals_* ${abb}conditionals/
 
-      Rscript ${scripts}/R/QQPlot-Viz.R /home-1/aseyedi2@jhu.edu/work/aseyedi2/sQTL/$abb $abb/$abb.nominals.all.chunks.NE_only.txt.gz $abb/$abb.permutations_full.txt.gz
+      Rscript ${scripts}/R/QQPlot-Viz.R /home-1/aseyedi2@jhu.edu/work/aseyedi2/sQTL/$abb $abb/$abb.nominals.all.chunks.NE_only.txt.gz $abb/$abb.permutations_full.txt.gz ${data}02-11-2019/tag_snps.neand.EUR.bed
    fi
 done
 echo "Done"
