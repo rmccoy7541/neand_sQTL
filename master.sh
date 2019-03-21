@@ -28,6 +28,7 @@ screen
 # redirect std out/err bracket
 {
 # load modules
+ml bedtools
 ml samtools
 ml sra-tools
 ml python/2.7-anaconda
@@ -127,7 +128,6 @@ python $leafCutter/scripts/prepare_phenotype_table.py Ne-sQTL_perind.counts.gz -
 sh Ne-sQTL_perind.counts.gz_prepare.sh
 # about the above line: you need to remove all of the index files and generate new ones once you convert the beds to a QTLtools compatible format
 
-
 ## Step 4 - VCF Preparation (optional, see doc for details)
 ################################################
 
@@ -163,7 +163,6 @@ for i in 1_*.txt; do echo $i | cut -d'_' -f 2| cut -d'.' -f 1 > tissuesused.txt;
 for i in *_*.txt; do echo $i | awk -F'[_.]' '{print $2}' | xargs -I '{}' mv $i '{}' ; done
 
 ## Concatting the phenotype files
-ml htslib
 for line in $(cat tissuesused.txt)
 do
    head -1 $line/1_$line.txt > $line/$line.phen_fastqtl.bed
@@ -174,8 +173,6 @@ do
       cat $file | sed -e1,1d >> $line/$line.phen_fastqtl.bed
    done
 done
-
-ml bedtools
 
 for line in $(cat tissuesused.txt)
 do
@@ -199,7 +196,7 @@ wget https://storage.googleapis.com/gtex_analysis_v7/single_tissue_eqtl_data/GTE
 
 tar -xvf GTEx_Analysis_v7_eQTL_covariates.tar.gz
 
-cp $data/Metadata/GTExCovKey.csv .
+cp $data/Metadata/GTExCovKey.csv $PWD
 
 # Moves covariates to corresponding directory
 for line in $(cat GTExCovKey.csv)
