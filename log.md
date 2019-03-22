@@ -5,6 +5,12 @@ These updates are read from most recent date at the top to initial entry at the 
 REMEMBER
 - You need to make the pipeline generalizable, especially the part after separating the phenotype table by tissue.
 
+### 12:23 PM 3/22/2019
+Dealt with concatting the remaining permutation pass files that didn't work for MSCLSK. Calling another conditional pass. Also doing nom pass extract for MSCLSK, BRNCTXB, and LIVER. All I have left with these files is QQviz and I'm done. Though it won't matter since I'm just going to do this all over again with the fully functioning pipeline.
+
+Speaking of which, the lung, thyroid and skin files are still downloading. Once they're done, I'm going to call the pipeline on them and see what happens.
+
+
 ### Thu 21 Mar 2019 03:21:19 PM EDT 
 Fixed conditional pass and nompassextract and now they're about to run. My next step is to download all of the files for lung, thyroid and exposed skin and try to pipeline on them since the quota is about to run out. 
 
