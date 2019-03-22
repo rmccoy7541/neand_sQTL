@@ -23,9 +23,9 @@ do
    abb=$(echo $line | awk -F',' '{print $2}')
    if grep "$abb" tissuesused.txt; then
       #Extract Neanderthal sequences
-      sbatch --export=listPath=$PWD/$abb,tissue=$(echo $abb),scripts=$scripts ${scripts}sh/NomPassExtractCall.sh
+      sbatch --export=listPath=$PWD,tissue=$(echo LIVER),scripts=$scripts ${scripts}sh/NomPassExtractCall.sh
 
-      #sbatch --export=VCF=$VCF,pheno=$(echo $abb/$abb.pheno.bed.gz),tissue=$(echo $abb/$abb),covariates=$(echo $abb/$full.v7.covariates_output.txt),permutations=$(echo $abb/$abb.permutations_full_FDR.thresholds.txt) ${scripts}/sh/CondPass.sh
+      sbatch --export=VCF=$VCF,pheno=$(echo MSCLSK.pheno.bed.gz),tissue=$(echo MSCLSK),covariates=$(echo MSCLSK.v7.covariates_output.txt),permutations=$(echo MSCLSK.permutations_full_FDR.thresholds.txt) ${scripts}/sh/CondPass.sh
 
       #Rscript ${scripts}/R/QQPlot-Viz.R $sra/juncfiles/intronclustering/$abb $abb/$abb.nominals.all.chunks.NE_only.txt.gz $abb/$abb.permutations_full.txt.gz ${data}02-11-2019/tag_snps.neand.EUR.bed
    fi

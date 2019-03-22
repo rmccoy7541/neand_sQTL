@@ -9,16 +9,16 @@
 #  
 ##########################################################################################################################################
 # This is the master script that prepares and submits all jobs for LeafCutter - all you need to do is put the GTEx sra's in the sra/ path#
-#																	 #
+#																																		 #
 # Fill out the variables below with the appropriate full paths for each of the corresponding directories.                                #
 # Also make sure to adjust the interactive session below for how long you think the whole pipeline will take. Err on the side of longer. #
-#																	 #
+#																																		 #
 # It is also assumed that the GTEx VCF file for the whole genome has already been downloaded (and processed) and resides in ncbi/files/	 #
-# 	(see Documentation for details)													 #
-#																	 #
+# 	(see Documentation for details)																										 #
+#																																		 #
 # It's also worth mentioning that though I've made variables for the pipeline, many of the shell scripts use absolute paths when calling #
 # programs such as samtools, QTLtools, sra-tools etc. due to restraints in the HPC. I would recommend going through the shell scripts    #
-# adapting them to your specific situation.												 #
+# adapting them to your specific situation.																								 #
 ##########################################################################################################################################
 
 NOW=$(date '+%F_%H:%M:%S')
