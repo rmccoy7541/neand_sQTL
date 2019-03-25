@@ -23,7 +23,7 @@
 
 NOW=$(date '+%F_%H:%M:%S')
 # adjust for the interactive session time length you might need here
-interact -p unlimited -t 14-0:0:0 -c 24
+interact -p unlimited -t 14-0:0:0 -c 12
 screen
 # redirect std out/err bracket
 {
