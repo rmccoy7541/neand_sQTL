@@ -6,7 +6,7 @@ library(qvalue)
 
 cmdArgs = commandArgs(trailingOnly=TRUE)
 # cmdArgs[1] is wd, [2] is NE nominals, [3] is permutations, [4] tag snps for neanderthals
-
+setwd(cmdArgs[1])
 
 dt <- fread(cmdArgs[2]) %>%
   setnames(., c("intron_cluster", "chrom", "pheno_start", "pheno_end", 
