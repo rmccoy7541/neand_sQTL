@@ -54,7 +54,6 @@ gtp <- fread(cmdArgs[3]) %>%
                 "p", "beta", "emp_p", "adj_p")) %>%
   setorder(., adj_p)
 
-system("cd -")
 gtp[, qval := qvalue(gtp$adj_p)$qvalue]
 
 neand <- fread(cmdArgs[4]) %>%
