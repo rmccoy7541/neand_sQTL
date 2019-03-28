@@ -19,6 +19,3 @@ module load gcc
 line=`sed "${SLURM_ARRAY_TASK_ID}q;d" ${listPath}/${tissue}_chunks_list.txt`
 
 Rscript ${scripts}/R/NomPassExtract.R $listPath/${line} $abb/"tag_snps.neand.EUR.bed"
-
-
-

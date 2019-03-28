@@ -1,9 +1,14 @@
-﻿#Updates
+#Updates
 
 These updates are read from most recent date at the top to initial entry at the bottom.
 
 REMEMBER
 - You need to make the pipeline generalizable, especially the part after separating the phenotype table by tissue.
+
+### 03/28/19
+I just talked to Ryan Bradley over at his office at the CS building. He basically told me that I should use `snakemake`. Also that I could get away with calling an unlimited `sbatch` and then maybe using sbatch to do the rest of it. Make it just a series of `sbatch` calls. That could work. 
+
+The dev node is down and I still need to do some stuff with the 6 tissues we have right now. I'm "focusing" on the presentation for RECOMB-GEN so I don't really have all that much time to spend on optimizing the pipeline.
 
 ### 12:23 PM 3/22/2019
 Dealt with concatting the remaining permutation pass files that didn't work for MSCLSK. Calling another conditional pass. Also doing nom pass extract for MSCLSK, BRNCTXB, and LIVER. All I have left with these files is QQviz and I'm done. Though it won't matter since I'm just going to do this all over again with the fully functioning pipeline.
@@ -160,11 +165,8 @@ c47b1b6868b59868bfee98c29736aa618439b382  ../BRNCHA_nominals_chunk_50.txt
 [aseyedi2@jhu.edu@rmccoy22-dev sanitycheck]$ cd ../../TESTIS/
 
 ```
-
 Going to try it again for TESTIS
-
 `/scratch/groups/rmccoy22/progs/QTLtools/QTLtools_1.1_Ubuntu14.04_x86_64 cis --vcf $VCF --bed "${pheno}" --cov  "../Testis.v7.covariates_output.txt" --nominal 1 --chunk 50 100 --out "TESTIS_nominals_chunk_50_SANITYCHECK.txt"`
-
 ```
 [aseyedi2@jhu.edu@compute0003 sanitycheck]$ sha1sum TESTIS_nominals_chunk_50_SANITYCHECK.txt 
 821da43b75f23fe802f70d8521e618bf94ffd4f1  TESTIS_nominals_chunk_50_SANITYCHECK.txt
