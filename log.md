@@ -10,6 +10,8 @@ I feel like there's something fishy about the two NE only nominal passes (BRNCTX
 
 I'm going to try generating NE only files for MSCLSK. If that doesn't work, I'm going to redo the QTLtools step for all three of them interactively (I've already requested a 5-day-long interactive session) and worry about debugging the master script later. 
 
+Update: the MSCLSK output is only 12 Mb. That's not good. Once my unlimited interactive job gets approved, I'm going to try it again, and by 'it' I mean running QTLtools but interactively this time.
+
 ### 03/28/19
 I just talked to Ryan Bradley over at his office at the CS building. He basically told me that I should use `snakemake`. Also that I could get away with calling an unlimited `sbatch` and then maybe using sbatch to do the rest of it. Make it just a series of `sbatch` calls. That could work. 
 
