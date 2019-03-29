@@ -4,8 +4,8 @@ commvars = commandArgs(trailingOnly=TRUE)
 # basedir <- "/scratch/groups/rmccoy22/Ne_sQTL/sra/juncfiles/intronclustering/WHLBLD/"
 
 # Whole blood chunk 1-100 is arg 1
-sqtl <- fread(commvars[1]) %>%
-setnames(., c("intron_cluster", "chrom", "pheno_start", "pheno_end", "strand", "total_cis", "distance", "variant_id", "variant_chrom", "var_start", "var_end", "p", "beta", "is_top_variant"))
+sqtl <- fread(commvars[1]) %>% 
+  setnames(., c("intron_cluster", "chrom", "pheno_start", "pheno_end", "strand", "total_cis", "distance", "variant_id", "variant_chrom", "var_start", "var_end", "p", "beta", "is_top_variant"))
 
 # Neanderthal bed file is arg 2
 neand <- fread(commvars[2]) %>%

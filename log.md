@@ -1,9 +1,14 @@
-#Updates
+## Updates
 
 These updates are read from most recent date at the top to initial entry at the bottom.
 
 REMEMBER
 - You need to make the pipeline generalizable, especially the part after separating the phenotype table by tissue.
+
+### 03/29/19
+I feel like there's something fishy about the two NE only nominal passes (BRNCTXB and LIVER) I just generated... They're both less than 2 Mb, whereas the other tissues' NE only nom pass are like... at least 100 Mb. There is something fishy about this. I feel like I should redo QTLtools steps for BRNCTXB, LIVER, and MSCLSK manually. 
+
+I'm going to try generating NE only files for MSCLSK. If that doesn't work, I'm going to redo the QTLtools step for all three of them interactively (I've already requested a 5-day-long interactive session) and worry about debugging the master script later. 
 
 ### 03/28/19
 I just talked to Ryan Bradley over at his office at the CS building. He basically told me that I should use `snakemake`. Also that I could get away with calling an unlimited `sbatch` and then maybe using sbatch to do the rest of it. Make it just a series of `sbatch` calls. That could work. 
