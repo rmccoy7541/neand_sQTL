@@ -222,8 +222,13 @@ do
    if grep "$abb" tissuesused.txt; then
       # Nominal Pass
       sbatch --wait --export=VCF=$VCF,pheno=$(echo $abb/$abb.pheno.bed.gz),tissue=$(echo $abb/$abb),covariates=$(echo $abb/$full.v7.covariates_output.txt) ${scripts}/sh/NomPass.sh
+      
+      for i in {1..100}; do
 
-      cat $abb/${abb}_nominals_chunk_*.txt | gzip -c > $abb/$abb.nominals.all.chunks.txt.gz
+         cat $abb/${abb}_nominals_chunk_${i}.txt | gzip -c >> $abb/$abb.nominals.all.chunks.txt.gz
+
+      done
+
       ls $abb/$abb_* | sort -V >> $abb/${abb}_chunks_list.txt
 
       #Extract Neanderthal sequences
@@ -231,14 +236,19 @@ do
       sbatch --wait --export=listPath=$PWD/$abb,tissue=$(echo $abb),scripts=$scripts ${scripts}sh/NomPassExtractCall.sh
       rm $abb/tag_snps.neand.EUR.bed
 
-      cat ${abb}/${abb}_nominals_chunk_*_out.txt | gzip -c > ${abb}/$abb.nominals.all.chunks.NE_only.txt.gz
+      for i in {1..100}; do
+         cat ${abb}/${abb}_nominals_chunk_$i_out.txt | gzip -c >> ${abb}/$abb.nominals.all.chunks.NE_only.txt.gz
+      done
+      
 
       mkdir $abb/nominals; mv $abb/*_nominals_* $abb/nominals/
 
       #Call permuatation pass
       sbatch --wait --export=VCF=$VCF,pheno=$(echo $abb/$abb.pheno.bed.gz),tissue=$(echo $abb/$abb),covariates=$(echo $abb/$full.v7.covariates_output.txt) ${scripts}/sh/PermPass.sh
-
-      cat $abb/${abb}_permutations_chunk_*.txt | gzip -c > $abb/${abb}.permutations_full.txt.gz
+      
+      for i in {1..100}; do
+         cat $abb/${abb}_permutations_chunk_$i.txt | gzip -c >> $abb/${abb}.permutations_full.txt.gz
+      done
 
       mkdir ${abb}/permutations; mv ${abb}/*_permutations_* ${abb}/permutations/
 
@@ -246,7 +256,9 @@ do
 
       sbatch --wait --export=VCF=$VCF,pheno=$(echo $abb/$abb.pheno.bed.gz),tissue=$(echo $abb/$abb),covariates=$(echo $abb/$full.v7.covariates_output.txt),permutations=$(echo $abb/$abb.permutations_full_FDR.thresholds.txt) ${scripts}/sh/CondPass.sh
 
-      cat $abb/${abb}_conditionals_chunk_*.txt | gzip -c > $abb/${abb}.conditional_full.txt.gz
+      for i in {1..100}; do
+         cat $abb/${abb}_conditionals_chunk_$i.txt | gzip -c >> $abb/${abb}.conditional_full.txt.gz
+      done
 
       mkdir ${abb}/conditionals; mv ${abb}/*_conditionals_* ${abb}conditionals/
 
