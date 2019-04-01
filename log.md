@@ -5,6 +5,17 @@ These updates are read from most recent date at the top to initial entry at the 
 REMEMBER
 - You need to make the pipeline generalizable, especially the part after separating the phenotype table by tissue.
 
+### 03/31/2019
+```
+for i in {1..100}; do
+   cat MSCLSK_nominals_chunk_$i_out.txt | gzip -c >> MSCLSK.nominals.all.chunks.NE_only.in-screen.txt.gz
+done
+```
+Okay something fucked up. I'm not even sure what I'm doing anymore. I got this weird message about some of the files in the LIVER directory not being accessible so I impulsively deleted them. Not sure that I had to do that but I did it. 
+
+### 03/30/19
+I just finished generating the nom pass for LIVER and concatting them and the new concatted file is different from the old one. However, I concatted them on a screen that crashed, so I'm not sure if it went all the way through. I'm going to concat them again and see if they're any different. Important to note that the old and new LIVER nominals concatted file are about the same size but have a different shasum. 
+
 ### 03/29/19
 I feel like there's something fishy about the two NE only nominal passes (BRNCTXB and LIVER) I just generated... They're both less than 2 Mb, whereas the other tissues' NE only nom pass are like... at least 100 Mb. There is something fishy about this. I feel like I should redo QTLtools steps for BRNCTXB, LIVER, and MSCLSK manually. 
 

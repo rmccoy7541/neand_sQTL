@@ -239,7 +239,6 @@ do
       for i in {1..100}; do
          cat ${abb}/${abb}_nominals_chunk_$i_out.txt | gzip -c >> ${abb}/$abb.nominals.all.chunks.NE_only.txt.gz
       done
-      
 
       mkdir $abb/nominals; mv $abb/*_nominals_* $abb/nominals/
 
