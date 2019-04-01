@@ -5,10 +5,27 @@ These updates are read from most recent date at the top to initial entry at the 
 REMEMBER
 - You need to make the pipeline generalizable, especially the part after separating the phenotype table by tissue.
 
+### 04/01/2019
+Happy April fools day. I (speaking on behalf of MARCC) finished producing the nominals again and I'm goint to try concatting (again again) to make sure it was all good. The MSCLSK and BRNCTXB finished concatting, I'm going to `sha1sum` them to see if they match the ones I already made. I don't know.
+
+Okay, surprise, none of the other tissues finished concatting. What the hell. I feel like I'm wasting my time.
+```
+for i in {1..100}; do
+   cat LIVER_nominals_chunk_${i}.txt | gzip -c >> LIVER.nominals.all.chunks.in-screen.txt.gz
+done
+```
+```
+for i in {1..100}; do
+   cat BRNCTXB_nominals_chunk_${i}.txt | gzip -c >> BRNCTXB.nominals.all.chunks.in-screen.txt.gz
+done
+```
+I'm concatting again, but in a supervised way this time. Hopefully 6 hours and 4 cores is enough to do this. Not having the dev node is really screwing things up.
+
+
 ### 03/31/2019
 ```
 for i in {1..100}; do
-   cat MSCLSK_nominals_chunk_$i_out.txt | gzip -c >> MSCLSK.nominals.all.chunks.NE_only.in-screen.txt.gz
+   cat MSCLSK_nominals_chunk_${i}.txt | gzip -c >> MSCLSK.nominals.all.chunks.in-screen.txt.gz
 done
 ```
 Okay something fucked up. I'm not even sure what I'm doing anymore. I got this weird message about some of the files in the LIVER directory not being accessible so I impulsively deleted them. Not sure that I had to do that but I did it. 

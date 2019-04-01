@@ -18,4 +18,4 @@ module load gcc
 # Consider passing WHLBLD_chunks as a command line var
 line=`sed "${SLURM_ARRAY_TASK_ID}q;d" ${listPath}/${tissue}_chunks_list.txt`
 
-Rscript ${scripts}/R/NomPassExtract.R $listPath/${line} $abb/"tag_snps.neand.EUR.bed"
+Rscript ${scripts}/R/NomPassExtract.R $listPath/${line} $abb/"sprime_calls.txt"
