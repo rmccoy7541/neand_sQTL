@@ -21,6 +21,8 @@ done
 ```
 I'm concatting again, but in a supervised way this time. Hopefully 6 hours and 4 cores is enough to do this. Not having the dev node is really screwing things up.
 
+I ran NPEC on all of the generated nominal chunks for each one of the three tissues I'm working with. I may eventually need to do it for the other tissues I've already worked with but we will see. The goal is to produce NPE files to then concatenate and extract the top Neanderthal calls from. I'm doing practice-practice presentation next Monday so I really need to step it up. I don't know why I volunteered for it.
+
 
 ### 03/31/2019
 ```
