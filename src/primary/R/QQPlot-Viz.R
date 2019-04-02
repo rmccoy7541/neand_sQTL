@@ -15,7 +15,7 @@ setwd(cmdArgs[1])
 #   setorder(., p)
 
 # pdf(paste0(cmdArgs[1],"/Nominals_NE.pdf")
-  
+
 # dt[, drop := NULL]
 
 # head(dt[is_top_variant == TRUE])
@@ -57,7 +57,7 @@ gtp <- fread(cmdArgs[3]) %>%
 
 gtp[, qval := qvalue(gtp$adj_p)$qvalue]
 
-neand <- fread(commvars[2]) %>%
+neand <- fread(cmdArgs[2]) %>%
   mutate(., var_id_1 = paste(CHROM, POS, REF, ALT, "b37", sep = "_")) %>%
   as.data.table()
 
