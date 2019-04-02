@@ -5,7 +5,7 @@ library(qqman)
 library(qvalue)
 
 cmdArgs = commandArgs(trailingOnly=TRUE)
-# cmdArgs[1] is wd, [2] is NE nominals, [3] is permutations, [4] tag snps for neanderthals
+# cmdArgs[1] is wd, [2] is NE nominals, [3] is permutations, [4] SPRIME calls
 setwd(cmdArgs[1])
 
 # dt <- fread(cmdArgs[2]) %>%
@@ -57,7 +57,7 @@ gtp <- fread(cmdArgs[3]) %>%
 
 gtp[, qval := qvalue(gtp$adj_p)$qvalue]
 
-neand <- fread(cmdArgs[2]) %>%
+neand <- fread(cmdArgs[4]) %>%
   mutate(., var_id_1 = paste(CHROM, POS, REF, ALT, "b37", sep = "_")) %>%
   as.data.table()
 
