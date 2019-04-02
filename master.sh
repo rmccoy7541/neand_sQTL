@@ -235,7 +235,7 @@ do
       cp ${data}/../analysis/SPRIME/sprime_calls.txt $abb
       sbatch --wait --export=listPath=$PWD/$abb,tissue=$(echo $abb),scripts=$scripts ${scripts}sh/NomPassExtractCall.sh
       rm $abb/sprime_calls.txt
-      
+
       for i in {1..100}; do
          cat ${abb}/${abb}_nominals_chunk_$i_out.txt | gzip -c >> ${abb}/$abb.nominals.all.chunks.NE_only.txt.gz
       done
@@ -263,7 +263,7 @@ do
 
       mkdir ${leafCutter}/../sQTL/$abb
 
-      Rscript ${scripts}/R/QQPlot-Viz.R /home-1/aseyedi2@jhu.edu/work/aseyedi2/sQTL/$abb $abb/$abb.nominals.all.chunks.NE_only.txt.gz $abb/$abb.permutations_full.txt.gz ${data}02-11-2019/../analysis/SPRIME/sprime_calls.txt
+      Rscript ${scripts}/R/QQPlot-Viz.R /home-1/aseyedi2@jhu.edu/work/aseyedi2/sQTL/$abb $abb/$abb.nominals.all.chunks.NE_only.txt.gz $abb/$abb.permutations_full.txt.gz ${data}/../analysis/SPRIME/sprime_calls.txt
    fi
 done
 echo "Done"

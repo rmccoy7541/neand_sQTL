@@ -6,7 +6,17 @@ REMEMBER
 - You need to make the pipeline generalizable, especially the part after separating the phenotype table by tissue.
 
 ### 04/02/2019
+I finished with the three tissues using the SPrime calls (BRNCTXB, LIVER, and MSCLSK), and MSCLSK has 21 sQTL hits, whereas the others have 0. 
 
+```
+for i in {1..100}; do
+   cat BRNCTXB_nominals_chunk_${i}_out.txt | gzip -c >> BRNCTXB.nominals.all.chunks.NE_only.txt.gz
+done
+
+sbatch --export=listPath=$PWD,tissue=$(echo BRNCTXB),scripts=$scripts ../NomPassExtractCall.sh
+
+Rscript ${scripts}/R/QQPlot-Viz.R $PWD res_SPRIME/BRNCTXB.nominals.all.chunks.NE_only.txt.gz BRNCTXB.permutations_full.txt.gz ${data}/../analysis/SPRIME/sprime_calls.txt
+```
 
 ### 04/01/2019
 Happy April fools day. I (speaking on behalf of MARCC) finished producing the nominals again and I'm goint to try concatting (again again) to make sure it was all good. The MSCLSK and BRNCTXB finished concatting, I'm going to `sha1sum` them to see if they match the ones I already made. I don't know.
