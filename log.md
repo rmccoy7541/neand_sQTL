@@ -5,6 +5,9 @@ These updates are read from most recent date at the top to initial entry at the 
 REMEMBER
 - You need to make the pipeline generalizable, especially the part after separating the phenotype table by tissue.
 
+### 04/02/2019
+
+
 ### 04/01/2019
 Happy April fools day. I (speaking on behalf of MARCC) finished producing the nominals again and I'm goint to try concatting (again again) to make sure it was all good. The MSCLSK and BRNCTXB finished concatting, I'm going to `sha1sum` them to see if they match the ones I already made. I don't know.
 

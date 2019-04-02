@@ -56,9 +56,8 @@ gtp <- fread(cmdArgs[3]) %>%
 
 gtp[, qval := qvalue(gtp$adj_p)$qvalue]
 
-neand <- fread(cmdArgs[4]) %>%
-  mutate(., var_id_1 = paste(V1, V3, V4, V5, "b37", sep = "_")) %>%
-  mutate(., var_id_2 = paste(V1, V3, V5, V4, "b37", sep = "_")) %>%
+neand <- fread(commvars[2]) %>%
+  mutate(., var_id_1 = paste(CHROM, POS, REF, ALT, "b37", sep = "_")) %>%
   as.data.table()
 
 neand_list <- c(neand$var_id_1, neand$var_id_2)

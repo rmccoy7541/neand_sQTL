@@ -3,10 +3,10 @@ library(tidyverse)
 library(Homo.sapiens)
 library(qqman)
 
-setwd("/scratch/groups/rmccoy22/Ne_sQTL/sra/juncfiles/intronclustering/WHLBLD")
+# cmdargs 1 working dir, 2 concatted Neanderthal nom pass hits
+setwd(cmdargs[1])
 
-dt <- do.call(rbind, lapply(1:100, function(x) tryCatch(fread(paste0("WHLBLD_nominals_chunk_", x, "_out.txt")), 
-                                                        error = function(e) NULL))) %>%
+dt <- fread(cmdargs[2]) %>%
   setnames(., c("intron_cluster", "chrom", "pheno_start", "pheno_end", 
                 "strand", "total_cis", "distance", "variant_id", "variant_chrom", 
                 "var_start", "var_end", "p", "beta", "is_top_variant", "drop")) %>%

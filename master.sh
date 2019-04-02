@@ -235,7 +235,7 @@ do
       cp ${data}/../analysis/SPRIME/sprime_calls.txt $abb
       sbatch --wait --export=listPath=$PWD/$abb,tissue=$(echo $abb),scripts=$scripts ${scripts}sh/NomPassExtractCall.sh
       rm $abb/sprime_calls.txt
-
+      
       for i in {1..100}; do
          cat ${abb}/${abb}_nominals_chunk_$i_out.txt | gzip -c >> ${abb}/$abb.nominals.all.chunks.NE_only.txt.gz
       done
