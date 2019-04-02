@@ -15,6 +15,7 @@ dt <- fread(cmdArgs[2]) %>%
   setorder(., p)
 
 pdf(paste0(cmdArgs[1],"/Nominals_NE.pdf")
+  
 dt[, drop := NULL]
 
 head(dt[is_top_variant == TRUE])
