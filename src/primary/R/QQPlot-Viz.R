@@ -47,6 +47,10 @@ setwd(cmdArgs[1])
 # dev.off()
 
 #########
+gene_list <- genes(TxDb.Hsapiens.UCSC.hg19.knownGene) %>%
+  as.data.table()
+
+gene_list[, subjectHits := .I]
 
 gtp <- fread(cmdArgs[3]) %>%
   setnames(., c("intron_cluster", "chrom", "pheno_start", "pheno_end", 
