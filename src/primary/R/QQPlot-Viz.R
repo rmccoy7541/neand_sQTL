@@ -61,7 +61,7 @@ gtp <- fread(cmdArgs[3]) %>%
 
 gtp[, qval := qvalue(gtp$adj_p)$qvalue]
 
-neand <- fread(cmdArgs[4]) %>%
+neand <- fread(cmdArgs[4])[vindija_match == "match" | altai_match == "match"] %>%
   mutate(., var_id_1 = paste(CHROM, POS, REF, ALT, "b37", sep = "_")) %>%
   as.data.table()
 

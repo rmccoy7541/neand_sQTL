@@ -65,8 +65,9 @@ ls *.sra >> sralist.txt
 
 sra2BamNum=$(wc -l sralist.txt)
 # sra2bam, most computationally intensive step
-sbatch --wait -a $(echo $sra2BamNum) --export=sraListPath=$PWD,homeDir=$homeDir ${scripts}/sh/sra2bam.sh
-
+for i in $(cat sralist.txt); do
+	sbatch --wait -a 1-$sra2BamNum --export=sraListPath=$PWD,homeDir=$homeDir ${scripts}/sh/sra2bam.sh
+done
 ## samtools error check, remove broken bams
 samtools quickcheck *bam 2> samtools_err_bam.txt
 

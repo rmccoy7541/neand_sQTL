@@ -1,9 +1,12 @@
-## Updates
+﻿## Updates
 
 These updates are read from most recent date at the top to initial entry at the bottom.
 
 REMEMBER
 - You need to make the pipeline generalizable, especially the part after separating the phenotype table by tissue.
+
+### 4:29 PM 4/4/2019
+I'm trying to call NPEC on all of the remaining tissues (BRNCHA, TESTIS, WHLBLD). I'm going to have to do all of WHLBLD all over again because I don't have the intermediary files. Which is fine for now since my focus is putting together a presentation. For TESTIS, the nominal was close to 1 terabyte, so I broke it up into ~ one hundred pieces and am going to try to run NPEC on that. I think BRNCHA is (almost) done with NPEC so I'm going to cat them and put them in `~/data`. So really I have one tissue to work on immediately (TESTIS). I think the plan is talk about some of the top Neanderthal genes by tissue. 
 
 ### 04/02/2019
 I finished with the three tissues using the SPrime calls (BRNCTXB, LIVER, and MSCLSK), and MSCLSK has 21 sQTL hits, whereas the others have 0. 
