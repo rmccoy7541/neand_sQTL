@@ -62,8 +62,10 @@ leafCutter=$(echo /scratch/groups/rmccoy22/aseyedi2/leafcutter)
 cd $sra
 # store all .sra names into text file for job array
 ls *.sra >> sralist.txt
+
+sra2BamNum=$(wc -l sralist.txt)
 # sra2bam, most computationally intensive step
-sbatch --wait --export=sraListPath=$PWD,homeDir=$homeDir ${scripts}/sh/sra2bam.sh
+sbatch --wait -a $(echo $sra2BamNum) --export=sraListPath=$PWD,homeDir=$homeDir ${scripts}/sh/sra2bam.sh
 
 ## samtools error check, remove broken bams
 samtools quickcheck *bam 2> samtools_err_bam.txt
