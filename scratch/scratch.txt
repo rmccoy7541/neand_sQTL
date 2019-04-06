@@ -4,6 +4,10 @@ sbatch --export=listPath=$PWD,tissue=$(echo BRNCHA),scripts=$scripts ${scripts}s
 
 Rscript ${scripts}/R/NomPassExtract.R TESTIS.nominals.all.chunks.txt "sprime_calls.txt"
 
-`split -d -a 6 -b 10GB --additional-suffix '.split' TESTIS.nominals.all.chunks.txt ''`
+`split -d -a 6 -l 65898466 --additional-suffix '.split' TESTIS.nominals.all.chunks.txt ''`
 
 sbatch --export=listPath=$PWD,tissue=$(echo TESTIS),scripts=$scripts ../NomPassExtractCall.sh
+
+for i in {1..100}; do
+	cat BRNCHA_nominals_chunk_${i}_out.txt | gzip -c >> BRNCHA.nominals.all.chunks.NE_only.txt.gz
+done

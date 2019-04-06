@@ -63,11 +63,9 @@ cd $sra
 # store all .sra names into text file for job array
 ls *.sra >> sralist.txt
 
-sra2BamNum=$(wc -l sralist.txt)
+sra2BamNum=$(wc -l sralist.txt | awk '{print $1}')
 # sra2bam, most computationally intensive step
-for i in $(cat sralist.txt); do
-	sbatch --wait -a 1-$sra2BamNum --export=sraListPath=$PWD,homeDir=$homeDir ${scripts}/sh/sra2bam.sh
-done
+sbatch --wait -a 1-$sra2BamNum --export=sraListPath=$PWD,homeDir=$homeDir ${scripts}/sh/sra2bam.sh
 ## samtools error check, remove broken bams
 samtools quickcheck *bam 2> samtools_err_bam.txt
 
@@ -240,7 +238,7 @@ do
       rm $abb/sprime_calls.txt
 
       for i in {1..100}; do
-         cat ${abb}/${abb}_nominals_chunk_$i_out.txt | gzip -c >> ${abb}/$abb.nominals.all.chunks.NE_only.txt.gz
+         cat ${abb}/${abb}_nominals_chunk_${i}_out.txt | gzip -c >> ${abb}/$abb.nominals.all.chunks.NE_only.txt.gz
       done
 
       mkdir $abb/nominals; mv $abb/*_nominals_* $abb/nominals/

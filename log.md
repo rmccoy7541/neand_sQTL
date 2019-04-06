@@ -5,6 +5,13 @@ These updates are read from most recent date at the top to initial entry at the 
 REMEMBER
 - You need to make the pipeline generalizable, especially the part after separating the phenotype table by tissue.
 
+### 9:23 AM 4/5/2019
+Holy crap... so splitting the TESTIS had a mistake, in that many of the files were split along the middle of the line, destroying the whole thing. I'm going to have to split again and then do NPEC, but this time split by lines and not by bytes.
+
+I fucked up and accidentally deleted the TESTIS nominal pass concatted file. Damn. Whatever, it was becoming a pain in the ass to do it the hard way. I'm just going do do a NomPass and then run NPEC and get the Neaderthal-extracted sQTLs the normal way, which is from the separate outputs. Whatever.
+
+Bamming the WHLBLD sra's
+
 ### 4:29 PM 4/4/2019
 I'm trying to call NPEC on all of the remaining tissues (BRNCHA, TESTIS, WHLBLD). I'm going to have to do all of WHLBLD all over again because I don't have the intermediary files. Which is fine for now since my focus is putting together a presentation. For TESTIS, the nominal was close to 1 terabyte, so I broke it up into ~ one hundred pieces and am going to try to run NPEC on that. I think BRNCHA is (almost) done with NPEC so I'm going to cat them and put them in `~/data`. So really I have one tissue to work on immediately (TESTIS). I think the plan is talk about some of the top Neanderthal genes by tissue. 
 
