@@ -1,0 +1,1 @@
+intron_cluster	chrom	pheno_start	pheno_end	strand	total_cis	distance	variant_id	variant_chrom	var_start	var_end	df	dummy	param_1	param_2	p	beta	emp_p	adj_p	qval	is_neand	queryHits	subjectHits	seqnames	start	end	width	i.strand	gene_id
