@@ -5,6 +5,18 @@ These updates are read from most recent date at the top to initial entry at the 
 REMEMBER
 - You need to make the pipeline generalizable, especially the part after separating the phenotype table by tissue.
 
+### 5:45 PM 4/10/2019
+Well, turns out I need the cluster counts, and I deleted them, so I need to reproduce the TESTIS clusters. Did not save the intermediate files, which I should have done, since we have more than enough space. 
+
+```
+IFS=$'\n'       # make newlines the only separator
+for sample in $(cat ~/work/aseyedi2/neand_sQTL/data/Metadata/testisSRR)
+do
+    /home-1/aseyedi2@jhu.edu/work/progs/sra-tools/bin/prefetch -X 50G -O /scratch/groups/rmccoy22/Ne_sQTL/sra/TESTIS --ascp-path '/software/apps/aspera/3.7.2.354/bin/ascp|/software/apps/aspera/3.7.2.354/etc/asperaweb_id_dsa.openssh' $sample
+done
+```
+I'm going to redownload the testis files, and then I'm going to convert them to bam and do the rest of the pipeline to get the intron clusters.
+
 ### 9:23 AM 4/5/2019
 Holy crap... so splitting the TESTIS had a mistake, in that many of the files were split along the middle of the line, destroying the whole thing. I'm going to have to split again and then do NPEC, but this time split by lines and not by bytes.
 
