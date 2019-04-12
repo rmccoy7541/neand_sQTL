@@ -85,10 +85,10 @@ ls *.bam >> bamlist.txt
 # bring bed file to current directory
 cp ${data}/12-07-2018/GRCh37.bed $PWD
 # filter unplaced contigs
-bamNum=$(wc -l sralist.txt | awk '{print $1}')
+bamNum=$(wc -l bamlist.txt | awk '{print $1}')
 
 echo "Filtering unplaced contigs..."
-sbatch --wait ${scripts}/sh/filter_bam.sh
+sbatch --wait -a 1-$bamNum ${scripts}/sh/filter_bam.sh
 
 ls *.filt >> filtlist.txt
 
@@ -108,8 +108,10 @@ done
 mkdir juncfiles
 ## IMPORTANT: changed leafcutter's bam2junc.sh to directly call
 ## the bin for samtools
+filtNum=$(wc -l filtlist.txt | awk '{print $1}')
+
 echo "Converting bam files to junc..."
-sbatch --wait ${scripts}/sh/bam2junccall.sh
+sbatch --wait -a 1-$filtNum ${scripts}/sh/bam2junccall.sh
 mv *.junc juncfiles/
 cd juncfiles/
 # strip junc files - STILL WITH RUN ID 'SRR######'
