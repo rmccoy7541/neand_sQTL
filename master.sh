@@ -69,7 +69,7 @@ sbatch --wait -a 1-$sra2BamNum --export=sraListPath=$PWD,homeDir=$homeDir ${scri
 ## samtools error check, remove broken bams
 samtools quickcheck *bam 2> samtools_err_bam.txt
 
-cat samtools_err_bam.txt | cut -d'.' -f 1,2,3 > failedbams.txt
+cat samtools_err_bam.txt | awk -F' ' '{print $1}' > failedbams.txt
 
 for i in $(cat failedbams.txt)
 do
