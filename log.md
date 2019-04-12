@@ -5,6 +5,9 @@ These updates are read from most recent date at the top to initial entry at the 
 REMEMBER
 - You need to make the pipeline generalizable, especially the part after separating the phenotype table by tissue.
 
+### 04/11/2019
+Well, looks like Rajiv 
+
 ### 5:45 PM 4/10/2019
 Well, turns out I need the cluster counts, and I deleted them, so I need to reproduce the TESTIS clusters. Did not save the intermediate files, which I should have done, since we have more than enough space. 
 

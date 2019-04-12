@@ -52,7 +52,7 @@ ncbiFiles=$(echo /scratch/groups/rmccoy22/Ne_sQTL/files/)
 # IF YOU ALREADY HAVE NON-BIALLELIC INDEXED VCF
 VCF=$(echo /scratch/groups/rmccoy22/Ne_sQTL/files/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz)
 # input directory with sra files here
-sra=$(/home-1/aseyedi2@jhu.edu/work/Ne_sQTL/sra/lung_skinEx_thy)
+sra=$(echo /home-1/aseyedi2@jhu.edu/work/Ne_sQTL/sra/lung_skinEx_thy)
 # leafcutter directory here
 leafCutter=$(echo /scratch/groups/rmccoy22/aseyedi2/leafcutter)
 
@@ -69,7 +69,7 @@ sbatch --wait -a 1-$sra2BamNum --export=sraListPath=$PWD,homeDir=$homeDir ${scri
 ## samtools error check, remove broken bams
 samtools quickcheck *bam 2> samtools_err_bam.txt
 
-cat samtools_err_bam.txt | cut -d'.' -f1,2,3 > failedbams.txt
+cat samtools_err_bam.txt | cut -d'.' -f 1,2,3 > failedbams.txt
 
 for i in $(cat failedbams.txt)
 do
@@ -85,6 +85,8 @@ ls *.bam >> bamlist.txt
 # bring bed file to current directory
 cp ${data}/12-07-2018/GRCh37.bed $PWD
 # filter unplaced contigs
+bamNum=$(wc -l sralist.txt | awk '{print $1}')
+
 echo "Filtering unplaced contigs..."
 sbatch --wait ${scripts}/sh/filter_bam.sh
 
