@@ -90,17 +90,17 @@ bamNum=$(wc -l bamlist.txt | awk '{print $1}')
 echo "Filtering unplaced contigs..."
 sbatch --wait -a 1-$bamNum ${scripts}/sh/filter_bam.sh
 
-ls *.filt >> filtlist.txt
-
 samtools quickcheck *filt 2> samtools_err_filt.txt
 
-cat samtools_err_filt.txt | cut -d'.' -f1,2,3 > failedfilt.txt
+cat samtools_err_filt.txt | awk -F' ' '{print $1}' > failedfilt.txt
 
 for i in $(cat failedfilt.txt)
 do
    echo "$i is broken, removing now..." >> log
    rm $i
 done
+
+ls *.filt >> filtlist.txt
 
 
 ## Step 2 - Intron Clustering
