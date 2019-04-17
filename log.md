@@ -5,6 +5,12 @@ These updates are read from most recent date at the top to initial entry at the 
 REMEMBER
 - You need to make the pipeline generalizable, especially the part after separating the phenotype table by tissue.
 
+### 04/17/2019
+
+`for i in $(cat failed_jobs.txt); do sed "${i}q;d" filtlist.txt ; done`
+
+I'm finishing up the junc conversions for the ones that failed for the lung/skin/whatever files. I'm going to ram the results throught the pipeline and then 
+
 ### 04/11/2019
 Well, looks like Rajiv 
 
