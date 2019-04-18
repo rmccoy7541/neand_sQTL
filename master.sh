@@ -118,7 +118,7 @@ cd juncfiles/
 find -type f -name '*.sra.bam.filt.junc' | while read f; do mv "$f" "${f%.sra.bam.filt.junc}"; done
 
 # put all of the renamed junc files in a text
-ls SRR* >> juncfiles.txt
+ls SRR* > juncfiles.txt
 # intron clustering
 mkdir intronclustering/
 echo "Intron clustering..."
