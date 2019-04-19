@@ -52,7 +52,7 @@ ncbiFiles=$(echo /scratch/groups/rmccoy22/Ne_sQTL/files/)
 # IF YOU ALREADY HAVE NON-BIALLELIC INDEXED VCF
 VCF=$(echo /scratch/groups/rmccoy22/Ne_sQTL/files/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz)
 # input directory with sra files here
-sra=$(/home-1/aseyedi2@jhu.edu/work/Ne_sQTL/sra/lung_skinEx_thy)
+sra=$(echo /home-1/aseyedi2@jhu.edu/work/Ne_sQTL/sra/lung_skinEx_thy)
 # leafcutter directory here
 leafCutter=$(echo /scratch/groups/rmccoy22/aseyedi2/leafcutter)
 
@@ -69,7 +69,7 @@ sbatch --wait -a 1-$sra2BamNum --export=sraListPath=$PWD,homeDir=$homeDir ${scri
 ## samtools error check, remove broken bams
 samtools quickcheck *bam 2> samtools_err_bam.txt
 
-cat samtools_err_bam.txt | cut -d'.' -f1,2,3 > failedbams.txt
+cat samtools_err_bam.txt | awk -F' ' '{print $1}' > failedbams.txt
 
 for i in $(cat failedbams.txt)
 do
@@ -85,14 +85,14 @@ ls *.bam >> bamlist.txt
 # bring bed file to current directory
 cp ${data}/12-07-2018/GRCh37.bed $PWD
 # filter unplaced contigs
-echo "Filtering unplaced contigs..."
-sbatch --wait ${scripts}/sh/filter_bam.sh
+bamNum=$(wc -l bamlist.txt | awk '{print $1}')
 
-ls *.filt >> filtlist.txt
+echo "Filtering unplaced contigs..."
+sbatch --wait -a 1-$bamNum ${scripts}/sh/filter_bam.sh
 
 samtools quickcheck *filt 2> samtools_err_filt.txt
 
-cat samtools_err_filt.txt | cut -d'.' -f1,2,3 > failedfilt.txt
+cat samtools_err_filt.txt | awk -F' ' '{print $1}' > failedfilt.txt
 
 for i in $(cat failedfilt.txt)
 do
@@ -100,21 +100,25 @@ do
    rm $i
 done
 
+ls *.filt >> filtlist.txt
+
 
 ## Step 2 - Intron Clustering
 ################################################
 mkdir juncfiles
 ## IMPORTANT: changed leafcutter's bam2junc.sh to directly call
 ## the bin for samtools
+filtNum=$(wc -l filtlist.txt | awk '{print $1}')
+
 echo "Converting bam files to junc..."
-sbatch --wait ${scripts}/sh/bam2junccall.sh
+sbatch --wait -a 1-$filtNum ${scripts}/sh/bam2junccall.sh
 mv *.junc juncfiles/
 cd juncfiles/
 # strip junc files - STILL WITH RUN ID 'SRR######'
 find -type f -name '*.sra.bam.filt.junc' | while read f; do mv "$f" "${f%.sra.bam.filt.junc}"; done
 
 # put all of the renamed junc files in a text
-ls SRR* >> juncfiles.txt
+ls SRR* > juncfiles.txt
 # intron clustering
 mkdir intronclustering/
 echo "Intron clustering..."

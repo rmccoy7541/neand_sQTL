@@ -1,11 +1,10 @@
 #!/bin/bash
 #SBATCH --job-name=bam2junccall
-#SBATCH --time=2:00:00
+#SBATCH --time=4:00:00
 #SBATCH --partition=shared
 #SBATCH --nodes=1
 # number of tasks (processes) per node
 #SBATCH --ntasks-per-node=1
-#SBATCH --array=1-734
 
 # creates list of filtered bam files for job array
 # ls *.filt >> filtbamlist.txt
