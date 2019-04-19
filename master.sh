@@ -165,7 +165,7 @@ mv tissue_table.txt tissuetable/
 for i in 1_*.txt; do echo $i | cut -d'_' -f 2| cut -d'.' -f 1 | xargs mkdir; done
 
 # save tissue types in a file
-for i in 1_*.txt; do echo $i | cut -d'_' -f 2| cut -d'.' -f 1 > tissuesused.txt; done
+for i in 1_*.txt; do echo $i | cut -d'_' -f 2| cut -d'.' -f 1 >> tissuesused.txt; done
 
 # moves each outputted file into its respective tissue folder
 for i in *_*.txt; do echo $i | awk -F'[_.]' '{print $2}' | xargs -I '{}' mv $i '{}' ; done
@@ -187,7 +187,7 @@ do
    echo "Sorting $line.phen_fastqtl.bed to $line/$line.pheno.bed..."
    bedtools sort -header -i $line/$line.phen_fastqtl.bed > $line/$line.pheno.bed 
    echo "bgzipping $line/$line.pheno.bed..."
-   bgzip $line/$line.pheno.bed
+   bgzip -f $line/$line.pheno.bed
    #figure out where tabix outputs
    echo "Indexing $line/$line.pheno.bed.gz..."
    tabix -p bed $line/$line.pheno.bed.gz
