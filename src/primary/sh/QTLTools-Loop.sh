@@ -6,6 +6,7 @@
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=4
 
+ml htslib
 ml R
 ml gcc
 ml
@@ -70,7 +71,7 @@ do
 
       mkdir ${abb}/conditionals; mv ${abb}/*_conditionals_* ${abb}conditionals/
 
-      mkdir ${leafCutter}/../sQTL/$abb
+      mkdir /home-1/aseyedi2@jhu.edu/work/aseyedi2/sQTL/$abb
 
       Rscript ${scripts}/R/QQPlot-Viz.R /home-1/aseyedi2@jhu.edu/work/aseyedi2/sQTL/$abb $abb/$abb.nominals.all.chunks.NE_only.txt.gz $abb/$abb.permutations_full.txt.gz ${data}/../analysis/SPRIME/sprime_calls.txt
    fi
