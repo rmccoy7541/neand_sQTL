@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --partition=shared
 #SBATCH --job-name=QTLTools-Loop
-#SBATCH --time=12:0:0
+#SBATCH --time=3-0:0:0
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=4
@@ -73,6 +73,9 @@ if grep "$abb" tissuesused.txt; then
    mkdir /home-1/aseyedi2@jhu.edu/work/aseyedi2/sQTL/$abb
 
    Rscript ${scripts}/R/QQPlot-Viz.R /home-1/aseyedi2@jhu.edu/work/aseyedi2/sQTL/$abb $abb/$abb.nominals.all.chunks.NE_only.txt.gz $abb/$abb.permutations_full.txt.gz ${data}/../analysis/SPRIME/sprime_calls.txt
+   echo "$full is done with QTL mapping"
+else
+   echo "$full was not included in the analysis"
 fi
-echo "$full is done with QTL mapping"
+
 }
