@@ -26,6 +26,7 @@ sra=$(echo /home-1/aseyedi2@jhu.edu/work/Ne_sQTL/sra/lung_skinEx_thy)
 # leafcutter directory here
 leafCutter=$(echo /scratch/groups/rmccoy22/aseyedi2/leafcutter)
 
+time { 
 line=`sed "${SLURM_ARRAY_TASK_ID}q;d" GTExCovKey.csv`
 full=$(echo $line | awk -F',' '{print $1}')
 abb=$(echo $line | awk -F',' '{print $2}')
@@ -74,3 +75,4 @@ if grep "$abb" tissuesused.txt; then
    Rscript ${scripts}/R/QQPlot-Viz.R /home-1/aseyedi2@jhu.edu/work/aseyedi2/sQTL/$abb $abb/$abb.nominals.all.chunks.NE_only.txt.gz $abb/$abb.permutations_full.txt.gz ${data}/../analysis/SPRIME/sprime_calls.txt
 fi
 echo "$full is done with QTL mapping"
+}
