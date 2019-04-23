@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --partition=shared
 #SBATCH --job-name=QTLTools-Loop
-#SBATCH --time=72:0:0
+#SBATCH --time=0:1:0
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=1
@@ -30,7 +30,7 @@ leafCutter=$(echo /scratch/groups/rmccoy22/aseyedi2/leafcutter)
 time {
 cp ${data}/../analysis/SPRIME/sprime_calls.txt $abb
 # This next script does nom pass, then calls perm pass AND nom pass extract, and then perm pass calls cond pass once finished, which cats everything or whatever.
-sbatch --wait --export=VCF=$VCF,pheno=$(echo $abb/$abb.pheno.bed.gz),tissue=$(echo $abb/$abb),covariates=$(echo $abb/$full.v7.covariates_output.txt),abb=$abb,full=$full ${scripts}/sh/NomPass.sh
+sbatch --export=VCF=$VCF,pheno=$(echo $abb/$abb.pheno.bed.gz),tissue=$(echo $abb/$abb),covariates=$(echo $abb/$full.v7.covariates_output.txt),abb=$abb,full=$full ${scripts}/sh/NomPass.sh
 
 }
 
