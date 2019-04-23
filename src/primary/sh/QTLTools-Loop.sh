@@ -1,10 +1,10 @@
 #!/bin/bash
 #SBATCH --partition=shared
 #SBATCH --job-name=QTLTools-Master
-#SBATCH --time=12:0:0
+#SBATCH --time=72:0:0
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --cpus-per-task=4
+#SBATCH --cpus-per-task=1
 
 ml htslib
 ml R
@@ -25,7 +25,7 @@ sra=$(echo /home-1/aseyedi2@jhu.edu/work/Ne_sQTL/sra/lung_skinEx_thy)
 # leafcutter directory here
 leafCutter=$(echo /scratch/groups/rmccoy22/aseyedi2/leafcutter)
 
-
+time {
 line=`sed "${SLURM_ARRAY_TASK_ID}q;d" GTExCovKey.csv`
 full=$(echo $line | awk -F',' '{print $1}')
 abb=$(echo $line | awk -F',' '{print $2}')
@@ -39,3 +39,4 @@ if grep "$abb" tissuesused.txt; then
 
    sbatch --export=VCF=$VCF,pheno=$(echo $abb/$abb.pheno.bed.gz),tissue=$(echo $abb/$abb),covariates=$(echo $abb/$full.v7.covariates_output.txt),permutations=$(echo $abb/$abb.permutations_full_FDR.thresholds.txt),abb=$abb,full=$full $scripts/../AWS/QTLtools-int.sh
 fi
+}

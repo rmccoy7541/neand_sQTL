@@ -12,9 +12,9 @@
 ######################
 
 /home-1/aseyedi2@jhu.edu/work/progs/QTLtools/QTLtools_1.1_Ubuntu14.04_x86_64 cis \
-	--vcf  $VCF \
-	--bed "$pheno" \
-	--cov  "$covariates" \
-	--mapping "$permutations" \
-	--chunk ${SLURM_ARRAY_TASK_ID} 100 \
-	--out "${tissue}_conditionals_chunk_${SLURM_ARRAY_TASK_ID}.txt"
+  --vcf  $VCF \
+  --bed "$pheno" \
+  --cov  "$covariates" \
+  --mapping "$permutations" \
+  --chunk ${SLURM_ARRAY_TASK_ID} 100 \
+  --out "${tissue}_conditionals_chunk_${SLURM_ARRAY_TASK_ID}.txt"

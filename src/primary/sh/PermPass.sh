@@ -20,4 +20,3 @@
   --out "${tissue}_permutations_chunk_${SLURM_ARRAY_TASK_ID}.txt" \
   --normal
 
-scripts=$(echo /home-1/aseyedi2@jhu.edu/work/aseyedi2/neand_sQTL/src/primary/)
