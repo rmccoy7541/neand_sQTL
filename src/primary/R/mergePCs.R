@@ -6,14 +6,15 @@ library("data.table")
 leafcut <- fread(args[1], colClasses = "character")
 #leafcut <- fread(as.character("Ne-sQTL_perind.counts.gz.PCs"))
 gtexPC <- fread(args[2], colClasses = "character")
-#gtexPC <- fread("GTEx_Analysis_v7_eQTL_covariates/Whole_Blood.v7.covariates.txt")
+#gtexPC <- fread("Adipose_Subcutaneous.v7.covariates.txt")
 lookup <- fread(args[3], colClasses = "character")
+#lookup <- fread("tissue_table.txt")
 # make the use of "id" header standard
 setnames(gtexPC, "ID", "id")
 
 # making sure our leafcutter friends have the right header names
-ind <- match(names(leafcut), lookup$Run)
-names(leafcut) <- lookup$Sample_Name[ind]
+ind <- match(names(leafcut), lookup$Sample_Name)
+names(leafcut) <- lookup$submitted_subject_id[ind]
 
 # concatenate; fill missing values with na, but then remove
 out = rbind(leafcut,gtexPC, use.names=T, fill=T)
