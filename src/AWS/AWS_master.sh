@@ -125,6 +125,10 @@ done
 
 ## Step 4 - Mapping sQTLs using QTLtools
 ################################################
-numTissues=$(wc -l GTExCovKey.csv)
+numTis=$(wc -l GTExCovKey.csv | awk '{print $1}')
 
-sbatch --wait -a 2-$numTissues ${scripts}/sh/QTLTools-Loop.sh
+sbatch --wait -a 2-$numTis ${scripts}/sh/QTLTools-Loop.sh
+
+sbatch --wait -a 2-$numTis --export=tissue=$(echo $abb) ${scripts}/../AWS/QTLtools-int.sh
+
+sbatch ${scripts}/sh/QQViz.sh

@@ -6,7 +6,6 @@
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=4
 
-ml htslib
 
 line=`sed "${SLURM_ARRAY_TASK_ID}q;d" GTExCovKey.csv`
 full=$(echo $line | awk -F',' '{print $1}')

@@ -9,7 +9,6 @@
 ml htslib
 ml R
 ml gcc
-ml
 
 # top-level directory, above ncbi/
 homeDir=$(echo ~/work/)
@@ -34,19 +33,9 @@ if grep "$abb" tissuesused.txt; then
 
    cp ${data}/../analysis/SPRIME/sprime_calls.txt $abb
    # This next script does nom pass, then calls perm pass AND nom pass extract, and then perm pass calls cond pass once finished, which cats everything or whatever.
-   sbatch --wait --export=VCF=$VCF,pheno=$(echo $abb/$abb.pheno.bed.gz),tissue=$(echo $abb/$abb),covariates=$(echo $abb/$full.v7.covariates_output.txt) ${scripts}/sh/NomPass.sh
+   sbatch --wait --export=VCF=$VCF,pheno=$(echo $abb/$abb.pheno.bed.gz),tissue=$(echo $abb/$abb),covariates=$(echo $abb/$full.v7.covariates_output.txt),abb=$abb,full=$full ${scripts}/sh/NomPass.sh
 
-   
+   sbatch --wait --export=VCF=$VCF,pheno=$(echo $abb/$abb.pheno.bed.gz),tissue=$(echo $abb/$abb),covariates=$(echo $abb/$full.v7.covariates_output.txt),permutations=$(echo $abb/$abb.permutations_full_FDR.thresholds.txt),abb=$abb,full=$full $scripts/../AWS/PermPassFDR.sh
 
-
-   mkdir ${abb}/conditionals; mv ${abb}/*_conditionals_* ${abb}conditionals/
-
-   mkdir /home-1/aseyedi2@jhu.edu/work/aseyedi2/sQTL/$abb
-
-   sbatch --wait --export=tissue=$(echo $abb) ${scripts}/../AWS/QTLtools-int.sh
-
-   Rscript ${scripts}/R/QQPlot-Viz.R /home-1/aseyedi2@jhu.edu/work/aseyedi2/sQTL/$abb $abb/$abb.nominals.all.chunks.NE_only.txt.gz $abb/$abb.permutations_full.txt.gz ${data}/../analysis/SPRIME/sprime_calls.txt
-   echo "$full is done with QTL mapping"
-else
-   echo "$full was not included in the analysis"
+   sbatch --export=VCF=$VCF,pheno=$(echo $abb/$abb.pheno.bed.gz),tissue=$(echo $abb/$abb),covariates=$(echo $abb/$full.v7.covariates_output.txt),permutations=$(echo $abb/$abb.permutations_full_FDR.thresholds.txt),abb=$abb,full=$full $scripts/../AWS/QTLtools-int.sh
 fi
