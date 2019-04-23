@@ -125,8 +125,6 @@ done
 
 ## Step 4 - Mapping sQTLs using QTLtools
 ################################################
-numTis=$(wc -l GTExCovKey.csv | awk '{print $1}')
-
 for line in $(cat GTExCovKey.csv); do
    full=$(echo $line | awk -F',' '{print $1}')
    abb=$(echo $line | awk -F',' '{print $2}')

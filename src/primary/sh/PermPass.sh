@@ -19,4 +19,3 @@
   --chunk ${SLURM_ARRAY_TASK_ID} 100 \
   --out "${tissue}_permutations_chunk_${SLURM_ARRAY_TASK_ID}.txt" \
   --normal
-
