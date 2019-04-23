@@ -127,8 +127,14 @@ done
 ################################################
 numTis=$(wc -l GTExCovKey.csv | awk '{print $1}')
 
-sbatch --wait -a 2-$numTis ${scripts}/sh/QTLTools-Loop.sh
+for line in $(cat GTExCovKey.csv); do
+   full=$(echo $line | awk -F',' '{print $1}')
+   abb=$(echo $line | awk -F',' '{print $2}')
+   if grep "$abb" tissuesused.txt; then
 
-sbatch --wait -a 2-$numTis --export=tissue=$(echo $abb) ${scripts}/../AWS/QTLtools-int.sh
+      sbatch --export=abb=$abb ${scripts}/sh/QTLTools-Loop.sh
+      
+   fi
+done
 
 sbatch ${scripts}/sh/QQViz.sh
