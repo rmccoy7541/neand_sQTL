@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 require("data.table")
-# arg 1 is leafcutter PCs, arg 2 is GTEx covariate file for tissue, 3 is tissue_table.txt, 4 is wd
+# arg 1 is leafcutter PCs, arg 2 is GTEx covariate file for tissue, 3 is tissue_table.txt
 args = commandArgs(trailingOnly=TRUE)
 library("data.table")
 leafcut <- fread(args[1], colClasses = "character")
@@ -13,7 +13,7 @@ setnames(gtexPC, "ID", "id")
 
 # making sure our leafcutter friends have the right header names
 ind <- match(names(leafcut), lookup$Run)
-names(leafcut) <- lookup$submitted_subject_id[ind]
+names(leafcut) <- lookup$Sample_Name[ind]
 
 # concatenate; fill missing values with na, but then remove
 out = rbind(leafcut,gtexPC, use.names=T, fill=T)

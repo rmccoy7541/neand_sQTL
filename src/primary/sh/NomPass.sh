@@ -19,3 +19,10 @@
 	--nominal 1  \
 	--chunk $SLURM_ARRAY_TASK_ID 100 \
 	--out "${tissue}_nominals_chunk_${SLURM_ARRAY_TASK_ID}.txt"
+
+scripts=$(echo /home-1/aseyedi2@jhu.edu/work/aseyedi2/neand_sQTL/src/primary/)
+
+sbatch -a $SLURM_ARRAY_TASK_ID --export=listPath=$PWD/$abb,tissue=$(echo $abb),scripts=$scripts ${scripts}sh/NomPassExtractCall.sh
+
+#Call permuatation pass
+sbatch -a $SLURM_ARRAY_TASK_ID --export=VCF=$VCF,pheno=$(echo $abb/$abb.pheno.bed.gz),tissue=$(echo $abb/$abb),covariates=$(echo $abb/$full.v7.covariates_output.txt) ${scripts}/sh/PermPass.sh
