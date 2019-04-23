@@ -1,4 +1,10 @@
-### this performs all of the intermediary steps of QTLtools
+#!/bin/bash
+#SBATCH --partition=shared
+#SBATCH --job-name=QTLTools-Int
+#SBATCH --time=6:0:0
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --cpus-per-task=4
 
 
 # catting noms
@@ -25,3 +31,9 @@ for i in {1..100}; do
 done
 
 mkdir ${abb}/permutations; mv ${abb}/*_permutations_* ${abb}/permutations/
+
+#######
+
+for i in {1..100}; do
+  cat $abb/${abb}_conditionals_chunk_$i.txt | gzip -c >> $abb/${abb}.conditional_full.txt.gz
+done

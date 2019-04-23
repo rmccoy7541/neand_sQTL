@@ -41,9 +41,6 @@ cd intronclustering/
 
 sbatch --wait ${scripts}/../AWS/prepare_phen_table.sh
 
-sh Ne-sQTL_perind.counts.gz_prepare.sh
-# about the above line: you need to remove all of the index files and generate new ones once you convert the beds to a QTLtools compatible format
-
 ## Step 4 - VCF Preparation (optional, see doc for details)
 ################################################
 
