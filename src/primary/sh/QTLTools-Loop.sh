@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --partition=shared
-#SBATCH --job-name=QTLTools-Master
+#SBATCH --job-name=QTLTools-Loop
 #SBATCH --time=72:0:0
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
