@@ -32,8 +32,10 @@ cp ${data}/../analysis/SPRIME/sprime_calls.txt $abb
 # This next script does nom pass, then calls perm pass AND nom pass extract, and then perm pass calls cond pass once finished, which cats everything or whatever.
 sbatch --wait --export=VCF=$VCF,pheno=$(echo $abb/$abb.pheno.bed.gz),tissue=$(echo $abb/$abb),covariates=$(echo $abb/$full.v7.covariates_output.txt),abb=$abb,full=$full ${scripts}/sh/NomPass.sh
 
-sbatch --wait --export=VCF=$VCF,pheno=$(echo $abb/$abb.pheno.bed.gz),tissue=$(echo $abb/$abb),covariates=$(echo $abb/$full.v7.covariates_output.txt),permutations=$(echo $abb/$abb.permutations_full_FDR.thresholds.txt),abb=$abb,full=$full $scripts/../AWS/PermPassFDR.sh
-
-sbatch --export=VCF=$VCF,pheno=$(echo $abb/$abb.pheno.bed.gz),tissue=$(echo $abb/$abb),covariates=$(echo $abb/$full.v7.covariates_output.txt),permutations=$(echo $abb/$abb.permutations_full_FDR.thresholds.txt),abb=$abb,full=$full $scripts/../AWS/QTLtools-int.sh
-
 }
+
+
+# figure out how to implement these next two scripts.
+# sbatch --wait --export=VCF=$VCF,pheno=$(echo $abb/$abb.pheno.bed.gz),tissue=$(echo $abb/$abb),covariates=$(echo $abb/$full.v7.covariates_output.txt),permutations=$(echo $abb/$abb.permutations_full_FDR.thresholds.txt),abb=$abb,full=$full $scripts/../AWS/PermPassFDR.sh
+
+# sbatch --export=VCF=$VCF,pheno=$(echo $abb/$abb.pheno.bed.gz),tissue=$(echo $abb/$abb),covariates=$(echo $abb/$full.v7.covariates_output.txt),permutations=$(echo $abb/$abb.permutations_full_FDR.thresholds.txt),abb=$abb,full=$full $scripts/../AWS/QTLtools-int.sh

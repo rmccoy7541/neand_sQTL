@@ -132,7 +132,7 @@ for line in $(cat GTExCovKey.csv); do
    abb=$(echo $line | awk -F',' '{print $2}')
    if grep "$abb" tissuesused.txt; then
 
-      sbatch --export=abb=$abb ${scripts}/sh/QTLTools-Loop.sh
+      sbatch --export=abb=$abb,full=$full ${scripts}/sh/QTLTools-Loop.sh
       
    fi
 done
