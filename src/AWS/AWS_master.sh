@@ -47,11 +47,11 @@ sbatch --wait ${scripts}/../AWS/prepare_phen_table.sh
 ## Step 5 - QTLtools Preparation
 ################################################
 # prepare files for QTLtools
-ls *qqnorm*.gz >> leafcutterphenotypes.txt 
+ls *qqnorm*.gz | sort -V > leafcutterphenotypes.txt 
 # important: render these files compatible with QTLtools
 echo "Making phenotype files QTLtools compatible..."
 sbatch --wait ${scripts}/sh/QTLtools-Filter.sh
-ls *.qtltools >> qtltools-input.txt
+ls *.qtltools | sort -V > qtltools-input.txt
 # generate the corresponding tbi files
 rm Ne*tbi
 for i in {1..22}; do tabix -p bed Ne-sQTL_perind.counts.gz.qqnorm_chr${i}.gz.qtltools; echo "Bedding chromosome $i"; done
