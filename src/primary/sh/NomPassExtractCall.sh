@@ -15,6 +15,6 @@ module load R
 module load gcc
 
 # Consider passing WHLBLD_chunks as a command line var
-line=`sed "${SLURM_ARRAY_TASK_ID}q;d" ${listPath}/${tissue}_chunks_list.txt`
+line=$(echo ${tissue}_nominals_chunk_${SLURM_ARRAY_TASK_ID})
 
 Rscript ${scripts}/R/NomPassExtract.R $listPath/${line} $tissue/"sprime_calls.txt"
