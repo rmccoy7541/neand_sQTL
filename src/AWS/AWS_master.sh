@@ -80,7 +80,7 @@ for line in $(cat tissuesused.txt)
 do
    head -1 $line/1_$line.txt > $line/$line.phen_fastqtl.bed
    echo "Concatenating $line phenotypes..."
-   for file in $(ls $line/*_*.txt)
+   for file in $(ls $line/*_*.txt | sort -V)
    do
       echo "Adding $file..."
       cat $file | sed -e1,1d >> $line/$line.phen_fastqtl.bed
