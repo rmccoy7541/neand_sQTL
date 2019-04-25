@@ -5,3 +5,7 @@ for line in $(cat GTExCovKey.csv); do
 		sbatch -a 1-100 --export=VCF=$VCF,pheno=$(echo $abb/$abb.pheno.bed.gz),tissue=$(echo $abb/$abb),covariates=$(echo $abb/$full.v7.covariates_output.txt),abb=$abb,full=$full ${scripts}/sh/PermPass.sh
 	fi
 done
+
+for line in $(cat tissuesused.txt); do
+	for i in {1..100}; do
+		if [ -f $line/${line}_permutations_chunk_${i}.txt]; then
