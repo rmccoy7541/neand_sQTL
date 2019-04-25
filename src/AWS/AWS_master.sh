@@ -124,15 +124,16 @@ do
 done
 
 ## Step 4 - Mapping sQTLs using QTLtools
-################################################
-for line in $(cat GTExCovKey.csv); do
-   full=$(echo $line | awk -F',' '{print $1}')
-   abb=$(echo $line | awk -F',' '{print $2}')
-   if grep "$abb" tissuesused.txt; then
+###############################################
+# for line in $(cat GTExCovKey.csv); do
+   # full=$(echo $line | awk -F',' '{print $1}')
+   # abb=$(echo $line | awk -F',' '{print $2}')
+   # if grep "$abb" tissuesused.txt; then
 
-      sbatch --export=abb=$abb,full=$full ${scripts}/sh/QTLTools-Loop.sh
+numTis=$(wc -l tissuesused.txt)
+sbatch -a 1-$numTis ${scripts}/sh/QTLTools-Loop.sh
       
-   fi
-done
+   # fi
+# done
 
 sbatch ${scripts}/sh/QQViz.sh
