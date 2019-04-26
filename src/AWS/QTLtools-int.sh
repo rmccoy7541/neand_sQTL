@@ -17,7 +17,7 @@ if grep "$abb" tissuesused.txt; then
 	done
 
 	# getting chunks
-	ls $abb/${abb}_* | sort -V >> $abb/${abb}_chunks_list.txt
+	# ls $abb/${abb}_* | sort -V >> $abb/${abb}_chunks_list.txt
 	#######
 
 	for i in {1..100}; do
@@ -36,11 +36,11 @@ if grep "$abb" tissuesused.txt; then
 
 	#######
 
-	for i in {1..100}; do
-	  cat $abb/${abb}_conditionals_chunk_$i.txt | gzip -c >> $abb/${abb}.conditional_full.txt.gz
-	done
+	# for i in {1..100}; do
+	  # cat $abb/${abb}_conditionals_chunk_$i.txt | gzip -c >> $abb/${abb}.conditional_full.txt.gz
+	# done
 
-	mkdir ${abb}/conditionals; mv ${abb}/*_conditionals_* ${abb}conditionals/
+	# mkdir ${abb}/conditionals; mv ${abb}/*_conditionals_* ${abb}conditionals/
 
    	mkdir /home-1/aseyedi2@jhu.edu/work/aseyedi2/sQTL/$abb
 fi
