@@ -12,6 +12,19 @@
 # Begin work section #
 ######################
 
+# this project's scripts dir
+scripts=$(echo /home-1/aseyedi2@jhu.edu/work/aseyedi2/neand_sQTL/src/primary/)
+# data dir
+data=$(echo /home-1/aseyedi2@jhu.edu/work/aseyedi2/neand_sQTL/data/)
+# ncbi/files/
+ncbiFiles=$(echo /scratch/groups/rmccoy22/Ne_sQTL/files/)
+# IF YOU ALREADY HAVE NON-BIALLELIC INDEXED VCF
+VCF=$(echo /scratch/groups/rmccoy22/Ne_sQTL/files/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz)
+# input directory with junc files here
+junc=$(echo '/scratch/groups/rmccoy22/Ne_sQTL/sra/sqtl_junc')
+# leafcutter directory here
+leafCutter=$(echo /scratch/groups/rmccoy22/aseyedi2/leafcutter)
+
 /scratch/groups/rmccoy22/progs/QTLtools/QTLtools_1.1_Ubuntu14.04_x86_64 cis \
     --vcf  $VCF \
     --bed "$pheno" \
