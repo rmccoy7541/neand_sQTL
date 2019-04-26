@@ -13,11 +13,11 @@
 
 /home-1/aseyedi2@jhu.edu/work/progs/QTLtools/QTLtools_1.1_Ubuntu14.04_x86_64 cis \
   --vcf  $VCF \
-  --bed LUNG/LUNG.pheno.bed.gz \
-  --cov  "LUNG/Lung.v7.covariates_output.txt" \
+  --bed $tissue.pheno.bed.gz \
+  --cov  "$covariates" \
   --permute 1000  \
-  --chunk 19 100 \
-  --out "LUNG/LUNG_permutations_chunk_19.txt" \
+  --chunk $SLURM_ARRAY_TASK_ID 100 \
+  --out "${tissue}_permutations_chunk_${SLURM_ARRAY_TASK_ID}.txt" \
   --normal
   
-  sbatch -a 19 --export=VCF=$VCF,pheno=$(echo LUNG/LUNG.pheno.bed.gz),tissue=$(echo LUNG/LUNG),covariates=$(echo LUNG/Lung.v7.covariates_output.txt),abb=$(echo LUNG),full=$(echo Lung) ${scripts}/sh/PermPass.sh
+ #sbatch -a 1-100 --export=VCF=$VCF,pheno=$(echo $abb/$abb.pheno.bed.gz),tissue=$(echo $abb/$abb),covariates=$(echo $abb/$full.v7.covariates_output.txt),abb=$abb,full=$full ${scripts}/sh/PermPass.sh
