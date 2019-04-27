@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --partition=shared
 #SBATCH --job-name=QTLTools-Int
-#SBATCH --time=6:0:0
+#SBATCH --time=12:0:0
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=4
