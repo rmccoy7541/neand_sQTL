@@ -5,7 +5,7 @@
 #SBATCH --nodes=1
 #SBATCH --time=10:0:0
 #SBATCH --ntasks-per-node=1
-#SBATCH --cpus-per-task=5
+#SBATCH --cpus-per-task=4
 
 ######################
 # Begin work section #

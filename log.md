@@ -5,6 +5,9 @@ These updates are read from most recent date at the top to initial entry at the 
 REMEMBER
 - You need to make the pipeline generalizable, especially the part after separating the phenotype table by tissue.
 
+### 04/28/2019
+`mv ADRNLG/ ~/sQTL_data/; mv ARTAORT/ ~/sQTL_data/; mv BREAST/ ~/sQTL_data/; mv BRNCTXA/ ~/sQTL_data/; mv CLNTRN ~/sQTL_data/; mv FIBRLBLS/ ~/sQTL_data/; mv HRTAA ~/sQTL_data/; mv LIVER ~/sQTL_data/; mv PRSTTE/ ~/sQTL_data/; mv SLVRYG/ ~/sQTL_data/; mv SPLEEN/ ~/sQTL_data/; mv TESTIS/ ~/sQTL_data/; mv UTERUS/ ~/sQTL_data/`
+
 ### 04/17/2019
 
 `for i in $(cat failed_jobs.txt); do sed "${i}q;d" filtlist.txt ; done`
