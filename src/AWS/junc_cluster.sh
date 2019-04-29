@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=callJuncCluster
-#SBATCH --time=2:00:00
+#SBATCH --time=1:00:00
 #SBATCH --partition=shared
 #SBATCH --nodes=1
 # number of tasks (processes) per node
