@@ -7,20 +7,20 @@
 #SBATCH --cpus-per-task=4
 
 
-# catting noms
-for i in {1..100}; do
-cat $abb/${abb}_nominals_chunk_${i}.txt | gzip -c >> $abb/$abb.nominals.all.chunks.txt.gz
-done
+# # catting noms
+# # for i in {1..100}; do
+# # cat $abb/${abb}_nominals_chunk_${i}.txt | gzip -c >> $abb/$abb.nominals.all.chunks.txt.gz
+# # done
 
-# getting chunks
-# ls $abb/${abb}_* | sort -V >> $abb/${abb}_chunks_list.txt
-#######
+# # getting chunks
+# # ls $abb/${abb}_* | sort -V >> $abb/${abb}_chunks_list.txt
+# #######
 
-for i in {1..100}; do
-cat ${abb}/${abb}_nominals_chunk_${i}_out.txt | gzip -c >> ${abb}/$abb.nominals.all.chunks.NE_only.txt.gz
-done
+# for i in {1..100}; do
+# cat ${abb}/${abb}_nominals_chunk_${i}_out.txt | gzip -c >> ${abb}/$abb.nominals.all.chunks.NE_only.txt.gz
+# done
 
-mkdir $abb/nominals; mv $abb/*_nominals_* $abb/nominals/
+# # mkdir $abb/nominals; mv $abb/*_nominals_* $abb/nominals/
 
 #######
 

@@ -42,7 +42,7 @@ sbatch --export=VCF=$VCF,pheno=$(echo $abb/$abb.pheno.bed.gz),tissue=$(echo $abb
 # for line in $(cat GTExCovKey.csv); do
 	# full=$(echo $line | awk -F',' '{print $1}')
 	# abb=$(echo $line | awk -F',' '{print $2}')
-	# if grep $abb "tissuesused.txt"; then
+	# if grep $abb "failcat"; then
 		# sbatch --export=VCF=$VCF,pheno=$(echo $abb/$abb.pheno.bed.gz),tissue=$(echo $abb/$abb),covariates=$(echo $abb/$full.v7.covariates_output.txt),permutations=$(echo $abb/$abb.permutations_full_FDR.thresholds.txt),abb=$abb,full=$full $scripts/../AWS/QTLtools-int.sh
 	# fi
 # done	
