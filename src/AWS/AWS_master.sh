@@ -136,4 +136,4 @@ sbatch -a 1-$numTis ${scripts}/sh/QTLTools-Loop.sh
    # fi
 # done
 
-sbatch ${scripts}/sh/QQViz.sh
+sbatch ${scripts}/sh/QQViz.sh $PWD $NULL {permutation pass} ${data}/../analysis/SPRIME/sprime_calls.txt

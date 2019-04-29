@@ -52,6 +52,7 @@ gene_list <- genes(TxDb.Hsapiens.UCSC.hg19.knownGene) %>%
 
 gene_list[, subjectHits := .I]
 
+# Perm Pass QTLTOOLS
 gtp <- fread(cmdArgs[3]) %>%
   setnames(., c("intron_cluster", "chrom", "pheno_start", "pheno_end", 
                 "strand", "total_cis", "distance", "variant_id", "variant_chrom", 
@@ -61,6 +62,7 @@ gtp <- fread(cmdArgs[3]) %>%
 
 gtp[, qval := qvalue(gtp$adj_p)$qvalue]
 
+# Not TAGSNPS but SPRIME
 neand <- fread(cmdArgs[4])[vindija_match == "match" | altai_match == "match"] %>%
   mutate(., var_id_1 = paste(CHROM, POS, REF, ALT, "b37", sep = "_")) %>%
   as.data.table()
