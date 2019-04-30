@@ -5,6 +5,11 @@ These updates are read from most recent date at the top to initial entry at the 
 REMEMBER
 - You need to make the pipeline generalizable, especially the part after separating the phenotype table by tissue.
 
+### 04/30/2019
+`t_val <- qt(p_value/2, df = degrees_of_freedom) # Calculating the t-value using quantile function
+se <- slope / abs(t_val) # Calculating standard error`
+Method to compute STD err from QTLtools output.
+
 ### 04/28/2019
 `mv ADRNLG/ ~/sQTL_data/; mv ARTAORT/ ~/sQTL_data/; mv BREAST/ ~/sQTL_data/; mv BRNCTXA/ ~/sQTL_data/; mv CLNTRN ~/sQTL_data/; mv FIBRLBLS/ ~/sQTL_data/; mv HRTAA ~/sQTL_data/; mv LIVER ~/sQTL_data/; mv PRSTTE/ ~/sQTL_data/; mv SLVRYG/ ~/sQTL_data/; mv SPLEEN/ ~/sQTL_data/; mv TESTIS/ ~/sQTL_data/; mv UTERUS/ ~/sQTL_data/`
 
