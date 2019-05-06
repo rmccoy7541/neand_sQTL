@@ -5,6 +5,53 @@ These updates are read from most recent date at the top to initial entry at the 
 REMEMBER
 - You need to make the pipeline generalizable, especially the part after separating the phenotype table by tissue.
 
+### 1:21 PM 5/6/2019
+
+```
+ml bedtools
+ml samtools
+ml sra-tools
+ml python/2.7-anaconda
+ml bcftools
+ml htslib
+ml R
+ml gcc
+
+# navigate to directory with junc files (created from CRAM on Amazon EC2)
+cd /work-zfs/rmccoy22/rmccoy22/sqtl/sqtl_junc
+
+mkdir /work-zfs/rmccoy22/rmccoy22/sqtl/nuclear
+
+for i in *.junc
+do
+  grep -v "^MT" ${i} > ../nuclear/${i}
+done &
+
+wait
+
+cd /work-zfs/rmccoy22/rmccoy22/sqtl/nuclear
+
+ls *.junc > juncfiles.txt
+
+mkdir /work-zfs/rmccoy22/rmccoy22/sqtl/intron_clustering
+
+~/work/progs/leafcutter/clustering/leafcutter_cluster.py \
+  -j juncfiles.txt \
+  -m 50 \
+  -o Ne-sQTL \
+  -l 500000 \
+  -r ../intron_clustering/
+
+cd /work-zfs/rmccoy22/rmccoy22/sqtl/intron_clustering
+
+conda activate leafcutter
+
+python ~/work/progs/leafcutter/scripts/prepare_phenotype_table.py \
+  Ne-sQTL_perind.counts.gz \
+  -p 10
+```
+
+
 ### 04/30/2019
 `t_val <- qt(p_value/2, df = degrees_of_freedom) # Calculating the t-value using quantile function
 se <- slope / abs(t_val) # Calculating standard error`
