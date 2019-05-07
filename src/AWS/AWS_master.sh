@@ -47,7 +47,7 @@ sbatch --wait ${scripts}/../AWS/prepare_phen_table.sh
 ## Step 5 - QTLtools Preparation
 ################################################
 # prepare files for QTLtools
-ls *qqnorm*.gz | sort -V > leafcutterphenotypes.txt 
+ls *qqnorm* | sort -V > leafcutterphenotypes.txt 
 # important: render these files compatible with QTLtools
 echo "Making phenotype files QTLtools compatible..."
 sbatch --wait ${scripts}/sh/QTLtools-Filter.sh
