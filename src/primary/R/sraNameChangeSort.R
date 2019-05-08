@@ -2,7 +2,7 @@ require("data.table")
 require("R.utils")
 args = commandArgs(trailingOnly=TRUE)
 #args[1] is the leafcutter-generated phenotypes, args[2] is the tissue table
-NE <- fread(args[1])
+NE <- fread(paste0("zcat ", args[1]))
 #NE <- fread("zcat Ne-sQTL_perind.counts.gz.qqnorm_chr16.gz.qtltools")
 
 
