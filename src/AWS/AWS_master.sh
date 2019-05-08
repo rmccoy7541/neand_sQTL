@@ -47,21 +47,21 @@ sbatch --wait ${scripts}/../AWS/prepare_phen_table.sh
 ## Step 5 - QTLtools Preparation
 ################################################
 # prepare files for QTLtools
-ls *qqnorm*.gz | sort -V > leafcutterphenotypes.txt 
+ls *qqnorm* | sort -V > leafcutterphenotypes.txt 
 # important: render these files compatible with QTLtools
 echo "Making phenotype files QTLtools compatible..."
 sbatch --wait ${scripts}/sh/QTLtools-Filter.sh
 ls *.qtltools | sort -V > qtltools-input.txt
 # generate the corresponding tbi files
 rm Ne*tbi
-for i in {1..22}; do tabix -p bed Ne-sQTL_perind.counts.gz.qqnorm_chr${i}.gz.qtltools; echo "Bedding chromosome $i"; done
+for i in {1..22}; do tabix -p bed Ne-sQTL_perind.counts.gz.qqnorm_chr${i}.qtltools; echo "Bedding chromosome $i"; done
 
 cp ${data}/01-22-2019/GTExTissueKey.csv $PWD
 # get the tissue sites for each corresonding sra file
 Rscript ${scripts}/R/sraTissueExtract.R ${data}/Metadata/SraRunTable.txt GTExTissueKey.csv
 
 # submit each LF phenotype file to sraNameChangeSort as command line variable as well as tissue_table.txt
-for phen in *qqnorm*.gz.qtltools; do Rscript ${scripts}/R/sraNameChangeSort.R $phen tissue_table.txt ; done
+for phen in *qqnorm*.qtltools; do Rscript ${scripts}/R/sraNameChangeSort.R $phen tissue_table.txt ; done
 cat tissue_table.txt | cut -f3 | awk '{if(NR>1)print}' |  awk '!seen[$0]++' > tissuenames.txt
 
 mkdir tissuetable/
