@@ -2,7 +2,7 @@ require("data.table")
 require("R.utils")
 args = commandArgs(trailingOnly=TRUE)
 #args[1] is the leafcutter-generated phenotypes, args[2] is the tissue table
-NE <- fread(paste0("zcat ", args[1]))
+NE <- fread(args[1])
 #NE <- fread("zcat Ne-sQTL_perind.counts.gz.qqnorm_chr16.gz.qtltools")
 
 
@@ -11,7 +11,7 @@ setnames(NE, c('ID', '.', '+'), c('PID', 'GID', 'Strand'))
 tistab <- fread(args[2])
 #tistab <- fread("tissue_table.txt")
 
-
+names(NE) <- sapply(strsplit(names(NE), "_"), '[', 1)
 # below takes the SRR IDs found in NE column headers, matches them to those found in the
 # tissue table, and then changes them the GTEX sample ID
 ind <- match(names(NE), tistab$Run)
