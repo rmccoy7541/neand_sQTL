@@ -11,7 +11,7 @@ setnames(NE, c('ID', '.', '+'), c('PID', 'GID', 'Strand'))
 tistab <- fread(args[2])
 #tistab <- fread("tissue_table.txt")
 
-names(NE) <- sapply(strsplit(names(NE), "\\."), '[', 1)
+# names(NE) <- sapply(strsplit(names(NE), "\\."), '[', 1)
 # below takes the SRR IDs found in NE column headers, matches them to those found in the
 # tissue table, and then changes them the GTEX sample ID
 ind <- match(names(NE), tistab$Run)
