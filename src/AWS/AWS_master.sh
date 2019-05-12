@@ -97,7 +97,7 @@ do
    echo "Indexing $line/$line.pheno.bed.gz..."
    tabix -p bed $line/$line.pheno.bed.gz
 done
-# ----- 05/08/2019
+# here
 for line in $(cat tissuesused.txt)
 do
    mkdir $line/sepfiles
