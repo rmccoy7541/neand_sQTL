@@ -14,14 +14,8 @@ ml gcc
 scripts=$(echo /work-zfs/rmccoy22/aseyedi2/neanderthal-sqtl/src/primary)
 # data dir
 data=$(echo /work-zfs/rmccoy22/aseyedi2/neanderthal-sqtl/data)
-# ncbi/files/
-ncbiFiles=$(echo /scratch/groups/rmccoy22/Ne_sQTL/files/)
 # IF YOU ALREADY HAVE NON-BIALLELIC INDEXED VCF
 VCF=$(echo /scratch/groups/rmccoy22/Ne_sQTL/files/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz)
-# input directory with junc files here
-junc=$(echo '/scratch/groups/rmccoy22/Ne_sQTL/sra/sqtl_junc')
-# leafcutter directory here
-leafCutter=$(echo /scratch/groups/rmccoy22/aseyedi2/leafcutter)
 # sprime_calls
 sprime=$(echo /work-zfs/rmccoy22/aseyedi2/neanderthal-sqtl/analysis/SPRIME/sprime_calls.txt)
 # /work-zfs/rmccoy22/rmccoy22/sqtl/intron_clustering/tryagain
