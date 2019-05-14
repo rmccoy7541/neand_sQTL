@@ -10,20 +10,21 @@ ml htslib
 ml R
 ml gcc
 
-# top-level directory, above ncbi/
-homeDir=$(echo ~/work/)
 # this project's scripts dir
-scripts=$(echo /home-1/aseyedi2@jhu.edu/work/aseyedi2/neand_sQTL/src/primary/)
+scripts=$(echo /work-zfs/rmccoy22/aseyedi2/neanderthal-sqtl/src/primary)
 # data dir
-data=$(echo /home-1/aseyedi2@jhu.edu/work/aseyedi2/neand_sQTL/data/)
+data=$(echo /work-zfs/rmccoy22/aseyedi2/neanderthal-sqtl/data)
 # ncbi/files/
 ncbiFiles=$(echo /scratch/groups/rmccoy22/Ne_sQTL/files/)
 # IF YOU ALREADY HAVE NON-BIALLELIC INDEXED VCF
 VCF=$(echo /scratch/groups/rmccoy22/Ne_sQTL/files/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz)
-# input directory with sra files here
-sra=$(echo /home-1/aseyedi2@jhu.edu/work/Ne_sQTL/sra/lung_skinEx_thy)
+# input directory with junc files here
+junc=$(echo '/scratch/groups/rmccoy22/Ne_sQTL/sra/sqtl_junc')
 # leafcutter directory here
 leafCutter=$(echo /scratch/groups/rmccoy22/aseyedi2/leafcutter)
+# sprime_calls
+sprime=$(echo /work-zfs/rmccoy22/aseyedi2/neanderthal-sqtl/analysis/SPRIME/sprime_calls.txt)
+# /work-zfs/rmccoy22/rmccoy22/sqtl/intron_clustering/tryagain
 
 line=`sed "${SLURM_ARRAY_TASK_ID}q;d" GTExCovKey.csv`
 
@@ -31,9 +32,9 @@ full=$(echo $line | awk -F',' '{print $1}')
 abb=$(echo $line | awk -F',' '{print $2}')
 
 
-cp ${data}/../analysis/SPRIME/sprime_calls.txt $abb
+cp $sprime $abb
 # This next script does nom pass, then calls perm pass AND nom pass extract, and then perm pass calls cond pass once finished, which cats everything or whatever.
-sbatch --export=VCF=$VCF,pheno=$(echo $abb/$abb.pheno.bed.gz),tissue=$(echo $abb/$abb),covariates=$(echo $abb/$full.v7.covariates_output.txt),abb=$abb,full=$full ${scripts}/sh/NomPass.sh
+sbatch --export=VCF=$VCF,pheno=$(echo $abb/$abb.pheno.bed.gz),tissue=$(echo $abb/$abb),covariates=$(echo $abb/$full.v7.covariates_output.txt),abb=$abb,full=$full,worDir=$PWD ${scripts}/sh/NomPass.sh
 
 
 # figure out how to implement these next two scripts.
