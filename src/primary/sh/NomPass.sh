@@ -35,8 +35,6 @@ leafCutter=$(echo /scratch/groups/rmccoy22/aseyedi2/leafcutter)
     --out "${tissue}_nominals_chunk_${SLURM_ARRAY_TASK_ID}.txt"
 #fi
 
-scripts=$(echo /home-1/aseyedi2@jhu.edu/work/aseyedi2/neand_sQTL/src/primary/)
-
 sbatch -a $SLURM_ARRAY_TASK_ID --export=listPath=$PWD/$abb,tissue=$(echo $abb),scripts=$scripts ${scripts}sh/NomPassExtractCall.sh
 
 #Call permuatation pass
