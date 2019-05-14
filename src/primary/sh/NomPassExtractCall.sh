@@ -17,4 +17,4 @@ module load gcc
 # Consider passing WHLBLD_chunks as a command line var
 line=$(echo ${tissue}_nominals_chunk_${SLURM_ARRAY_TASK_ID})
 
-Rscript ${scripts}/R/NomPassExtract.R $worDir/${line} $tissue/sprime_calls.txt
+Rscript ${scripts}/R/NomPassExtract.R $listPath/${line} $tissue/sprime_calls.txt
