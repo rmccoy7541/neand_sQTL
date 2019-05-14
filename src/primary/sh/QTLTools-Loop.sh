@@ -25,7 +25,7 @@ sra=$(echo /home-1/aseyedi2@jhu.edu/work/Ne_sQTL/sra/lung_skinEx_thy)
 # leafcutter directory here
 leafCutter=$(echo /scratch/groups/rmccoy22/aseyedi2/leafcutter)
 
-line=`sed "${SLURM_ARRAY_TASK_ID}q;d" tissuesused.txt`
+line=`sed "${SLURM_ARRAY_TASK_ID}q;d" GTExCovKey.csv`
 
 full=$(echo $line | awk -F',' '{print $1}')
 abb=$(echo $line | awk -F',' '{print $2}')

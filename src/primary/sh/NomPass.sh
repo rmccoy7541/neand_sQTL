@@ -13,9 +13,9 @@
 ######################
 
 # this project's scripts dir
-scripts=$(echo /home-1/aseyedi2@jhu.edu/work/aseyedi2/neand_sQTL/src/primary/)
+scripts=$(echo /work-zfs/rmccoy22/aseyedi2/neanderthal-sqtl/src/primary)
 # data dir
-data=$(echo /home-1/aseyedi2@jhu.edu/work/aseyedi2/neand_sQTL/data/)
+data=$(echo /work-zfs/rmccoy22/aseyedi2/neanderthal-sqtl/data)
 # ncbi/files/
 ncbiFiles=$(echo /scratch/groups/rmccoy22/Ne_sQTL/files/)
 # IF YOU ALREADY HAVE NON-BIALLELIC INDEXED VCF
@@ -25,6 +25,7 @@ junc=$(echo '/scratch/groups/rmccoy22/Ne_sQTL/sra/sqtl_junc')
 # leafcutter directory here
 leafCutter=$(echo /scratch/groups/rmccoy22/aseyedi2/leafcutter)
 
+#if [ ! -f ${abb}/${tissue}_nominals_chunk_${SLURM_ARRAY_TASK_ID}.txt ]; then
 /scratch/groups/rmccoy22/progs/QTLtools/QTLtools_1.1_Ubuntu14.04_x86_64 cis \
     --vcf  $VCF \
     --bed "$pheno" \
@@ -32,6 +33,7 @@ leafCutter=$(echo /scratch/groups/rmccoy22/aseyedi2/leafcutter)
     --nominal 1  \
     --chunk $SLURM_ARRAY_TASK_ID 100 \
     --out "${tissue}_nominals_chunk_${SLURM_ARRAY_TASK_ID}.txt"
+#fi
 
 scripts=$(echo /home-1/aseyedi2@jhu.edu/work/aseyedi2/neand_sQTL/src/primary/)
 
