@@ -19,9 +19,10 @@ ind <- match(names(leafcut), lookup$Sample_Name)
 names(leafcut) <- lookup$submitted_subject_id[ind]
 
 # concatenate; fill missing values with na, but then remove
-out = rbind(leafcut,gtexPC, use.names=T, fill=T)
+out <- rbind(leafcut,gtexPC, use.names=T, fill=T)
 # omit NA's with a function that only works on rows
 out <- t(na.omit(t(out)))
-tissue = tools::file_path_sans_ext(basename(args[2]))
+# tissue = tools::file_path_sans_ext(basename(args[2]))
+tissue <- tools::file_path_sans_ext(basename("Whole_Blood.v7.covariates.txt"))
 outfile <- gsub(" ", "", paste(tissue, "_output.txt"), fixed = TRUE)
 write.table(out, file = outfile, quote = F, sep= "\t", eol = "\r\n", row.names = F)
