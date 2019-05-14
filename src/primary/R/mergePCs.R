@@ -12,7 +12,7 @@ lookup <- fread(args[3], colClasses = "character")
 # make the use of "id" header standard
 setnames(gtexPC, "ID", "id")
 
-# names(leafcut) <- sapply(strsplit(names(leafcut), "\\."), '[', 1)
+names(leafcut) <- sapply(strsplit(names(leafcut), "\\."), '[', 1)
 
 # making sure our leafcutter friends have the right header names
 ind <- match(names(leafcut), lookup$Sample_Name)

@@ -54,7 +54,7 @@ sbatch --wait ${scripts}/sh/QTLtools-Filter.sh
 ls *.qtltools | sort -V > qtltools-input.txt
 # generate the corresponding tbi files
 rm Ne*tbi
-for i in {1..22}; do tabix -p bed Ne-sQTL_perind.counts.gz.qqnorm_chr${i}.qtltools; echo "Bedding chromosome $i"; done
+for i in {1..22}; do echo "Bedding chromosome $i"; tabix -p bed Ne-sQTL_perind.counts.gz.qqnorm_chr${i}.qtltools; done
 
 cp ${data}/01-22-2019/GTExTissueKey.csv $PWD
 # get the tissue sites for each corresonding sra file
