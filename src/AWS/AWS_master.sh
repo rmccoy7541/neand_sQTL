@@ -154,8 +154,8 @@ exit
    # abb=$(echo $line | awk -F',' '{print $2}')
    # if grep "$abb" tissuesused.txt; then
 
-numTis=$(wc -l tissuesused.txt | awk -F' ' '{print $1}')
-sbatch -a 1-$numTis ${scripts}/sh/QTLTools-Loop.sh
+numTis=$(wc -l GTExCovKey.csv | awk -F' ' '{print $1}')
+sbatch -a 2-$numTis ${scripts}/sh/QTLTools-Loop.sh
       
    # fi
 # done
