@@ -15,7 +15,7 @@ ml samtools
 ml sra-tools
 ml python/2.7-anaconda
 ml bcftools
-ml htslib
+
 ml R
 ml gcc
 ml
@@ -54,14 +54,28 @@ sbatch --wait ${scripts}/sh/QTLtools-Filter.sh
 ls *.qtltools | sort -V > qtltools-input.txt
 # generate the corresponding tbi files
 rm Ne*tbi
+
+interact -p shared -t 2:0:0
+ml htslib
 for i in {1..22}; do echo "Bedding chromosome $i"; tabix -p bed Ne-sQTL_perind.counts.gz.qqnorm_chr${i}.qtltools; done
+exit
 
 cp ${data}/01-22-2019/GTExTissueKey.csv $PWD
+
 # get the tissue sites for each corresonding sra file
+interact -p shared -t 1:0
+ml R
+ml gcc
 Rscript ${scripts}/R/sraTissueExtract.R ${data}/Metadata/SraRunTable.txt GTExTissueKey.csv
+exit
 
 # submit each LF phenotype file to sraNameChangeSort as command line variable as well as tissue_table.txt
+interact -p shared -t 4:0:0
+ml R
+ml gcc
 for phen in *qqnorm*.qtltools; do Rscript ${scripts}/R/sraNameChangeSort.R $phen tissue_table.txt ; done
+exit
+
 cat tissue_table.txt | cut -f3 | awk '{if(NR>1)print}' |  awk '!seen[$0]++' > tissuenames.txt
 
 mkdir tissuetable/
@@ -75,6 +89,9 @@ for i in 1_*.txt; do echo $i | cut -d'_' -f 2| cut -d'.' -f 1 >> tissuesused.txt
 # moves each outputted file into its respective tissue folder
 for i in *_*.txt; do echo $i | awk -F'[_.]' '{print $2}' | xargs -I '{}' mv $i '{}' ; done
 
+interact -p shared -t 360:00 -c 2
+ml bedtools
+ml htslib
 ## Concatting the phenotype files
 for line in $(cat tissuesused.txt)
 do
@@ -104,6 +121,9 @@ do
    mv $line/*_${line}.txt $line/sepfiles/
 done
 
+exit
+
+
 # download genotype covariates
 wget https://storage.googleapis.com/gtex_analysis_v7/single_tissue_eqtl_data/GTEx_Analysis_v7_eQTL_covariates.tar.gz
 
@@ -111,6 +131,9 @@ tar -xvf GTEx_Analysis_v7_eQTL_covariates.tar.gz
 
 cp $data/Metadata/GTExCovKey.csv $PWD
 
+interact -p shared -t 1:0:0
+ml R
+ml gcc
 # Moves covariates to corresponding directory
 for line in $(cat GTExCovKey.csv)
 do
@@ -122,11 +145,12 @@ do
       mv $full.v7.covariates_output.txt $abb
    fi
 done
+exit
 
 ## Step 4 - Mapping sQTLs using QTLtools
 ###############################################
 # for line in $(cat GTExCovKey.csv); do
-   # full=$(echo $line | awk -F',' '{print $1}')
+   # full=$(echo $line | awk -F',' '{print $1}')    
    # abb=$(echo $line | awk -F',' '{print $2}')
    # if grep "$abb" tissuesused.txt; then
 
@@ -135,5 +159,5 @@ sbatch -a 1-$numTis ${scripts}/sh/QTLTools-Loop.sh
       
    # fi
 # done
-
+#figure out what to do here
 sbatch ${scripts}/sh/QQViz.sh $PWD $NULL LUNG.permutations_full.txt.gz ${data}/../analysis/SPRIME/sprime_calls.txt

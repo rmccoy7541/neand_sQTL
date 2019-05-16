@@ -221,6 +221,5 @@ done
 ## Step 4 - Mapping sQTLs using QTLtools
 ################################################
 numTissues=$(wc -l GTExCovKey.csv)
-
 sbatch --wait -a 2-$numTissues ${scripts}/sh/QTLTools-Loop.sh
 exit
