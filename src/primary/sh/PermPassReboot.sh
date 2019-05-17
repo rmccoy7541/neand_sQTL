@@ -32,7 +32,7 @@ cp $sprime $abb
 
 
 # figure out how to implement these next two scripts.
-sbatch --wait -a 1-100 --export=VCF=$VCF,pheno=$(echo $abb/$abb.pheno.bed.gz),tissue=$(echo $abb/$abb),covariates=$(echo $abb/$full.v7.covariates_output.txt),permutations=$(echo $abb/$abb.permutations_full_FDR.thresholds.txt),abb=$abb,full=$full ${scripts}/sh/PermPass.sh
+sbatch -a 1-100 --export=VCF=$VCF,pheno=$(echo $abb/$abb.pheno.bed.gz),tissue=$(echo $abb/$abb),covariates=$(echo $abb/$full.v7.covariates_output.txt),permutations=$(echo $abb/$abb.permutations_full_FDR.thresholds.txt),abb=$abb,full=$full ${scripts}/sh/PermPass.sh
 
 # for line in $(cat GTExCovKey.csv); do
 	# full=$(echo $line | awk -F',' '{print $1}')
