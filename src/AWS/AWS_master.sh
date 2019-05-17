@@ -156,6 +156,8 @@ exit
 
 numTis=$(wc -l GTExCovKey.csv | awk -F' ' '{print $1}')
 sbatch -a 2-$numTis ${scripts}/sh/QTLTools-Loop.sh
+
+# sbatch -a 2-$numTis ${scripts}/sh/PermPassReboot.sh
       
    # fi
 # done
