@@ -1,16 +1,21 @@
 #!/bin/bash
 #SBATCH --partition=shared
 #SBATCH --job-name=QTLTools-Int
-#SBATCH --time=12:0:0
+#SBATCH --time=24:0:0
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --cpus-per-task=4
+#SBATCH --cpus-per-task=2
+# enter array info command line
 
+line=`sed "${SLURM_ARRAY_TASK_ID}q;d" GTExCovKey.csv`
 
-# # catting noms
-# # for i in {1..100}; do
-# # cat $abb/${abb}_nominals_chunk_${i}.txt | gzip -c >> $abb/$abb.nominals.all.chunks.txt.gz
-# # done
+full=$(echo $line | awk -F',' '{print $1}')
+abb=$(echo $line | awk -F',' '{print $2}')
+
+# catting noms
+for i in {1..100}; do
+ cat $abb/${abb}_nominals_chunk_${i}.txt | gzip -c >> $abb/$abb.nominals.all.chunks.txt.gz
+done
 
 # # getting chunks
 # # ls $abb/${abb}_* | sort -V >> $abb/${abb}_chunks_list.txt
