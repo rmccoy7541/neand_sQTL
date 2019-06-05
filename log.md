@@ -5,6 +5,29 @@ These updates are read from most recent date at the top to initial entry at the 
 REMEMBER
 - You need to make the pipeline generalizable, especially the part after separating the phenotype table by tissue.
 
+### 06/06/2019
+Finally done with making the permutation pass files for all almost 12k samples.
+
+Here is the code Rajiv used to make backups of the permutation files and concatenate each perm array.
+```
+cd /scratch/groups/rmccoy22/rmccoy22/sqtl_permutation_backup
+cp /work-zfs/rmccoy22/rmccoy22/sqtl/intron_clustering/tryagain/*/*permutation* .
+
+for TISSUE in ADPSBQ ADPVSC ADRNLG ARTACRN ARTAORT ARTTBL BREAST BRNACC BRNAMY BRNCDT BRNCHA BRNCHB BRNCTXA BRNCTXB BRNHPP BRNHPT BRNNCC BRNPTM BRNSNG BRNSPC CLNSGM CLNTRN ESPGEJ ESPMCS ESPMSL FIBRLBLS HRTAA HRTLV LCL LIVER LUNG MSCLSK NERVET OVARY PNCREAS PRSTTE PTTARY SKINNS SKINS SLVRYG SNTTRM SPLEEN STMACH TESTIS THYROID UTERUS VAGINA WHLBLD
+do
+  mkdir ${TISSUE}
+  mv ${TISSUE}*permutations* ${TISSUE}
+  for i in {1..100}
+  do
+    cat ${TISSUE}/${TISSUE}_permutations_chunk_${i}.txt >> ${TISSUE}_permutations.txt
+  done
+done
+```
+
+I'm trying to figure out QTLtools `fenrich` function but I'm having trouble. I'm in `/home-1/aseyedi2@jhu.edu/work/aseyedi2/sqtl_work` and I've followed the directions, but I'm stuck on making the `--bed` file which are the functional annotations. I have to convert the sprime file over to bed but it's too ugly to neatly convert over. Mostly I'm trying to figure out the 4th and 5th columns. 
+
+`cat sprime_calls.txt | tail -n +2 | awk '{ print $1, expr $2-1, $2, $3, "+" }' |  tr " " "\t" | sort -k1,1 -k2,2n`
+
 ### 1:21 PM 5/6/2019
 
 ```

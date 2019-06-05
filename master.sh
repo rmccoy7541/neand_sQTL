@@ -221,5 +221,41 @@ done
 ## Step 4 - Mapping sQTLs using QTLtools
 ################################################
 numTissues=$(wc -l GTExCovKey.csv)
+
+# Will take at least 3 weeks lol
 sbatch --wait -a 2-$numTissues ${scripts}/sh/QTLTools-Loop.sh
-exit
+
+mkdir /scratch/groups/rmccoy22/rmccoy22/sqtl_permutation_backup
+cd /scratch/groups/rmccoy22/rmccoy22/sqtl_permutation_backup
+cp /work-zfs/rmccoy22/rmccoy22/sqtl/intron_clustering/tryagain/*/*permutation* .
+
+for TISSUE in ADPSBQ ADPVSC ADRNLG ARTACRN ARTAORT ARTTBL BREAST BRNACC BRNAMY BRNCDT BRNCHA BRNCHB BRNCTXA BRNCTXB BRNHPP BRNHPT BRNNCC BRNPTM BRNSNG BRNSPC CLNSGM CLNTRN ESPGEJ ESPMCS ESPMSL FIBRLBLS HRTAA HRTLV LCL LIVER LUNG MSCLSK NERVET OVARY PNCREAS PRSTTE PTTARY SKINNS SKINS SLVRYG SNTTRM SPLEEN STMACH TESTIS THYROID UTERUS VAGINA WHLBLD
+do
+  mkdir ${TISSUE}
+  mv ${TISSUE}*permutations* ${TISSUE}
+  for i in {1..100}
+  do
+    cat ${TISSUE}/${TISSUE}_permutations_chunk_${i}.txt >> ${TISSUE}_permutations.txt
+  done
+done
+
+# for i in *.txt; do
+#    Rscript ${scripts}/R/count_sqtl.R #Something like that
+# done
+
+for i in $(ls *permutations.txt); do
+   q=$(echo $i | cut -d _ -f 1)
+   Rscript /scratch/groups/rmccoy22/progs/QTLtools/script/runFDR_cis.R $i 0.10 ${q}.results
+done
+
+for i in $(ls *significant*); do
+   echo "Fixing ${i} to ${i}.bed..."
+   cat $i | awk '{ print $9, $10-1, $11, $8, $1, $5 }' | tr " " "\t" | sort -k1,1 -k2,2n > ${i}.bed
+done
+
+for i in $(ls *permutations*); do
+   echo "Fixing ${i} to ${i}.quantified.bed..."
+   cat $i | awk '{ print $9, $10-1, $11, $8, $1, $5 }' | tr " " "\t" | sort -k1,1 -k2,2n > ${i}.quantified.bed
+done
+
+/scratch/groups/rmccoy22/progs/QTLtools/QTLtools_1.1_Ubuntu14.04_x86_64 fenrich --qtl results.genes.significant.bed --tss results.genes.quantified.bed --bed TFs.encode.bed.gz --out enrichement.QTL.in.TF.txt
