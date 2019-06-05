@@ -28,6 +28,8 @@ I'm trying to figure out QTLtools `fenrich` function but I'm having trouble. I'm
 
 `cat sprime_calls.txt | tail -n +2 | awk '{ print $1, expr $2-1, $2, $3, "+" }' |  tr " " "\t" | sort -k1,1 -k2,2n`
 
+Also I'm rerunning `~/data/rmccoy22/sqtl/intron_clustering/tryagain/ARTTBL/ARTTBL_permutations_chunk_21.txt`, should remember to insert that in and reconcat everything.
+
 ### 1:21 PM 5/6/2019
 
 ```
