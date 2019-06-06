@@ -5,6 +5,15 @@ These updates are read from most recent date at the top to initial entry at the 
 REMEMBER
 - You need to make the pipeline generalizable, especially the part after separating the phenotype table by tissue.
 
+### 06/07/2019
+Fixed ARTTBL chunk 21. 
+
+According to Rajiv, in order to use `fenrich`, the tss file needs to be clusters without significant QTL, so I have to go back and look at the inputs for the QTL mapping steps for that.
+
+`for i in $(cat tissuenames.txt); do cp $i/$i.pheno.bed.gz ~/work/aseyedi2/sqtl_work/; done`
+
+Got `fenrich` to work.
+
 ### 06/06/2019
 Finally done with making the permutation pass files for all almost 12k samples.
 
