@@ -13,6 +13,36 @@ According to Rajiv, in order to use `fenrich`, the tss file needs to be clusters
 `for i in $(cat tissuenames.txt); do cp $i/$i.pheno.bed.gz ~/work/aseyedi2/sqtl_work/; done`
 
 Got `fenrich` to work.
+```
+filenames <- list.files(".", pattern="*enrichment.QTL.txt", full.names=TRUE)
+D=do.call(rbind, lapply(filenames, function(x) read.table(x, header=FALSE, stringsAsFactors=FALSE, col.names=c("observed.QTLs", "total.QTLs", "expected.QTLs", "stdDev.QTLs"))))
+
+toKeep <- seq(1, nrow(D), 2)
+D <- D[toKeep,]
+
+for(i in 1:47){
+  D[i,5] <-   gsub("/", "", strsplit(filenames[i], "\\.")[[1]][2])
+}
+rownames(D) <- D$V5
+D[,-5]
+
+ft.res <- apply(D, 1, function(x){
+    t1 <- fisher.test(matrix(x, nrow = 2))
+    data.frame(p_value = t1$p.value, odds_ratio = t1$estimate)
+})
+
+cbind(D, do.call(rbind, ft.res))
+```
+```
+for(i in 1:47) {
+  D=read.table(filesnames[i], head=FALSE, stringsAsFactors=FALSE)
+  fisher.test(matrix(c(D$V1, D$V2, round(D$V3), D$V2), ncol=2)
+}
+```
+My message to Rajiv:
+```
+Here's what I was able to generate. I will also send you the code that I used. It seems like minor salivary gland, the brain, small intenstine, uterus and vagina are depleted, and thyroid, testis, sun-exposed skin, skeletal muscle and subQ fat are enriched, assuming my analysis is correct
+```
 
 ### 06/06/2019
 Finally done with making the permutation pass files for all almost 12k samples.
