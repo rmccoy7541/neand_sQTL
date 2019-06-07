@@ -230,6 +230,7 @@ cd /scratch/groups/rmccoy22/rmccoy22/sqtl_permutation_backup
 cp /work-zfs/rmccoy22/rmccoy22/sqtl/intron_clustering/tryagain/*/*permutation* .
 cp /work-zfs/rmccoy22/rmccoy22/sqtl/intron_clustering/tryagain/*/*pheno* .
 cp /work-zfs/rmccoy22/rmccoy22/sqtl/intron_clustering/tryagain/tissuenames.txt .
+cp ${data}/../analysis/SPRIME/sprime_calls.txt .
 
 for TISSUE in ADPSBQ ADPVSC ADRNLG ARTACRN ARTAORT ARTTBL BREAST BRNACC BRNAMY BRNCDT BRNCHA BRNCHB BRNCTXA BRNCTXB BRNHPP BRNHPT BRNNCC BRNPTM BRNSNG BRNSPC CLNSGM CLNTRN ESPGEJ ESPMCS ESPMSL FIBRLBLS HRTAA HRTLV LCL LIVER LUNG MSCLSK NERVET OVARY PNCREAS PRSTTE PTTARY SKINNS SKINS SLVRYG SNTTRM SPLEEN STMACH TESTIS THYROID UTERUS VAGINA WHLBLD
 do
@@ -250,11 +251,20 @@ for i in $(ls *permutations.txt); do
    Rscript /scratch/groups/rmccoy22/progs/QTLtools/script/runFDR_cis.R $i 0.10 ${q}.results
 done
 
-for i in $(ls *permutations*); do
-   echo "Fixing ${i} to ${i}.quantified.bed..."
-   cat $i | awk '{ print $9, $10-1, $11, $8, $1, $5 }' | tr " " "\t" | sort -k1,1 -k2,2n > ${i}.quantified.bed
+for i in $(ls *results.significant.txt); do
+  echo "Fixing $i to $i.bed..."
+  cat $i | awk '{ print $9, $10-1, $11, $8, $1, $5 }' | tr " " "\t" | sort -k1,1 -k2,2n > $i.bed
 done
 
+# for i in $(ls *permutations*); do
+#    echo "Fixing ${i} to ${i}.quantified.bed..."
+#    cat $i | awk '{ print $9, $10-1, $11, $8, $1, $5 }' | tr " " "\t" | sort -k1,1 -k2,2n > ${i}.quantified.bed
+# done
+
+cat sprime_calls.txt | tail -n +2 | awk '{ print $1, expr $2-1, expr $2, $3, "+" }' |  tr " " "\t" | sort -k1,1 -k2,2n > sprime_calls.txt.bed
+
 for i in $(cat tissuenames.txt); do
-   /scratch/groups/rmccoy22/progs/QTLtools/QTLtools_1.1_Ubuntu14.04_x86_64 fenrich --qtl $i.results.significant.txt.bed --tss ${i}.pheno.bed.gz --bed sprime_snps.bed --seed 5318008 --log $i.enrichment.QTL.log --out ${i}.enrichement.QTL.txt
+   /scratch/groups/rmccoy22/progs/QTLtools/QTLtools_1.1_Ubuntu14.04_x86_64 fenrich --qtl $i.results.significant.txt.bed --tss ${i}.pheno.bed.gz --bed sprime_calls.txt.bed --seed 5318008 --log $i.enrichment.QTL.log --out ${i}.enrichement.QTL.txt
 done
+
+Rscript $scripts/R/fenrich_read.R

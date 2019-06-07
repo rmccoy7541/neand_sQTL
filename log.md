@@ -65,7 +65,7 @@ done
 
 I'm trying to figure out QTLtools `fenrich` function but I'm having trouble. I'm in `/home-1/aseyedi2@jhu.edu/work/aseyedi2/sqtl_work` and I've followed the directions, but I'm stuck on making the `--bed` file which are the functional annotations. I have to convert the sprime file over to bed but it's too ugly to neatly convert over. Mostly I'm trying to figure out the 4th and 5th columns. 
 
-`cat sprime_calls.txt | tail -n +2 | awk '{ print $1, expr $2-1, $2, $3, "+" }' |  tr " " "\t" | sort -k1,1 -k2,2n`
+`cat sprime_calls.txt | tail -n +2 | awk '{ print $1, expr $2-1, $2, $3, "+" }' |  tr " " "\t" | sort -k1,1 -k2,2n > sprime_calls.txt.bed`
 
 Also I'm rerunning `~/data/rmccoy22/sqtl/intron_clustering/tryagain/ARTTBL/ARTTBL_permutations_chunk_21.txt`, should remember to insert that in and reconcat everything.
 
