@@ -1,4 +1,4 @@
-﻿## Updates
+## Updates
 
 These updates are read from most recent date at the top to initial entry at the bottom.
 
@@ -24,7 +24,7 @@ for(i in 1:47){
   D[i,5] <-   gsub("/", "", strsplit(filenames[i], "\\.")[[1]][2])
 }
 rownames(D) <- D$V5
-D[,-5]
+D <- D[,-5]
 
 ft.res <- apply(D, 1, function(x){
     t1 <- fisher.test(matrix(x, nrow = 2))
