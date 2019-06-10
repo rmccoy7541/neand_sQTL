@@ -5,6 +5,25 @@ These updates are read from most recent date at the top to initial entry at the 
 REMEMBER
 - You need to make the pipeline generalizable, especially the part after separating the phenotype table by tissue.
 
+### 06/10/2019
+I think I figured out why `fenrich` doesn't work (as in it doesn't give accurate results); all of the phenotypes in `*.pheno.bed.gz` are on the `+` strand. At least, that might have something to do with it. According to the website:
+```
+This file contains the follwing columns:
+
+1. Chromosome ID of the phenotype
+2. Start position of the phenotype
+3. End position of the phenotype
+4. Phenotype ID
+5. Top variants (not used, can be whatever you want)
+6. Strand orientation *(important to measure distance between QTLs and phenotypes)*
+```
+The phenotype file does not have strand information because the VCF does not have strand information, and neither does the QTL file. Also, the website is confusing, because it says that "Targeted phenotype ID" is important because it's needed for "distance between QTL and phenotype can be determined" but it says the same thing for the phenotype file but for strand orientation. On the QTL file, it says that strand orientation is not used. And of course, the functional annotation file (sprime) does not use strand information. This whole thing is confusing. 
+
+`awk -F' ' 'NR==FNR{c[$2]++;next};c[$2] > 0' sprime_calls.txt.bed THYROID.results.significant.txt.bed`
+
+Above is what I used to find the matching start positions in `sprime` and compare them to those of `THYROID` and then print matching lines in `THYROID`.
+
+
 ### 06/07/2019
 Fixed ARTTBL chunk 21. 
 

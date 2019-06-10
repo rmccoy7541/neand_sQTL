@@ -268,3 +268,5 @@ for i in $(cat tissuenames.txt); do
 done
 
 Rscript $scripts/R/fenrich_read.R
+
+/scratch/groups/rmccoy22/progs/QTLtools/QTLtools_1.1_Ubuntu14.04_x86_64 fenrich --qtl dummy.txt --tss NERVET.pheno.bed.gz --bed sprime_calls.txt.bed --seed 5318008 --out dummy.enrichement.QTL.txt2
