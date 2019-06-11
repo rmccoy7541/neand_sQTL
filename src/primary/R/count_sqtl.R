@@ -4,7 +4,13 @@ library(qvalue)
 library(pbapply)
 library(Homo.sapiens)
 
-setwd("~/Desktop/sQTL/")
+
+args = commandArgs(trailingOnly=TRUE)
+# 1 is WD, 2 is sprime file
+
+
+# Working directory as commandline arg, make sure all of the catt'd permutation files are in your dir
+setwd(args[1])
 
 count_sqtl <- function(tissue, summarize = FALSE) {
   gtp <- fread(paste0(tissue, "_permutations.txt")) %>%
@@ -16,7 +22,8 @@ count_sqtl <- function(tissue, summarize = FALSE) {
   
   gtp[, qval := qvalue(gtp$adj_p)$qvalues]
   
-  neand <- fread("sprime_calls.txt.gz")[vindija_match == "match" | altai_match == "match"] %>%
+
+  neand <- fread(args[2])[vindija_match == "match" | altai_match == "match"] %>%
     mutate(., var_id = paste(CHROM, POS, REF, ALT, "b37", sep = "_")) %>%
     as.data.table()
   
