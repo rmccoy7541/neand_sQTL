@@ -10,7 +10,7 @@ args = commandArgs(trailingOnly=TRUE)
 
 
 # Working directory as commandline arg, make sure all of the catt'd permutation files are in your dir
-setwd(args[1])
+setwd("/Users/aseyedia/Documents/GitHub/neand_sQTL/analysis/PermPassResults/")
 
 count_sqtl <- function(tissue, summarize = FALSE) {
   gtp <- fread(paste0(tissue, "_permutations.txt")) %>%
@@ -22,11 +22,14 @@ count_sqtl <- function(tissue, summarize = FALSE) {
   
   gtp[, qval := qvalue(gtp$adj_p)$qvalues]
   
-
-  neand <- fread(args[2])[vindija_match == "match" | altai_match == "match"] %>%
+  neand <- fread("/Users/aseyedia/Documents/GitHub/neand_sQTL/analysis/SPRIME/sprime_calls.txt")[vindija_match == "match" | altai_match == "match"] %>%
     mutate(., var_id = paste(CHROM, POS, REF, ALT, "b37", sep = "_")) %>%
     as.data.table()
   
+  # neand <- fread(args[2])[vindija_match == "match" | altai_match == "match"] %>%
+  #   mutate(., var_id = paste(CHROM, POS, REF, ALT, "b37", sep = "_")) %>%
+  #   as.data.table()
+  # 
   gtp[, logP := -log10(adj_p)]
   setorder(gtp, logP)
   gtp[, expectedP := rev(-log10(ppoints(n = length(gtp$adj_p))))]
@@ -86,4 +89,5 @@ tissue_gtp_annotated <- tissue_gtp[olaps, on = "queryHits"]
 tissue_gtp_annotated <- tissue_gtp_annotated[gene_list, on = "subjectHits"] %>%
   setorder(., adj_p)
 
-dplyr::select(head(tissue_gtp_annotated[qval < 0.1 & is_neand == TRUE], 100), intron_cluster, variant_id, TISSUE_ID, adj_p, qval, symbol)
+topGenes <- dplyr::select(head(tissue_gtp_annotated[qval < 0.1 & is_neand == TRUE], 100), intron_cluster, variant_id, TISSUE_ID, adj_p, qval, symbol)
+write.table(topGenes, file = "TopGenes_PermPass.txt", quote = F, sep= "\t", eol = "\r\n", row.names = F)
