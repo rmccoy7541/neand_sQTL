@@ -10,7 +10,9 @@ args = commandArgs(trailingOnly=TRUE)
 
 
 # Working directory as commandline arg, make sure all of the catt'd permutation files are in your dir
-setwd("/Users/aseyedia/Documents/GitHub/neand_sQTL/analysis/PermPassResults/")
+#setwd("/Users/aseyedia/Documents/GitHub/neand_sQTL/analysis/PermPassResults/")
+
+setwd(args[1])
 
 count_sqtl <- function(tissue, summarize = FALSE) {
   gtp <- fread(paste0(tissue, "_permutations.txt")) %>%
@@ -22,14 +24,14 @@ count_sqtl <- function(tissue, summarize = FALSE) {
   
   gtp[, qval := qvalue(gtp$adj_p)$qvalues]
   
-  neand <- fread("/Users/aseyedia/Documents/GitHub/neand_sQTL/analysis/SPRIME/sprime_calls.txt")[vindija_match == "match" | altai_match == "match"] %>%
-    mutate(., var_id = paste(CHROM, POS, REF, ALT, "b37", sep = "_")) %>%
-    as.data.table()
-  
-  # neand <- fread(args[2])[vindija_match == "match" | altai_match == "match"] %>%
+  # neand <- fread("/Users/aseyedia/Documents/GitHub/neand_sQTL/analysis/SPRIME/sprime_calls.txt")[vindija_match == "match" | altai_match == "match"] %>%
   #   mutate(., var_id = paste(CHROM, POS, REF, ALT, "b37", sep = "_")) %>%
   #   as.data.table()
-  # 
+  
+  neand <- fread(args[2])[vindija_match == "match" | altai_match == "match"] %>%
+    mutate(., var_id = paste(CHROM, POS, REF, ALT, "b37", sep = "_")) %>%
+    as.data.table()
+
   gtp[, logP := -log10(adj_p)]
   setorder(gtp, logP)
   gtp[, expectedP := rev(-log10(ppoints(n = length(gtp$adj_p))))]
