@@ -5,6 +5,12 @@ These updates are read from most recent date at the top to initial entry at the 
 REMEMBER
 - You need to make the pipeline generalizable, especially the part after separating the phenotype table by tissue.
 
+### 06/18/2019
+I'm preparing the enrichment function. I'm right now trying to pull the VCF and load it into R so I can blah blah blah.
+`zcat GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz | awk '/#CHROM/{y=1}y' | head -n 50 > GTExVCFSample.vcf`
+This line will print out all of the non-hashtag preceeded lines EXCEPT for the column headers. Now I need to come up with a way to find SNPs in the nominal pass file whose frequencies can be extracted from the VCF. Remember, I want to build a distribution of p-values from SNPs whose frequency of expression matches the frequency of expression of SNPs found in NL-introgressed sQTLs. So let's say I have 15 permutation pass NL-introgressed SNPs, I have to find 15 SNPs in the nominal pass sQTL file with a similar frequency of expression and plot their p-values. See QTLtools documentation for more info. The p-value in question is nominal P-value of association between the variant and the phenotype.
+
+
 ### 06/10/2019
 I think I figured out why `fenrich` doesn't work (as in it doesn't give accurate results); all of the phenotypes in `*.pheno.bed.gz` are on the `+` strand. At least, that might have something to do with it. According to the website:
 ```
