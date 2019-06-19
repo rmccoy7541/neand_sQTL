@@ -19,7 +19,13 @@ library(R.utils)
 setwd("Documents/GitHub/neand_sQTL/scratch/")
 
 vcf <- fread("GTExVCFSample.vcf.gz")
-nomQtl <- fread("THYROID_nominals_chunk_1_sample.txt")
+nomQTL <- fread("THYROID_nominals_chunk_1_sample.txt")
 
 QT_head <- c("phen.id", "phen.chrom.id", "phen.start", "phen.end", "strand.orient", "num.var.cis", "distance", "var.id",
              "var.chrom.id", "var.start", "var.end", "p-value", "reg.slope", "top.var")
+
+nomQTL <- setNames(nomQTL, QT_head)
+
+
+
+
