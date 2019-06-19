@@ -21,3 +21,5 @@ for i in {1..100}; do
 done
 
 mv ${TISSUE}_nominals.txt $TISSUE
+
+echo "$TISSUE/$TISSUE_nominals.txt complete."
