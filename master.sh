@@ -282,6 +282,8 @@ for i in $(cat tissuenames.txt); do
    /scratch/groups/rmccoy22/progs/QTLtools/QTLtools_1.1_Ubuntu14.04_x86_64 fenrich --qtl $i.results.significant.txt.bed --tss ${i}.pheno.bed.gz --bed sprime_calls.txt.bed --seed 5318008 --log $i.enrichment.QTL.log --out ${i}.enrichement.QTL.txt
 done
 
-Rscript $scripts/R/fenrich_read.R
+# Rscript $scripts/R/fenrich_read.R
 
-/scratch/groups/rmccoy22/progs/QTLtools/QTLtools_1.1_Ubuntu14.04_x86_64 fenrich --qtl dummy.txt --tss NERVET.pheno.bed.gz --bed sprime_calls.txt.bed --seed 5318008 --out dummy.enrichement.QTL.txt2
+# /scratch/groups/rmccoy22/progs/QTLtools/QTLtools_1.1_Ubuntu14.04_x86_64 fenrich --qtl dummy.txt --tss NERVET.pheno.bed.gz --bed sprime_calls.txt.bed --seed 5318008 --out dummy.enrichement.QTL.txt2
+
+Rscript $scripts/sh/enrichementQTL.R $PWD /scratch/groups/rmccoy22/Ne_sQTL/files/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz
