@@ -5,6 +5,11 @@ These updates are read from most recent date at the top to initial entry at the 
 REMEMBER
 - You need to make the pipeline generalizable, especially the part after separating the phenotype table by tissue.
 
+### 06/20/2019
+`for i in $(cat tissuesused.txt); do echo "Moving $i/${i} to all noms..."; mv $i/${i}_nominals.txt all_noms; done`
+
+that's how I'm going to move all of the catted NomPass tissues. Can't find THYROID, for some reason... Still working on the enrichment function. Not making great progress. 
+
 ### 06/18/2019
 I'm preparing the enrichment function. I'm right now trying to pull the VCF and load it into R so I can blah blah blah.
 `zcat GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz | awk '/#CHROM/{y=1}y' | head -n 50 > GTExVCFSample.vcf`

@@ -6,7 +6,7 @@
 #SBATCH --time=30:0:0
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=2
-#SBATCH --array=1-48
+#SBATCH --array=1-53
 ######################
 # Begin work section #
 ######################
