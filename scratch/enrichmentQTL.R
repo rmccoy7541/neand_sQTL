@@ -3,7 +3,9 @@ library(data.table)
 library(R.utils)
 library(vcfR)
 library(Matching)
-# enrichment funciton
+
+cmdArgs = commandArgs(trailingOnly=TRUE)
+# enrichment function
 # - We are finding random sets of non-NL introgressed SNPs that have a similar frequency to the NL-introgressed SNPs and 
 # determining how many of them are significant to build a null distribution. We then take the signficant NL-introgressed SNPs 
 # and determine where they lie along the distribution. Permuations are the testing of the random set of SNPs.
@@ -18,10 +20,16 @@ library(Matching)
 # 
 # Develop seed method for random permutation - set default seed
 
-setwd("Documents/GitHub/neand_sQTL/scratch/")
 
-GTEx <- read.vcfR("GTExSample.vcf")
-nomQTL <- fread("THYROID_nominals_chunk_1_sample.txt")
+setwd(cmdArgs[1])
+# gonna have to insert these things as cmd-line variables.
+# setwd("Documents/GitHub/neand_sQTL/scratch/")
+
+# 2 is vcf 
+GTEx <- read.vcfR(cmdArgs[2])
+# GTEx <- read.vcfR("GTExSample.vcf")
+nomQTL <- fread(cmdArgs[3])
+# nomQTL <- fread("THYROID_nominals_chunk_1_sample.txt")
 
 QT_head <- c("phen.id", "phen.chrom.id", "phen.start", "phen.end", "strand.orient", "num.var.cis", "distance", "var.id",
              "var.chrom.id", "var.start", "var.end", "p.value", "reg.slope", "top.var")
@@ -39,7 +47,8 @@ nomQTL <- subset(nomQTL, select = var.chrom.id:`p-value`)
 GTEx <- transform(GTEx, var.chrom.id = as.integer(var.chrom.id))
 AllNomFreq <- merge(nomQTL, GTEx, by = c("var.chrom.id", "var.start"))
 
-permPass <- fread("../analysis/PermPassResults/TopGenes_PermPass.txt")
+permPass <- fread(cmdArgs[4])
+# permPass <- fread("../analysis/PermPassResults/TopGenes_PermPass.txt")
 
 # permHead <- c("phen.id", "phen.chrom.id", "phen.start", "phen.end", "strand.orient", "num.var.cis", "distance", "var.id",
 #               "var.chrom.id", "var.start", "var.end", "deg.of.freedom.p.value", "dummy", "first.beta.dist", "second.beta.dist", 
@@ -52,4 +61,3 @@ enrichTest <- function(NLpermTest, AF) {
    
   
 }
-
