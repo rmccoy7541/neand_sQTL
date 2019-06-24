@@ -286,4 +286,6 @@ done
 
 # /scratch/groups/rmccoy22/progs/QTLtools/QTLtools_1.1_Ubuntu14.04_x86_64 fenrich --qtl dummy.txt --tss NERVET.pheno.bed.gz --bed sprime_calls.txt.bed --seed 5318008 --out dummy.enrichement.QTL.txt2
 
-Rscript $scripts/R/enrichementQTL.R /work-zfs/rmccoy22/rmccoy22/sqtl/intron_clustering/tryagain /scratch/groups/rmccoy22/Ne_sQTL/files/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz /work-zfs/rmccoy22/rmccoy22/sqtl/intron_clustering/tryagain/LUNG_nominals.txt /home-1/aseyedi2@jhu.edu/work/aseyedi2/neand_sQTL/analysis/PermPassResults/TopGenes_PermPass.txt
+Rscript $scripts/R/enrichmentQTL.R /work-zfs/rmccoy22/rmccoy22/sqtl/intron_clustering/tryagain /scratch/groups/rmccoy22/Ne_sQTL/files/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz /work-zfs/rmccoy22/rmccoy22/sqtl/intron_clustering/tryagain/LUNG_nominals.txt /home-1/aseyedi2@jhu.edu/work/aseyedi2/neand_sQTL/analysis/PermPassResults/TopGenes_PermPass.txt
+
+zcat GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz | grep -v '#' | cut -f3,8 | tr ';' '\t' | cut -f1,3 | sed 's/AF=//g' > gtex_af.txt
