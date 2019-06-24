@@ -44,9 +44,9 @@ ml
 # top-level directory, above ncbi/
 homeDir=$(echo ~/work/)
 # this project's scripts dir
-scripts=$(echo /home-1/aseyedi2@jhu.edu/work/aseyedi2/neand_sQTL/src/primary/)
+scripts=$(echo /work-zfs/rmccoy22/aseyedi2/neanderthal-sqtl/src/primary/)
 # data dir
-data=$(echo /home-1/aseyedi2@jhu.edu/work/aseyedi2/neand_sQTL/data/)
+data=$(echo /work-zfs/rmccoy22/aseyedi2/neanderthal-sqtl/data/)
 # ncbi/files/
 ncbiFiles=$(echo /scratch/groups/rmccoy22/Ne_sQTL/files/)
 # IF YOU ALREADY HAVE NON-BIALLELIC INDEXED VCF
