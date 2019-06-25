@@ -279,3 +279,15 @@ cat sprime_calls.txt | tail -n +2 | awk '{ print $1, expr $2-1, expr $2, $3, "+"
 
 # zcat GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz | grep -v '#' | cut -f3,8 | tr ';' '\t' | cut -f1,3 | sed 's/AF=//g' > gtex_af.txt
 
+cd $VCF
+
+wget https://storage.googleapis.com/gtex_analysis_v7/reference/Homo_sapiens_assembly19.fasta.gz; gunzip Homo_sapiens_assembly19.fasta.gz
+
+ml samtools
+ml picard
+ml java
+samtools faidx Homo_sapiens_assembly19.fasta 
+picard CreateSequenceDictionary R= Homo_sapiens_assembly19.fasta O= Homo_sapiens_assembly19.dict
+
+sbatch $scripts/sh/VariantsToTable.sh
+
