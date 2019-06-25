@@ -29,6 +29,8 @@ java -jar ~/work/progs/GenomeAnalysisTK-3.8-1-0-gf15c1c3ef/GenomeAnalysisTK.jar 
 
 See `VariantToTable.sh`
 
+Then I'm going to work on that R script Rajiv sent me. But the jobs for the reformatting command are still pending.
+
 ### 06/20/2019
 `for i in $(cat tissuesused.txt); do echo "Moving $i/${i} to all noms..."; mv $i/${i}_nominals.txt all_noms; done`
 
