@@ -5,6 +5,30 @@ These updates are read from most recent date at the top to initial entry at the 
 REMEMBER
 - You need to make the pipeline generalizable, especially the part after separating the phenotype table by tissue.
 
+### 06/25/2019
+Gotta reformat the VCF to use it. I'm going to do 
+
+```
+ml java
+java -jar ~/work/progs/GenomeAnalysisTK-3.8-1-0-gf15c1c3ef/GenomeAnalysisTK.jar
+```
+instead. But first I need a reference. I downloaded `Homo_sapiens_assembly19.fasta`. But I needed to index and `dict` it first. Here's how:
+
+```
+ml samtools
+ml picard
+ml java
+samtools faidx Homo_sapiens_assembly19.fasta 
+picard CreateSequenceDictionary R= Homo_sapiens_assembly19.fasta O= Homo_sapiens_assembly19.dict
+```
+Then I reformat:
+```
+ml java
+java -jar ~/work/progs/GenomeAnalysisTK-3.8-1-0-gf15c1c3ef/GenomeAnalysisTK.jar -R Homo_sapiens_assembly19.fasta -T VariantsToTable -V GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz -L ${SLURM_ARRAY_TASK_ID} -F CHROM -F POS -F REF -F ALT -F AF -o GTExWGS.AF.chr${SLURM_ARRAY_TASK_ID}.txt
+```
+
+See `VariantToTable.sh`
+
 ### 06/20/2019
 `for i in $(cat tissuesused.txt); do echo "Moving $i/${i} to all noms..."; mv $i/${i}_nominals.txt all_noms; done`
 

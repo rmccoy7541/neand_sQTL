@@ -235,17 +235,6 @@ cp ${data}/../analysis/SPRIME/sprime_calls.txt .
 # cats the nominal pass results
 sbatch $scripts/primary/sh/CatNomPass.sh
 
-# for TISSUE in ADPSBQ ADPVSC ADRNLG ARTACRN ARTAORT ARTTBL BREAST BRNACC BRNAMY BRNCDT BRNCHA BRNCHB BRNCTXA BRNCTXB BRNHPP BRNHPT BRNNCC BRNPTM BRNSNG BRNSPC CLNSGM CLNTRN ESPGEJ ESPMCS ESPMSL FIBRLBLS HRTAA HRTLV LCL LIVER LUNG MSCLSK NERVET OVARY PNCREAS PRSTTE PTTARY SKINNS SKINS SLVRYG SNTTRM SPLEEN STMACH TESTIS THYROID UTERUS VAGINA WHLBLD
-# do
-#   mkdir ${TISSUE}
-#   mv ${TISSUE}*nominals* ${TISSUE}
-#   for i in {1..100}
-#   do
-#     echo "Catting ${TISSUE}_nominals_chunk_${i}.txt..."
-#     cat ${TISSUE}/${TISSUE}_nominals_chunk_${i}.txt >> ${TISSUE}_nominals.txt
-#   done
-# done
-
 for TISSUE in ADPSBQ ADPVSC ADRNLG ARTACRN ARTAORT ARTTBL BREAST BRNACC BRNAMY BRNCDT BRNCHA BRNCHB BRNCTXA BRNCTXB BRNHPP BRNHPT BRNNCC BRNPTM BRNSNG BRNSPC CLNSGM CLNTRN ESPGEJ ESPMCS ESPMSL FIBRLBLS HRTAA HRTLV LCL LIVER LUNG MSCLSK NERVET OVARY PNCREAS PRSTTE PTTARY SKINNS SKINS SLVRYG SNTTRM SPLEEN STMACH TESTIS THYROID UTERUS VAGINA WHLBLD
 do
   mkdir ${TISSUE}
@@ -278,14 +267,15 @@ done
 
 cat sprime_calls.txt | tail -n +2 | awk '{ print $1, expr $2-1, expr $2, $3, "+" }' |  tr " " "\t" | sort -k1,1 -k2,2n > sprime_calls.txt.bed
 
-for i in $(cat tissuenames.txt); do
-   /scratch/groups/rmccoy22/progs/QTLtools/QTLtools_1.1_Ubuntu14.04_x86_64 fenrich --qtl $i.results.significant.txt.bed --tss ${i}.pheno.bed.gz --bed sprime_calls.txt.bed --seed 5318008 --log $i.enrichment.QTL.log --out ${i}.enrichement.QTL.txt
-done
+# for i in $(cat tissuenames.txt); do
+#    /scratch/groups/rmccoy22/progs/QTLtools/QTLtools_1.1_Ubuntu14.04_x86_64 fenrich --qtl $i.results.significant.txt.bed --tss ${i}.pheno.bed.gz --bed sprime_calls.txt.bed --seed 5318008 --log $i.enrichment.QTL.log --out ${i}.enrichement.QTL.txt
+# done
 
 # Rscript $scripts/R/fenrich_read.R
 
 # /scratch/groups/rmccoy22/progs/QTLtools/QTLtools_1.1_Ubuntu14.04_x86_64 fenrich --qtl dummy.txt --tss NERVET.pheno.bed.gz --bed sprime_calls.txt.bed --seed 5318008 --out dummy.enrichement.QTL.txt2
 
-Rscript $scripts/R/enrichmentQTL.R /work-zfs/rmccoy22/rmccoy22/sqtl/intron_clustering/tryagain /scratch/groups/rmccoy22/Ne_sQTL/files/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz /work-zfs/rmccoy22/rmccoy22/sqtl/intron_clustering/tryagain/LUNG_nominals.txt /home-1/aseyedi2@jhu.edu/work/aseyedi2/neand_sQTL/analysis/PermPassResults/TopGenes_PermPass.txt
+# Rscript $scripts/R/enrichmentQTL.R /work-zfs/rmccoy22/rmccoy22/sqtl/intron_clustering/tryagain /scratch/groups/rmccoy22/Ne_sQTL/files/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz /work-zfs/rmccoy22/rmccoy22/sqtl/intron_clustering/tryagain/LUNG_nominals.txt /home-1/aseyedi2@jhu.edu/work/aseyedi2/neand_sQTL/analysis/PermPassResults/TopGenes_PermPass.txt
 
-zcat GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz | grep -v '#' | cut -f3,8 | tr ';' '\t' | cut -f1,3 | sed 's/AF=//g' > gtex_af.txt
+# zcat GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz | grep -v '#' | cut -f3,8 | tr ';' '\t' | cut -f1,3 | sed 's/AF=//g' > gtex_af.txt
+
