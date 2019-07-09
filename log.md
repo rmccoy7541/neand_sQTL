@@ -5,6 +5,13 @@ These updates are read from most recent date at the top to initial entry at the 
 REMEMBER
 - You need to make the pipeline generalizable, especially the part after separating the phenotype table by tissue.
 
+### 07/09/2019
+Now I have to remember what the hell I was doing before MARCC essentially went down for two weeks. I have the reformatted VCF in full now (a bit less than 1Gb). 
+
+I have to preprocess the nominal files to only include the variant ID, as they're each way too large to bring into R without some sort of complicated scheme. Since I'm right now developing with only the THYROID tissue, I called this command on the THYROID nominals:
+
+`awk '{ print $8 }' THYROID_nominals.txt > THYROID_nominals_varid.txt`
+
 ### 06/25/2019
 Gotta reformat the VCF to use it. I'm going to do 
 

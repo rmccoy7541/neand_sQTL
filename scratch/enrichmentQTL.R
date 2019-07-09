@@ -4,7 +4,7 @@ library(R.utils)
 library(vcfR)
 library(Matching)
 
-# cmdArgs = commandArgs(trailingOnly=TRUE)
+cmdArgs = commandArgs(trailingOnly=TRUE)
 # enrichment function
 # - We are finding random sets of non-NL introgressed SNPs that have a similar frequency to the NL-introgressed SNPs and 
 # determining how many of them are significant to build a null distribution. We then take the signficant NL-introgressed SNPs 

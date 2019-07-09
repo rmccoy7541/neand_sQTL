@@ -1,21 +1,26 @@
-library(data.table)
 library(tidyverse)
+library(data.table)
+library(ff)
 
-af <- fread("gtex_af.txt") %>%
-  setnames(., c("variant_id", "freq"))
+# 1 is the VCF filtered for allele freq, 2 is nom file, 3 is perm pass
+cmdArgs = commandArgs(trailingOnly=TRUE)
 
-nom <- fread("THYROID_nominals_allchunks.txt") %>%
+# af <- fread(cmdArgs[1])
+af <- fread("GTExWGS.AF.txt")
+
+# nom <- fread("../sqtl_permutation_backup/all_noms/THYROID_nominals.txt")
+nom <- fread("../sqtl_permutation_backup/all_noms/THYROID_nominals.txt") %>%
   setnames(., c("phen.id", "phen.chrom.id", "phen.start", "phen.end", "strand.orient", "num.var.cis", "distance", "var.id",
                 "var.chrom.id", "var.start", "var.end", "p.value", "reg.slope", "top.var"))
 
 # modify below to read in permutation results
-perm <- fread("Permutationpass") %>%
+perm <- fread("../sqtl_permutation_backup/THYROID_permutations.txt") %>%
   setnames(., c("phen.id", "phen.chrom.id", "phen.start", "phen.end", "strand.orient", "num.var.cis", "distance", "var.id",
                 "var.chrom.id", "var.start", "var.end", "deg.of.freedom.p.value", "dummy", "first.beta.dist", "second.beta.dist", 
                 "nom.p.value", "reg.slope", "empirical.p.value", "adjusted.p.value"))
 
 # edit below to read in sprime Neanderthal SNPs 
-sprime_snps <- fread("sprime_file.txt")$variant_id
+sprime_snps <- fread("sprime_file.txt")$ID
 
 # restrict frequency data to SNPs that were actually tested for associations
 af <- af[variant_id %in% nom$var.id]
