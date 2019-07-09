@@ -12,6 +12,12 @@ I have to preprocess the nominal files to only include the variant ID, as they'r
 
 `awk '{ print $8 }' THYROID_nominals.txt > THYROID_nominals_varid.txt`
 
+Got this error:
+
+`awk: cmd. line:1: (FILENAME=THYROID_nominals.txt FNR=1639313292) fatal: print to "standard output" failed (Input/output error)`
+
+Not sure why but doesn't matter right now since I'm only developing the enrichment fxn.
+
 ### 06/25/2019
 Gotta reformat the VCF to use it. I'm going to do 
 
