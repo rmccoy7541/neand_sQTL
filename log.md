@@ -18,6 +18,8 @@ Got this error:
 
 Not sure why but doesn't matter right now since I'm only developing the enrichment fxn.
 
+Okay. That doesn't work. I'm copying the THYROID nominals into wd and splitting them, and then getting the eigth column and making a new file. Hope that works.
+
 ### 06/25/2019
 Gotta reformat the VCF to use it. I'm going to do 
 
