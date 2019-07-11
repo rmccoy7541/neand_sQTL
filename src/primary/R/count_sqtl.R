@@ -91,5 +91,5 @@ tissue_gtp_annotated <- tissue_gtp[olaps, on = "queryHits"]
 tissue_gtp_annotated <- tissue_gtp_annotated[gene_list, on = "subjectHits"] %>%
   setorder(., adj_p)
 
-topGenes <- dplyr::select(head(tissue_gtp_annotated[qval < 0.1 & is_neand == TRUE], 100), intron_cluster, variant_id, TISSUE_ID, adj_p, qval, symbol)
+topGenes <- dplyr::select(head(tissue_gtp_annotated[qval < 0.1 & is_neand == TRUE], 292), intron_cluster, variant_id, TISSUE_ID, adj_p, qval, symbol)
 write.csv(topGenes, file = "TopGenes_PermPass.csv", eol = "\r\n", row.names = F)

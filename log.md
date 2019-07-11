@@ -20,6 +20,13 @@ Not sure why but doesn't matter right now since I'm only developing the enrichme
 
 Okay. That doesn't work. I'm copying the THYROID nominals into wd and splitting them, and then getting the eigth column and making a new file. Hope that works.
 
+### 06/26/2019
+Got many OOM errors with `sbatch`. Going to run it `VariantToTable` on the dev node.
+
+```
+java -jar ~/work/progs/GenomeAnalysisTK-3.8-1-0-gf15c1c3ef/GenomeAnalysisTK.jar -R Homo_sapiens_assembly19.fasta -T VariantsToTable -V GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz -F CHROM -F POS -F REF -F ALT -F AF -o GTExWGS.AF.txt
+```
+
 ### 06/25/2019
 Gotta reformat the VCF to use it. I'm going to do 
 
