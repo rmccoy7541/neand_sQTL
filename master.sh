@@ -228,6 +228,8 @@ numTissues=$(wc -l GTExCovKey.csv)
 sbatch --wait -a 2-$numTissues ${scripts}/sh/QTLTools-Loop.sh
 
 mkdir /scratch/groups/rmccoy22/rmccoy22/sqtl_permutation_backup
+mkdir all_noms
+mkdir sqtl_nrich
 cd /scratch/groups/rmccoy22/rmccoy22/sqtl_permutation_backup
 cp /work-zfs/rmccoy22/rmccoy22/sqtl/intron_clustering/tryagain/*/*permutation* .
 cp /work-zfs/rmccoy22/rmccoy22/sqtl/intron_clustering/tryagain/*/*pheno* .
