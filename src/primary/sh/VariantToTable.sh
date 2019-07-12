@@ -12,6 +12,8 @@
 # Begin work section #
 ######################
 
+cd /work-zfs/rmccoy22/aseyedi2/GTExWGS_VCF
+
 ml java
 java -jar ~/work/progs/GenomeAnalysisTK-3.8-1-0-gf15c1c3ef/GenomeAnalysisTK.jar \
   -R Homo_sapiens_assembly19.fasta \
