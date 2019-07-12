@@ -55,6 +55,8 @@ VCF=$(echo /scratch/groups/rmccoy22/Ne_sQTL/files/GTExWGSGenotypeMatrixBiallelic
 sra=$(echo /home-1/aseyedi2@jhu.edu/work/Ne_sQTL/sra/lung_skinEx_thy)
 # leafcutter directory here
 leafCutter=$(echo /scratch/groups/rmccoy22/aseyedi2/leafcutter)
+# sprime
+sprime=$(echo ${data}/../analysis/SPRIME/sprime_calls.txt)
 
 ## Step 1a - Conversion & Validation
 ################################################

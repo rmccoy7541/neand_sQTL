@@ -23,4 +23,5 @@ java -jar ~/work/progs/GenomeAnalysisTK-3.8-1-0-gf15c1c3ef/GenomeAnalysisTK.jar 
   -F REF \
   -F ALT \
   -F AF \
+  --showFiltered
   -o GTExWGS.AF.chr${SLURM_ARRAY_TASK_ID}.txt

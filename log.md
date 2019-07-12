@@ -5,6 +5,13 @@ These updates are read from most recent date at the top to initial entry at the 
 REMEMBER
 - You need to make the pipeline generalizable, especially the part after separating the phenotype table by tissue.
 
+### 07/12/19
+```
+ml java
+java -jar ~/work/progs/GenomeAnalysisTK-3.8-1-0-gf15c1c3ef/GenomeAnalysisTK.jar -R Homo_sapiens_assembly19.fasta -T VariantsToTable -V GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz -L ${SLURM_ARRAY_TASK_ID} -F CHROM -F POS -F REF -F ALT -F AF --showFiltered -o GTExWGS.AF.chr${SLURM_ARRAY_TASK_ID}.txt
+```
+Gotta add the `--showFiltered` flag to include low-quality SNPs.
+
 ### 07/09/2019
 Now I have to remember what the hell I was doing before MARCC essentially went down for two weeks. I have the reformatted VCF in full now (a bit less than 1Gb). 
 
