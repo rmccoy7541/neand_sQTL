@@ -1,23 +1,47 @@
 library(data.table)
 library(tidyverse)
 library(qvalue)
+library(pbmcapply)
 library(Matching)
 
+# cmd_args[1] is tissue name
+# cmd_args[2] is allele freq - "/work-zfs/rmccoy22/aseyedi2/GTExWGS_VCF/GTExWGS.AF.all.txt"
+# cmd_args[3] is base dir; has all chunk folders - "/work-zfs/rmccoy22/rmccoy22/sqtl/intron_clustering/tryagain/"
+# cmd_args[4] is sprime - "/work-zfs/rmccoy22/aseyedi2/neanderthal-sqtl/analysis/SPRIME/sprime_calls.txt"
+# cmd_args[5] is perm pass file - "/work-zfs/rmccoy22/aseyedi2/GTExWGS_VCF/${1}_permutations.txt"
+# cmd_args[6] is output file 
+# cmd_args <- commandArgs(trailingOnly = TRUE)
+# tissue_input <- cmd_args[1]
+tissue_input <- cmd_args[1]
 
-# 1 is the VCF filtered for allele freq, 2 is nom file, 3 is perm pass, 4 is sprime
-cmdArgs = commandArgs(trailingOnly=TRUE)
-
-af <- fread(file = cmdArgs[1], 
+# allele freq -
+af <- fread(file = cmd_args[2],
             colClasses = c("character", "integer", "character", "character", "numeric"))
-
 af[, AF := as.numeric(AF)]
-
-sprime <- fread(cmdArgs[4])
-
 af[, variant_id := paste(CHROM, POS, REF, ALT, "b37", sep = "_")]
-sprime[, variant_id := paste(CHROM, POS, REF, ALT, "b37", sep = "_")]
-
 af[, c("CHROM", "POS", "REF", "ALT") := NULL]
+
+basedir <- cmd_args[3]
+
+read_nom_ids_wrapper <- function(base_dir, tissue_name) {
+  basepath <- paste0(base_dir, tissue_name, "/", tissue_name, "_nominals_chunk")
+  dt <- do.call(c, pbmclapply(1:100, function(x) read_nom_ids(basepath, x), mc.cores = getOption("mc.cores", 24L)))
+  return(dt)
+}
+
+read_nom_ids <- function(base_path, chunk_number) {
+  path <- paste0(base_path, "_", chunk_number, ".txt")
+  return(unique(fread(path, select = 8)$V8))
+}
+
+noms <- unique(read_nom_ids_wrapper(basedir, tissue_input))
+
+# subset allele frequencies to those tested for splicing associations (nominal pass)
+af <- af[variant_id %in% noms]
+
+sprime <- fread(cmd_args[4])
+
+sprime[, variant_id := paste(CHROM, POS, REF, ALT, "b37", sep = "_")]
 
 sprime[, is_neand := (altai_match == "match" | vindija_match == "match")]
 
@@ -25,7 +49,7 @@ neand_snps <- sprime[is_neand == TRUE & !(grepl(",", variant_id))]$variant_id
 
 af[, is_neand := variant_id %in% neand_snps]
 
-perm <- fread(cmdArgs[3]) %>%
+perm <- fread(cmd_args[5]) %>%
   setnames(., c("intron_cluster", "chrom", "pheno_start", "pheno_end", 
                 "strand", "total_cis", "distance", "variant_id", "variant_chrom", 
                 "var_start", "var_end", "df", "dummy", "param_1", "param_2",
@@ -37,8 +61,28 @@ sig_snps <- perm[qval < 0.1]$variant_id
 
 af[, is_sig := variant_id %in% sig_snps]
 
-# naive enrichment test
+# shuffle AF
+set.seed(123)
+af <- af[sample(1:nrow(af), replace = F),]
 
-fisher.test(rbind(table(af[is_neand == FALSE]$is_sig),
-                  table(af[is_neand == TRUE]$is_sig))
-           )
+# play around with changing "M"?
+matches <- Match(X = af$AF, Tr = af$is_neand, exact = TRUE, replace = FALSE, ties = FALSE, version = "fast", M = 10)
+
+# enrichment test
+
+sig_neand <- nrow(af[unique(matches$index.treated),][is_sig == TRUE,])
+nsig_neand <- nrow(af[unique(matches$index.treated),][is_sig == FALSE,])
+sig_nneand <- nrow(af[unique(matches$index.control),][is_sig == TRUE,])
+nsig_nneand <- nrow(af[unique(matches$index.control),][is_sig == FALSE,])
+
+fisher_results <- fisher.test(rbind(cbind(sig_neand, nsig_neand), cbind(sig_nneand, nsig_nneand)))
+
+output_data <- data.table(
+  tissue = tissue_input, 
+  est = fisher_results$estimate,
+  ci.ll = fisher_results$conf.int[1],
+  ci.ul = fisher_results$conf.int[2],
+  p = fisher_results$p.value
+  )
+
+fwrite(output_data, file = cmd_args[6], quote = F, col.names = T, row.names = F)

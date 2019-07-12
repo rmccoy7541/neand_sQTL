@@ -262,19 +262,7 @@ for i in $(ls *results.significant.txt); do
   cat $i | awk '{ print $9, $10-1, $11, $8, $1, $5 }' | tr " " "\t" | sort -k1,1 -k2,2n > $i.bed
 done
 
-# for i in $(ls *permutations*); do
-#    echo "Fixing ${i} to ${i}.quantified.bed..."
-#    cat $i | awk '{ print $9, $10-1, $11, $8, $1, $5 }' | tr " " "\t" | sort -k1,1 -k2,2n > ${i}.quantified.bed
-# done
-
-cat sprime_calls.txt | tail -n +2 | awk '{ print $1, expr $2-1, expr $2, $3, "+" }' |  tr " " "\t" | sort -k1,1 -k2,2n > sprime_calls.txt.bed
-
-# for i in $(cat tissuenames.txt); do
-#    /scratch/groups/rmccoy22/progs/QTLtools/QTLtools_1.1_Ubuntu14.04_x86_64 fenrich --qtl $i.results.significant.txt.bed --tss ${i}.pheno.bed.gz --bed sprime_calls.txt.bed --seed 5318008 --log $i.enrichment.QTL.log --out ${i}.enrichement.QTL.txt
-# done
-
-# Rscript $scripts/R/fenrich_read.R
-
-# /scratch/groups/rmccoy22/progs/QTLtools/QTLtools_1.1_Ubuntu14.04_x86_64 fenrich --qtl dummy.txt --tss NERVET.pheno.bed.gz --bed sprime_calls.txt.bed --seed 5318008 --out dummy.enrichement.QTL.txt2
-
-Rscript $scripts/R/enrichementQTL.R /work-zfs/rmccoy22/rmccoy22/sqtl/intron_clustering/tryagain /scratch/groups/rmccoy22/Ne_sQTL/files/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz /work-zfs/rmccoy22/aseyedi2/sqtl_permutation_backup/all_noms/THYROID_nominals.txt /home-1/aseyedi2@jhu.edu/work/aseyedi2/neand_sQTL/analysis/PermPassResults/TopGenes_PermPass.txt
+for i in $(cat tissuenames.txt); do 
+  echo "Submitting $i Enrichment Test"
+  sbatch --export=tissue=$(echo $i) ${scripts}/sh/CallNRich.sh 
+done
