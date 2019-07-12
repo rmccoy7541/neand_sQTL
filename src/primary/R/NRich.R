@@ -14,7 +14,7 @@ library(Matching)
 # tissue_input <- cmd_args[1]
 tissue_input <- cmd_args[1]
 
-# allele freq -
+# allele freq VCF
 af <- fread(file = cmd_args[2],
             colClasses = c("character", "integer", "character", "character", "numeric"))
 af[, AF := as.numeric(AF)]
@@ -23,38 +23,45 @@ af[, c("CHROM", "POS", "REF", "ALT") := NULL]
 
 basedir <- cmd_args[3]
 
+# collects all chunks of computed nominal pass output
 read_nom_ids_wrapper <- function(base_dir, tissue_name) {
   basepath <- paste0(base_dir, tissue_name, "/", tissue_name, "_nominals_chunk")
   dt <- do.call(c, pbmclapply(1:100, function(x) read_nom_ids(basepath, x), mc.cores = getOption("mc.cores", 24L)))
   return(dt)
 }
 
+# reads all nominal pass chunks
 read_nom_ids <- function(base_path, chunk_number) {
   path <- paste0(base_path, "_", chunk_number, ".txt")
   return(unique(fread(path, select = 8)$V8))
 }
 
+# calls the above two functions
 noms <- unique(read_nom_ids_wrapper(basedir, tissue_input))
 
 # subset allele frequencies to those tested for splicing associations (nominal pass)
 af <- af[variant_id %in% noms]
 
+# NL SNPs
 sprime <- fread(cmd_args[4])
 
 sprime[, variant_id := paste(CHROM, POS, REF, ALT, "b37", sep = "_")]
 
+# create column for if either match
 sprime[, is_neand := (altai_match == "match" | vindija_match == "match")]
 
 neand_snps <- sprime[is_neand == TRUE & !(grepl(",", variant_id))]$variant_id
 
 af[, is_neand := variant_id %in% neand_snps]
 
+# read perm pass
 perm <- fread(cmd_args[5]) %>%
   setnames(., c("intron_cluster", "chrom", "pheno_start", "pheno_end", 
                 "strand", "total_cis", "distance", "variant_id", "variant_chrom", 
                 "var_start", "var_end", "df", "dummy", "param_1", "param_2",
                 "p", "beta", "emp_p", "adj_p"))
 
+# finding q value; FDR
 perm[, qval := qvalue(perm$adj_p)$qvalues]
 
 sig_snps <- perm[qval < 0.1]$variant_id
