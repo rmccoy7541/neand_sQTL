@@ -10,7 +10,7 @@ library(Matching)
 # cmd_args[4] is sprime - "/work-zfs/rmccoy22/aseyedi2/neanderthal-sqtl/analysis/SPRIME/sprime_calls.txt"
 # cmd_args[5] is perm pass file - "/work-zfs/rmccoy22/aseyedi2/GTExWGS_VCF/${1}_permutations.txt"
 # cmd_args[6] is output file 
-# cmd_args <- commandArgs(trailingOnly = TRUE)
+cmd_args <- commandArgs(trailingOnly = TRUE)
 # tissue_input <- cmd_args[1]
 tissue_input <- cmd_args[1]
 
