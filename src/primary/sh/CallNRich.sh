@@ -17,6 +17,7 @@ ml gcc
 date
 
 Rscript /work-zfs/rmccoy22/aseyedi2/neanderthal-sqtl/src/primary/R/NRich.R \
+  "${tissue}" \
   "/work-zfs/rmccoy22/aseyedi2/GTExWGS_VCF/GTExWGS.AF.all.txt" \
   "/work-zfs/rmccoy22/rmccoy22/sqtl/intron_clustering/tryagain/" \
   "/work-zfs/rmccoy22/aseyedi2/neanderthal-sqtl/analysis/SPRIME/sprime_calls.txt" \
