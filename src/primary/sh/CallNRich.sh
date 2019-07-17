@@ -16,6 +16,8 @@ ml gcc
 
 date
 
+echo "$tissue"
+
 Rscript /work-zfs/rmccoy22/aseyedi2/neanderthal-sqtl/src/primary/R/NRich.R \
   "${tissue}" \
   "/work-zfs/rmccoy22/aseyedi2/GTExWGS_VCF/GTExWGS.AF.all.txt" \
