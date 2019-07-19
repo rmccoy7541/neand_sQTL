@@ -8,6 +8,12 @@ REMEMBER
 ### 07/19/19
 What's been going on? Rajiv basically finished the NRichment function so now we are running tests to see if we get consistent results. Apparently some of the results from the first test differ from the results from the second enrichment test, but that's confounded by the fact that I (attempted) to run some of the enrichment independently to fix some of the problems with the `pbmclapply` multithreading.
 
+I have two ways to approach this:
+1. just try again and email marcc
+2. preprocess the nominals file and alter the code to reflect that and the computational expense
+
+I'm going to do both
+
 ### 07/12/19
 Gotta add the `--showFiltered` flag to VariantsToTable.sh include low-quality SNPs. Rerunning now. Going to finish the enrichment function with Rajiv after.
 

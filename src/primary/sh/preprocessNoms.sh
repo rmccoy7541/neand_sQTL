@@ -2,10 +2,10 @@
 
 #SBATCH --partition=shared
 #SBATCH --job-name=preprocessNoms
-#SBATCH --time=12:00:00
+#SBATCH --time=6:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --cpus-per-task=24
+#SBATCH --cpus-per-task=4
 #SBATCH --array=1-48
 
 ######################
