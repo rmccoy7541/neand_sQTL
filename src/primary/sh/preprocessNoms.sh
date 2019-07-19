@@ -14,6 +14,8 @@
 
 line=`sed "${SLURM_ARRAY_TASK_ID}q;d" tissuenames.txt`
 
+echo $line
+
 for i in {1..100}; do
 	cut -d' ' -f 8 /work-zfs/rmccoy22/rmccoy22/sqtl/intron_clustering/tryagain/$line/${line}_nominals_chunk_${i}.txt >> /work-zfs/rmccoy22/aseyedi2/sqtl_permutation_backup/all_noms/varIDs/${line}_nom_varIDs.txt
 done
