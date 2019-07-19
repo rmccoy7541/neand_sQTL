@@ -264,6 +264,8 @@ for i in $(ls *results.significant.txt); do
   cat $i | awk '{ print $9, $10-1, $11, $8, $1, $5 }' | tr " " "\t" | sort -k1,1 -k2,2n > $i.bed
 done
 
+for i in $(ls *_permutations.txt | sort -V); do echo $i | cut -d'_' -f 1; done > tissuesused.txt
+
 for i in $(cat tissuenames.txt); do 
   echo "Submitting $i Enrichment Test"
   sbatch --export=tissue=$(echo $i) ${scripts}/sh/CallNRich.sh 

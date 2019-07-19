@@ -73,7 +73,7 @@ set.seed(123)
 af <- af[sample(1:nrow(af), replace = F),]
 
 # play around with changing "M"?
-matches <- Match(X = af$AF, Tr = af$is_neand, exact = TRUE, replace = FALSE, ties = FALSE, version = "fast", M = 10)
+matches <- Match(X = af$AF, Tr = af$is_neand, exact = TRUE, replace = FALSE, ties = FALSE, version = "fast", M = 100)
 
 # enrichment test
 
@@ -81,6 +81,11 @@ sig_neand <- nrow(af[unique(matches$index.treated),][is_sig == TRUE,])
 nsig_neand <- nrow(af[unique(matches$index.treated),][is_sig == FALSE,])
 sig_nneand <- nrow(af[unique(matches$index.control),][is_sig == TRUE,])
 nsig_nneand <- nrow(af[unique(matches$index.control),][is_sig == FALSE,])
+
+print(paste0("Significant NL: ", sig_neand))
+print(paste0("Insignificant NL: ", nsig_neand))
+print(paste0("Significant non-NL:", sig_nneand))
+print(paste0("Non-significant non-NL: ", nsig_nneand))
 
 fisher_results <- fisher.test(rbind(cbind(sig_neand, nsig_neand), cbind(sig_nneand, nsig_nneand)))
 
