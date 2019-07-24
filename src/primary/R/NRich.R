@@ -12,7 +12,7 @@ library(Matching)
 # cmd_args[6] is output file 
 cmd_args <- commandArgs(trailingOnly = TRUE)
 # tissue_input <- cmd_args[1]
-tissue_input <- cmd_args[1]
+tissue_input <- "cmd_args[1]"
 
 # allele freq VCF
 af <- fread(file = cmd_args[2],
