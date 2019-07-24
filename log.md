@@ -33,6 +33,10 @@ done
 
 So I am trying again with the Nrich function, but this time just reading in the product of preprocessing the nominal pass files.
 
+Rajiv is now saying that I should also only extract the unique ones using `uniq` in the preprocessing step. 
+
+`for i in $(ls *txt); do uniq $i > uniq/$i.uniq; done`
+
 ### 07/19/19
 What's been going on? Rajiv basically finished the NRichment function so now we are running tests to see if we get consistent results. Apparently some of the results from the first test differ from the results from the second enrichment test, but that's confounded by the fact that I (attempted) to run some of the enrichment independently to fix some of the problems with the `pbmclapply` multithreading.
 
