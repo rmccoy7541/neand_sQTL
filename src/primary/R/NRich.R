@@ -6,7 +6,7 @@ library(Matching)
 
 # cmd_args[1] is tissue name
 # cmd_args[2] is allele freq - "/work-zfs/rmccoy22/aseyedi2/GTExWGS_VCF/GTExWGS.AF.all.txt"
-# cmd_args[3] is base dir; has all chunk folders - "/work-zfs/rmccoy22/rmccoy22/sqtl/intron_clustering/tryagain/"
+# cmd_args[3] is tissue nominal file, varIDs only - "/work-zfs/rmccoy22/aseyedi2/sqtl_permutation_backup/all_noms/varIDs/${tissue}_nom_varIDs.txt
 # cmd_args[4] is sprime - "/work-zfs/rmccoy22/aseyedi2/neanderthal-sqtl/analysis/SPRIME/sprime_calls.txt"
 # cmd_args[5] is perm pass file - "/work-zfs/rmccoy22/aseyedi2/GTExWGS_VCF/${1}_permutations.txt"
 # cmd_args[6] is output file 
@@ -21,23 +21,25 @@ af[, AF := as.numeric(AF)]
 af[, variant_id := paste(CHROM, POS, REF, ALT, "b37", sep = "_")]
 af[, c("CHROM", "POS", "REF", "ALT") := NULL]
 
-basedir <- cmd_args[3]
+# basedir <- cmd_args[3]
 
-# collects all chunks of computed nominal pass output
-read_nom_ids_wrapper <- function(base_dir, tissue_name) {
-  basepath <- paste0(base_dir, tissue_name, "/", tissue_name, "_nominals_chunk")
-  dt <- do.call(c, pbmclapply(1:100, function(x) read_nom_ids(basepath, x), mc.cores = getOption("mc.cores", 24L)))
-  return(dt)
-}
+# # collects all chunks of computed nominal pass output
+# read_nom_ids_wrapper <- function(base_dir, tissue_name) {
+#   basepath <- paste0(base_dir, tissue_name, "/", tissue_name, "_nominals_chunk")
+#   dt <- do.call(c, pbmclapply(1:100, function(x) read_nom_ids(basepath, x), mc.cores = getOption("mc.cores", 24L)))
+#   return(dt)
+# }
+# 
+# # reads all nominal pass chunks
+# read_nom_ids <- function(base_path, chunk_number) {
+#   path <- paste0(base_path, "_", chunk_number, ".txt")
+#   return(unique(fread(path, select = 8)$V8))
+# }
+# 
+# # calls the above two functions
+# noms <- unique(read_nom_ids_wrapper(basedir, tissue_input))
 
-# reads all nominal pass chunks
-read_nom_ids <- function(base_path, chunk_number) {
-  path <- paste0(base_path, "_", chunk_number, ".txt")
-  return(unique(fread(path, select = 8)$V8))
-}
-
-# calls the above two functions
-noms <- unique(read_nom_ids_wrapper(basedir, tissue_input))
+noms <- unique(cmd_args[3])
 
 # subset allele frequencies to those tested for splicing associations (nominal pass)
 af <- af[variant_id %in% noms]
