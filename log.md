@@ -5,6 +5,34 @@ These updates are read from most recent date at the top to initial entry at the 
 REMEMBER
 - You need to make the pipeline generalizable, especially the part after separating the phenotype table by tissue.
 
+### 07/24/19
+I have been so bad with logging, but bascially the NRich function doesn't work on it's own, so I had to preprocess the nominal files in `preprocessNoms.sh`. Something about cores failing. Some of the jobs failed, so I had to resubmit them as such:
+```
+#!/bin/bash
+
+#SBATCH --partition=shared
+#SBATCH --job-name=preprocessNoms
+#SBATCH --time=24:00:00
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --cpus-per-task=16
+#SBATCH --array=18,19,20,21,22,23
+
+######################
+# Begin work section #
+######################
+
+line=`sed "${SLURM_ARRAY_TASK_ID}q;d" tissuenames.txt`
+
+echo $line
+
+for i in {1..100}; do
+	cut -d' ' -f 8 /work-zfs/rmccoy22/rmccoy22/sqtl/intron_clustering/tryagain/$line/${line}_nominals_chunk_${i}.txt >> /work-zfs/rmccoy22/aseyedi2/sqtl_permutation_backup/all_noms/varIDs/${line}_nom_varIDs.txt
+done
+```
+
+So I am trying again with the Nrich function, but this time just reading in the product of preprocessing the nominal pass files.
+
 ### 07/19/19
 What's been going on? Rajiv basically finished the NRichment function so now we are running tests to see if we get consistent results. Apparently some of the results from the first test differ from the results from the second enrichment test, but that's confounded by the fact that I (attempted) to run some of the enrichment independently to fix some of the problems with the `pbmclapply` multithreading.
 
