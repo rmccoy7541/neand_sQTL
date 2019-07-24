@@ -12,7 +12,7 @@
 # Begin work section #
 ######################
 
-$tissue=`sed "${SLURM_ARRAY_TASK_ID}q;d" tissuenames.txt`
+tissue=$(sed "${SLURM_ARRAY_TASK_ID}q;d" tissuenames.txt)
 
 echo "$tissue"
 
