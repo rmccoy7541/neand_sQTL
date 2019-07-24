@@ -39,7 +39,7 @@ af[, c("CHROM", "POS", "REF", "ALT") := NULL]
 # # calls the above two functions
 # noms <- unique(read_nom_ids_wrapper(basedir, tissue_input))
 
-noms <- unique(cmd_args[3])
+noms <- unique(fread(cmd_args[3]))
 
 # subset allele frequencies to those tested for splicing associations (nominal pass)
 af <- af[variant_id %in% noms]
