@@ -5,6 +5,32 @@ These updates are read from most recent date at the top to initial entry at the 
 REMEMBER
 - You need to make the pipeline generalizable, especially the part after separating the phenotype table by tissue.
 
+### 07/26/19
+`uniq` didn't work. Even in a batch script. I'm going to try to `split` these guys now. This will work.
+
+```
+#!/bin/bash
+
+#SBATCH --partition=shared
+#SBATCH --job-name=splitNoms
+#SBATCH --time=24:00:00
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --cpus-per-task=16
+#SBATCH --array=1-48
+
+######################
+# Begin work section #
+######################
+
+line=`sed "${SLURM_ARRAY_TASK_ID}q;d" tissuenames.txt`
+
+split -n l/100 -d -a 2 --additional-suffix=.txt /work-zfs/rmccoy22/aseyedi2/sqtl_permutation_backup/all_noms/varIDs/${line}_nom_varIDs.txt chunks/${line}_varID_chunk_
+```
+That should split up each of the files. `-n l/100` breaks up the file into 100 chunks without splitting in the middle of a line (important). `-d` uses numeric suffixes, 00-99. `-a 2` uses two digits, which is the default but I specified anyway. `--additional-suffix=.txt` for consistency. Let's see what happens.
+
+If this works, I'm going to make it a script.
+
 ### 07/24/19
 I have been so bad with logging, but bascially the NRich function doesn't work on it's own, so I had to preprocess the nominal files in `preprocessNoms.sh`. Something about cores failing. Some of the jobs failed, so I had to resubmit them as such:
 ```
