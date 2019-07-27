@@ -6,17 +6,15 @@ library(Matching)
 
 # cmd_args[1] is tissue name
 # cmd_args[2] is allele freq - "/work-zfs/rmccoy22/aseyedi2/GTExWGS_VCF/GTExWGS.AF.all.txt"
-# cmd_args[3] is base path - /work-zfs/rmccoy22/aseyedi2/sqtl_permutation_backup/all_noms/varIDs/chunks
+# cmd_args[3] is base path - "/work-zfs/rmccoy22/aseyedi2/sqtl_permutation_backup/all_noms/varIDs/chunks/"
 # cmd_args[4] is sprime - "/work-zfs/rmccoy22/aseyedi2/neanderthal-sqtl/analysis/SPRIME/sprime_calls.txt"
 # cmd_args[5] is perm pass file - "/work-zfs/rmccoy22/aseyedi2/GTExWGS_VCF/${1}_permutations.txt"
 # cmd_args[6] is output file 
 cmd_args <- commandArgs(trailingOnly = TRUE)
-# tissue_input <- cmd_args[1]
 tissue_input <- cmd_args[1]
 
 # allele freq VCF
-af <- fread(file = cmd_args[2],
-            colClasses = c("character", "integer", "character", "character", "numeric"))
+af <- fread(file = cmd_args[2], colClasses = c("character", "integer", "character", "character", "numeric"))
 af[, AF := as.numeric(AF)]
 af[, variant_id := paste(CHROM, POS, REF, ALT, "b37", sep = "_")]
 af[, c("CHROM", "POS", "REF", "ALT") := NULL]
@@ -25,8 +23,8 @@ basedir <- cmd_args[3]
 
 # collects all chunks of computed nominal pass output
 read_nom_ids_wrapper <- function(base_dir, tissue_name) {
-  basepath <- paste0(basedir, tissue_name, "_varID_chunk_")
-  dt <- do.call(c, pbmclapply(1:100, function(x) read_nom_ids(basepath, x), mc.cores = getOption("mc.cores", 24L)))
+  basepath <- paste0(basedir, tissue_name, "_varID_chunk")
+  dt <- do.call(c, pbmclapply(0:99, function(x) read_nom_ids(basepath, x), mc.cores = getOption("mc.cores", 24L)))
   return(dt)
 }
 
