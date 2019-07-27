@@ -13,7 +13,7 @@ library(Matching)
 cmd_args <- commandArgs(trailingOnly = TRUE)
 # tissue_input <- cmd_args[1]
 tissue_input <- cmd_args[1]
-
+tissue_input
 # allele freq VCF
 af <- fread(file = cmd_args[2],
             colClasses = c("character", "integer", "character", "character", "numeric"))
@@ -37,7 +37,7 @@ read_nom_ids <- function(base_path, chunk_number) {
 }
 
 # calls the above two functions
-noms <- unique(read_nom_ids_wrapper(basedir, tissue_input))
+noms <- unique(read_nom_ids_wrapper(base_dir, tissue_input))
 
 # noms <- unique(fread(cmd_args[3]))
 
