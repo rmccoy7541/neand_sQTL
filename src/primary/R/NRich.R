@@ -25,19 +25,19 @@ basedir <- cmd_args[3]
 
 # collects all chunks of computed nominal pass output
 read_nom_ids_wrapper <- function(base_dir, tissue_name) {
-  basepath <- paste0(base_dir, tissue_name, "_varID_chunk_")
+  basepath <- paste0(basedir, tissue_name, "_varID_chunk_")
   dt <- do.call(c, pbmclapply(1:100, function(x) read_nom_ids(basepath, x), mc.cores = getOption("mc.cores", 24L)))
   return(dt)
 }
 
 # reads all nominal pass chunks
 read_nom_ids <- function(base_path, chunk_number) {
-  path <- paste0(base_path, "_", chunk_number, ".txt")
+  path <- paste0(basepath, "_", chunk_number, ".txt")
   return(unique(fread(path)))
 }
 
 # calls the above two functions
-noms <- unique(read_nom_ids_wrapper(base_dir, tissue_input))
+noms <- unique(read_nom_ids_wrapper(basedir, tissue_input))
 
 # noms <- unique(fread(cmd_args[3]))
 
