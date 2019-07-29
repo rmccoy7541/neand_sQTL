@@ -25,4 +25,5 @@ Rscript /work-zfs/rmccoy22/aseyedi2/neanderthal-sqtl/src/primary/R/NRich.R \
   "/work-zfs/rmccoy22/aseyedi2/sqtl_permutation_backup/all_noms/varIDs/chunks/" \
   "/work-zfs/rmccoy22/aseyedi2/neanderthal-sqtl/analysis/SPRIME/sprime_calls.txt" \
   "/work-zfs/rmccoy22/aseyedi2/sqtl_permutation_backup/${tissue}_permutations.txt" \
-  "/work-zfs/rmccoy22/aseyedi2/sqtl_permutation_backup/sqtl_nrich/${tissue}_enrichment.txt"
+  "/work-zfs/rmccoy22/aseyedi2/sqtl_permutation_backup/sqtl_nrich/${tissue}_enrichment.txt" \
+  $seed
