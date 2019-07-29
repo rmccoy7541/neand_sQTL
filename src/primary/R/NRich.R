@@ -22,14 +22,14 @@ af[, c("CHROM", "POS", "REF", "ALT") := NULL]
 basedir <- cmd_args[3]
 
 # collects all chunks of computed nominal pass output
-read_nom_ids_wrapper <- function(base_dir, tissue_name) {
-  basepath <- paste0(basedir, tissue_name, "_varID_chunk")
-  dt <- do.call(c, pbmclapply(sprintf("%03d", 1:100), function(x) read_nom_ids(basepath, x), mc.cores = getOption("mc.cores", 24L)))
+read_nom_ids_wrapper <- function(basedir, tissue_name) {
+  basepath <- paste0(basedir, tissue_name, "_nom_varIDs_chunk")
+  dt <- do.call(c, pbmclapply(sprintf("%03d", 1:100), function(x) read_nom_ids(basepath, x), mc.cores = getOption("mc.cores", 1L)))
   return(dt)
 }
 
 # reads all nominal pass chunks
-read_nom_ids <- function(base_path, chunk_number) {
+read_nom_ids <- function(basepath, chunk_number) {
   path <- paste0(basepath, "_", chunk_number, ".txt")
   return(unique(fread(path)))
 }
