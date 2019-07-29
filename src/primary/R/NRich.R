@@ -24,7 +24,7 @@ basedir <- cmd_args[3]
 # collects all chunks of computed nominal pass output
 read_nom_ids_wrapper <- function(basedir, tissue_name) {
   basepath <- paste0(basedir, tissue_name, "_nom_varIDs_chunk")
-  dt <- do.call(c, pbmclapply(sprintf("%03d", 1:3), function(x) read_nom_ids(basepath, x), mc.cores = getOption("mc.cores", 24L)))
+  dt <- do.call(c, pbmclapply(sprintf("%03d", 1:100), function(x) read_nom_ids(basepath, x), mc.cores = getOption("mc.cores", 24L)))
   return(dt)
 }
 
