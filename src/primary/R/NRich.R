@@ -31,7 +31,7 @@ read_nom_ids_wrapper <- function(basedir, tissue_name) {
 # reads all nominal pass chunks
 read_nom_ids <- function(basepath, chunk_number) {
   path <- paste0(basepath, "_", chunk_number, ".txt")
-  return(unique(fread(path, select = 1)$V1))
+  return(unique(fread(path, select = 1, header = F)$V1))
 }
 
 # calls the above two functions
