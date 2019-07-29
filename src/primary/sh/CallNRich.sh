@@ -15,6 +15,7 @@
 tissue=$(sed "${SLURM_ARRAY_TASK_ID}q;d" tissuenames.txt)
 
 echo "$tissue"
+echo "Seed is set to: " && echo "$seed"
 
 ml R
 ml gcc
