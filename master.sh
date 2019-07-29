@@ -266,4 +266,4 @@ done
 
 for i in $(ls *_permutations.txt | sort -V); do echo $i | cut -d'_' -f 1; done > tissuenames.txt
 
-sbatch --export=seed=$(echo "123") ${scripts}/sh/CallNRich.sh 
+sbatch --export=seed=$(echo "123") ${scripts}/sh/CallNRich.sh
