@@ -8,7 +8,7 @@ library(Matching)
 # cmd_args[2] is allele freq - "/work-zfs/rmccoy22/aseyedi2/GTExWGS_VCF/GTExWGS.AF.all.txt"
 # cmd_args[3] is base path - "/work-zfs/rmccoy22/aseyedi2/sqtl_permutation_backup/all_noms/varIDs/chunks/"
 # cmd_args[4] is sprime - "/work-zfs/rmccoy22/aseyedi2/neanderthal-sqtl/analysis/SPRIME/sprime_calls.txt"
-# cmd_args[5] is perm pass file - "/work-zfs/rmccoy22/aseyedi2/GTExWGS_VCF/${1}_permutations.txt"
+# cmd_args[5] is perm pass file - "/work-zfs/rmccoy22/aseyedi2/sqtl_permutation_backup/THYROID_permutations.txt"
 # cmd_args[6] is output file 
 cmd_args <- commandArgs(trailingOnly = TRUE)
 tissue_input <- cmd_args[1]
@@ -24,20 +24,18 @@ basedir <- cmd_args[3]
 # collects all chunks of computed nominal pass output
 read_nom_ids_wrapper <- function(basedir, tissue_name) {
   basepath <- paste0(basedir, tissue_name, "_nom_varIDs_chunk")
-  dt <- do.call(c, pbmclapply(sprintf("%03d", 1:100), function(x) read_nom_ids(basepath, x), mc.cores = getOption("mc.cores", 1L)))
+  dt <- do.call(c, pbmclapply(sprintf("%03d", 1:3), function(x) read_nom_ids(basepath, x), mc.cores = getOption("mc.cores", 24L)))
   return(dt)
 }
 
 # reads all nominal pass chunks
 read_nom_ids <- function(basepath, chunk_number) {
   path <- paste0(basepath, "_", chunk_number, ".txt")
-  return(unique(fread(path)))
+  return(unique(fread(path, select = 1)$V1))
 }
 
 # calls the above two functions
 noms <- unique(read_nom_ids_wrapper(basedir, tissue_input))
-
-# noms <- unique(fread(cmd_args[3]))
 
 # subset allele frequencies to those tested for splicing associations (nominal pass)
 af <- af[variant_id %in% noms]
@@ -55,7 +53,7 @@ neand_snps <- sprime[is_neand == TRUE & !(grepl(",", variant_id))]$variant_id
 af[, is_neand := variant_id %in% neand_snps]
 
 # read perm pass
-perm <- fread(cmd_args[5]) %>%
+perm <- fread(cmd_args[5] ) %>%
   setnames(., c("intron_cluster", "chrom", "pheno_start", "pheno_end", 
                 "strand", "total_cis", "distance", "variant_id", "variant_chrom", 
                 "var_start", "var_end", "df", "dummy", "param_1", "param_2",
