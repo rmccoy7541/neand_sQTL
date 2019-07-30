@@ -3,9 +3,9 @@
 #SBATCH --partition=shared
 #SBATCH --job-name=VariantToTable
 #SBATCH --nodes=1
-#SBATCH --time=0:30:0
+#SBATCH --time=6:0:0
 #SBATCH --ntasks-per-node=1
-#SBATCH --cpus-per-task=2
+#SBATCH --cpus-per-task=12
 #SBATCH --array=1-22
 
 ######################
