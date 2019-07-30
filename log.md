@@ -5,6 +5,9 @@ These updates are read from most recent date at the top to initial entry at the 
 REMEMBER
 - You need to make the pipeline generalizable, especially the part after separating the phenotype table by tissue.
 
+### 07/30/2019 
+Oops! We screwed up and used the wrong VCF for the pipeline. The correct VCF is GTEx_Analysis_2016-01-15_v7_WholeGenomeSeq_635Ind_PASS_AB02_GQ20_HETX_MISS15_PLINKQC.vcf.gz. I'm going to need to index it as well.
+
 ### 07/26/19
 `uniq` didn't work. Even in a batch script. I'm going to try to `split` these guys now. This will work.
 
