@@ -11,6 +11,8 @@ library(Matching)
 # cmd_args[5] is perm pass file - "/work-zfs/rmccoy22/aseyedi2/sqtl_permutation_backup/THYROID_permutations.txt"
 # cmd_args[6] is output file 
 # cmd_args[7] is seed (def 123)
+# cmd_args[8] is M (1000?)
+
 cmd_args <- commandArgs(trailingOnly = TRUE)
 tissue_input <- cmd_args[1]
 # tissue_input <- "THYROID"
@@ -78,7 +80,7 @@ set.seed(cmd_args[7])
 af <- af[sample(1:nrow(af), replace = F),]
 
 # play around with changing "M"?
-matches <- Match(X = af$AF, Tr = af$is_neand, exact = TRUE, replace = FALSE, ties = FALSE, version = "fast", M = 100)
+matches <- Match(X = af$AF, Tr = af$is_neand, exact = TRUE, replace = FALSE, ties = FALSE, version = "fast", M = cmd_args[8])
 
 # enrichment test
 
