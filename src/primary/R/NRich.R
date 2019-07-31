@@ -76,7 +76,7 @@ af[, is_sig := variant_id %in% sig_snps]
 
 # shuffle AF
 # set.seed(123)
-set.seed(cmd_args[7])
+set.seed(as.numeric(cmd_args[7]))
 af <- af[sample(1:nrow(af), replace = F),]
 
 # play around with changing "M"?
