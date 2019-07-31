@@ -11,7 +11,7 @@
 ######################
 # Begin work section #
 ######################
-
+date +%F_%T
 tissue=$(sed "${SLURM_ARRAY_TASK_ID}q;d" tissuenames.txt)
 
 echo "$tissue"
@@ -35,3 +35,5 @@ Rscript /work-zfs/rmccoy22/aseyedi2/neanderthal-sqtl/src/primary/R/NRich.R \
   "/work-zfs/rmccoy22/aseyedi2/sqtl_permutation_backup/sqtl_nrich/${tissue}_${seed}_${M}_enrichment.txt" \
   $seed \
   $M
+
+date +%F_%T
