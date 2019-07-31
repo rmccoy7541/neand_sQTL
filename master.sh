@@ -272,5 +272,3 @@ cat GTExWGS.AF.chr1.txt > GTExWGS.AF.all.txt
 for i in {2..22}; do tail -n +2 GTExWGS.AF.chr${i}.txt >> GTExWGS.AF.all.txt ; done
 
 sbatch --export=seed=$(echo "123"),M=$(echo "1000") ${scripts}/sh/CallNRich.sh
-
-
