@@ -80,7 +80,7 @@ set.seed(cmd_args[7])
 af <- af[sample(1:nrow(af), replace = F),]
 
 # play around with changing "M"?
-matches <- Match(X = af$AF, Tr = af$is_neand, exact = TRUE, replace = FALSE, ties = FALSE, version = "fast", M = cmd_args[8])
+matches <- Match(X = af$AF, Tr = af$is_neand, exact = TRUE, replace = FALSE, ties = FALSE, version = "fast", M = as.numeric(cmd_args[8]))
 
 # enrichment test
 
