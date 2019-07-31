@@ -42,7 +42,7 @@ read_nom_ids <- function(basepath, chunk_number) {
 
 # calls the above two functions
 #noms <- unique(read_nom_ids_wrapper(basedir, tissue_input))
-noms <- as.data.table(unique(read_nom_ids_wrapper(basedir, tissue_input)))
+noms <- unique(read_nom_ids_wrapper(basedir, tissue_input))
 
 # subset allele frequencies to those tested for splicing associations (nominal pass)
 af <- af[variant_id %in% noms]
