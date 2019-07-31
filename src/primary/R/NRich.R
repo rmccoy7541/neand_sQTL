@@ -41,7 +41,8 @@ read_nom_ids <- function(basepath, chunk_number) {
 }
 
 # calls the above two functions
-noms <- unique(read_nom_ids_wrapper(basedir, tissue_input))
+#noms <- unique(read_nom_ids_wrapper(basedir, tissue_input))
+noms <- as.data.table(unique(read_nom_ids_wrapper(basedir, tissue_input)))
 
 # subset allele frequencies to those tested for splicing associations (nominal pass)
 af <- af[variant_id %in% noms]
@@ -81,6 +82,7 @@ af <- af[sample(1:nrow(af), replace = F),]
 
 # play around with changing "M"?
 matches <- Match(X = af$AF, Tr = af$is_neand, exact = TRUE, replace = FALSE, ties = FALSE, version = "fast", M = as.numeric(cmd_args[8]))
+#matches <- Match(X = af$AF, Tr = af$is_neand, exact = TRUE, replace = FALSE, ties = FALSE, version = "fast", M = as.numeric(500))
 
 # enrichment test
 

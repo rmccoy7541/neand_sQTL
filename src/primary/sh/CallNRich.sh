@@ -37,3 +37,14 @@ Rscript /work-zfs/rmccoy22/aseyedi2/neanderthal-sqtl/src/primary/R/NRich.R \
   $M
 
 date +%F_%T
+
+# mkdir -p "/work-zfs/rmccoy22/aseyedi2/sqtl_permutation_backup/sqtl_nrich/devnode_tblsht"
+# Rscript /work-zfs/rmccoy22/aseyedi2/neanderthal-sqtl/src/primary/R/NRich.R \
+#   "ADPVSC" \
+#   "/work-zfs/rmccoy22/aseyedi2/GTExWGS_VCF/GTExWGS.AF.all.txt" \
+#   "/work-zfs/rmccoy22/aseyedi2/sqtl_permutation_backup/all_noms/varIDs/chunks/" \
+#   "/work-zfs/rmccoy22/aseyedi2/neanderthal-sqtl/analysis/SPRIME/sprime_calls.txt" \
+#   "/work-zfs/rmccoy22/aseyedi2/sqtl_permutation_backup/ADPVSC_permutations.txt" \
+#   "/work-zfs/rmccoy22/aseyedi2/sqtl_permutation_backup/sqtl_nrich/devnode_tblsht/ADPVSC_123_100_enrichment.txt" \
+#   123 \
+#   100
