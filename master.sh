@@ -271,4 +271,5 @@ for i in $(ls *_permutations.txt | sort -V); do echo $i | cut -d'_' -f 1; done >
 cat GTExWGS.AF.chr1.txt > GTExWGS.AF.all.txt
 for i in {2..22}; do tail -n +2 GTExWGS.AF.chr${i}.txt >> GTExWGS.AF.all.txt ; done
 
-sbatch --export=seed=$(echo "123"),M=$(echo "1000") ${scripts}/sh/CallNRich.sh
+cd ~/data/aseyedi2/sqtl_permutation_backup/all_noms/varIDs/
+sbatch --export=seed=$(echo "123"),M=$(echo "100") ${scripts}/sh/CallNRich.sh
