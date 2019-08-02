@@ -9,7 +9,4 @@
 ml htslib
 
 ml python/2.7-anaconda
-python /scratch/groups/rmccoy22/aseyedi2/leafcutter/scripts/prepare_phenotype_table.py Ne-sQTL_perind.counts.gz -p 10
-
-sh Ne-sQTL_perind.counts.gz_prepare.sh
-# about the above line: you need to remove all of the index files and generate new ones once you convert the beds to a QTLtools compatible format
+python $1/scripts/prepare_phenotype_table.py Ne-sQTL_perind.counts.gz -p 10

@@ -15,17 +15,15 @@
 #  ██║ ╚████║███████╗██║  ██║██║ ╚████║██████╔╝███████╗██║  ██║   ██║   ██║  ██║██║  ██║███████╗    ███████║╚██████╔╝   ██║   ███████╗
 #  ╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═════╝ ╚══════╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝    ╚══════╝ ╚══▀▀═╝    ╚═╝   ╚══════╝
 ##########################################################################################################################################
-# This is the master script that prepares and submits all jobs for LeafCutter - all you need to do is put the GTEx sra's in the sra/ path#
-#																																		 #
 # Fill out the variables below with the appropriate full paths for each of the corresponding directories.                                #
 # Also make sure to adjust the interactive session below for how long you think the whole pipeline will take. Err on the side of longer. #
-#																																		 #
+#																																		                                                                     #
 # It is also assumed that the GTEx VCF file for the whole genome has already been downloaded (and processed) and resides in ncbi/files/	 #
-# 	(see Documentation for details)																										 #
-#																																		 #
+# 	(see Documentation for details)																										                                                   #
+#																																		                                                                     #
 # It's also worth mentioning that though I've made variables for the pipeline, many of the shell scripts use absolute paths when calling #
 # programs such as samtools, QTLtools, sra-tools etc. due to restraints in the HPC. I would recommend going through the shell scripts    #
-# adapting them to your specific situation.																								 #
+# adapting them to your specific situation.																								                                               #
 ##########################################################################################################################################
 
 # adjust for the interactive session time length you might need here
@@ -41,6 +39,7 @@ ml R
 ml gcc
 ml
 
+#### Fill the Directories appropriately here
 # top-level directory, above ncbi/
 homeDir=$(echo ~/work/)
 # this project's scripts dir
@@ -51,107 +50,34 @@ data=$(echo /work-zfs/rmccoy22/aseyedi2/neanderthal-sqtl/data/)
 ncbiFiles=$(echo /scratch/groups/rmccoy22/Ne_sQTL/files/)
 # IF YOU ALREADY HAVE NON-BIALLELIC INDEXED VCF
 VCF=$(echo /scratch/groups/rmccoy22/Ne_sQTL/files/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz)
-# input directory with sra files here
-sra=$(echo /home-1/aseyedi2@jhu.edu/work/Ne_sQTL/sra/lung_skinEx_thy)
 # leafcutter directory here
 leafCutter=$(echo /scratch/groups/rmccoy22/aseyedi2/leafcutter)
 # sprime
 sprime=$(echo ${data}/../analysis/SPRIME/sprime_calls.txt)
 
-## Step 1a - Conversion & Validation
-################################################
-# convert .sra to .bam files
-cd $sra
-# store all .sra names into text file for job array
-ls *.sra >> sralist.txt
 
-sra2BamNum=$(wc -l sralist.txt | awk '{print $1}')
-# sra2bam, most computationally intensive step
-sbatch --wait -a 1-$sra2BamNum --export=sraListPath=$PWD,homeDir=$homeDir ${scripts}/sh/sra2bam.sh
-## samtools error check, remove broken bams
-samtools quickcheck *bam 2> samtools_err_bam.txt
-
-cat samtools_err_bam.txt | awk -F' ' '{print $1}' > failedbams.txt
-
-for i in $(cat failedbams.txt)
-do
-   echo "$i is broken, removing now..." 
-   rm $i
-done
-
-## Step 1b - Filtration
-################################################
-
-# list of bams to be filtered 
-ls *.bam >> bamlist.txt
-# bring bed file to current directory
-cp ${data}/12-07-2018/GRCh37.bed $PWD
-# filter unplaced contigs
-bamNum=$(wc -l bamlist.txt | awk '{print $1}')
-
-echo "Filtering unplaced contigs..."
-sbatch --wait -a 1-$bamNum ${scripts}/sh/filter_bam.sh
-
-samtools quickcheck *filt 2> samtools_err_filt.txt
-
-cat samtools_err_filt.txt | awk -F' ' '{print $1}' > failedfilt.txt
-
-for i in $(cat failedfilt.txt)
-do
-   echo "$i is broken, removing now..." >> log
-   rm $i
-done
-
-ls *.filt >> filtlist.txt
-
-
-## Step 2 - Intron Clustering
-################################################
-mkdir juncfiles
-## IMPORTANT: changed leafcutter's bam2junc.sh to directly call
-## the bin for samtools
-filtNum=$(wc -l filtlist.txt | awk '{print $1}')
-
-echo "Converting bam files to junc..."
-sbatch --wait -a 1-$filtNum ${scripts}/sh/bam2junccall.sh
-mv *.junc juncfiles/
-cd juncfiles/
-# strip junc files - STILL WITH RUN ID 'SRR######'
-find -type f -name '*.sra.bam.filt.junc' | while read f; do mv "$f" "${f%.sra.bam.filt.junc}"; done
-
-# put all of the renamed junc files in a text
-ls SRR* > juncfiles.txt
-# intron clustering
 mkdir intronclustering/
-echo "Intron clustering..."
-# intron clustering
-python $leafCutter/clustering/leafcutter_cluster.py -j juncfiles.txt -r intronclustering/ -m 50 -o Ne-sQTL -l 500000 # no option for parallelization
+
+sbatch --wait ${scripts}/../AWS/junc_cluster.sh
+
 cd intronclustering/
 
-## Step 3 - PCA calculation
-################################################
-# IMPORTANT: altered to remove 0 samples with NA's
 echo "Preparing phenotype table..."
-python $leafCutter/scripts/prepare_phenotype_table.py Ne-sQTL_perind.counts.gz -p 10 
-
-# indexing and bedding
-sh Ne-sQTL_perind.counts.gz_prepare.sh
-# about the above line: you need to remove all of the index files and generate new ones once you convert the beds to a QTLtools compatible format
-
-## Step 4 - VCF Preparation (optional, see doc for details)
-################################################
+sbatch --wait ${scripts}/../AWS/prepare_phen_table.sh $leafCutter
 
 ## Step 5 - QTLtools Preparation
 ################################################
 # prepare files for QTLtools
-ls *qqnorm*.gz >> leafcutterphenotypes.txt 
+ls *qqnorm* >> leafcutterphenotypes.txt 
 # important: render these files compatible with QTLtools
 echo "Making phenotype files QTLtools compatible..."
 sbatch --wait ${scripts}/sh/QTLtools-Filter.sh
 ls *.qtltools >> qtltools-input.txt
+
 # generate the corresponding tbi files
-rm Ne*tbi
+interact -p shared -t 04:0:0 -c 3
 for i in {1..22}; do tabix -p bed Ne-sQTL_perind.counts.gz.qqnorm_chr${i}.gz.qtltools; echo "Bedding chromosome $i"; done
+exit
 
 cp ${data}/01-22-2019/GTExTissueKey.csv $PWD
 # get the tissue sites for each corresonding sra file
@@ -236,9 +162,7 @@ cp /work-zfs/rmccoy22/rmccoy22/sqtl/intron_clustering/tryagain/*/*pheno* .
 cp /work-zfs/rmccoy22/rmccoy22/sqtl/intron_clustering/tryagain/tissuenames.txt .
 cp ${data}/../analysis/SPRIME/sprime_calls.txt .
 
-# cats the nominal pass results
-sbatch $scripts/primary/sh/CatNomPass.sh
-
+# concatenates permutation pass results
 for TISSUE in ADPSBQ ADPVSC ADRNLG ARTACRN ARTAORT ARTTBL BREAST BRNACC BRNAMY BRNCDT BRNCHA BRNCHB BRNCTXA BRNCTXB BRNHPP BRNHPT BRNNCC BRNPTM BRNSNG BRNSPC CLNSGM CLNTRN ESPGEJ ESPMCS ESPMSL FIBRLBLS HRTAA HRTLV LCL LIVER LUNG MSCLSK NERVET OVARY PNCREAS PRSTTE PTTARY SKINNS SKINS SLVRYG SNTTRM SPLEEN STMACH TESTIS THYROID UTERUS VAGINA WHLBLD
 do
   mkdir ${TISSUE}
@@ -250,26 +174,16 @@ do
   done
 done
 
-# for i in *.txt; do
-#    Rscript ${scripts}/R/count_sqtl.R #Something like that
-# done
-
-for i in $(ls *permutations.txt); do
-   q=$(echo $i | cut -d _ -f 1)
-   Rscript /scratch/groups/rmccoy22/progs/QTLtools/script/runFDR_cis.R $i 0.10 ${q}.results
-done
-
-for i in $(ls *results.significant.txt); do
-  echo "Fixing $i to $i.bed..."
-  cat $i | awk '{ print $9, $10-1, $11, $8, $1, $5 }' | tr " " "\t" | sort -k1,1 -k2,2n > $i.bed
-done
-
+# getting tissue names
 for i in $(ls *_permutations.txt | sort -V); do echo $i | cut -d'_' -f 1; done > tissuenames.txt
 
-#VariantsToTable.sh here
+sbatch $scripts/sh/VariantToTable.sh
 
+# concat the GTEx AF VCF chunks
+cd /work-zfs/rmccoy22/aseyedi2/GTExWGS_VCF
 cat GTExWGS.AF.chr1.txt > GTExWGS.AF.all.txt
 for i in {2..22}; do tail -n +2 GTExWGS.AF.chr${i}.txt >> GTExWGS.AF.all.txt ; done
+cd -
 
 cd ~/data/aseyedi2/sqtl_permutation_backup/all_noms/varIDs/
 sbatch --export=seed=$(echo "123"),M=$(echo "100") ${scripts}/sh/CallNRich.sh

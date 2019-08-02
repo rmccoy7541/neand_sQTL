@@ -14,7 +14,7 @@ else
     if ! which filter_cs.py>/dev/null
     then 
         echo "ERROR:"
-        echo "Add 'scripts' forlder to your path or set leafCutterDir variable in $0"
+        echo "Add 'scripts' folder to your path or set leafCutterDir variable in $0"
         exit 1
     fi
     samtools view -T $reffile $bamfile | filter_cs.py | sam2bed.pl --use-RNA-strand - $bedfile

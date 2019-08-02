@@ -27,9 +27,4 @@ mv stripped/* .
 
 rmdir stripped/
 
-# for i in $(ls *gz); do
-# 	zgrep -v '^MT' $i > stripped/${i}.stripped
-# 	bgzip stripped/${i}.stripped
-# done
-
 sbatch ${scripts}/../AWS/intronclustering.sh

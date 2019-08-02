@@ -33,13 +33,7 @@ junc=$(echo '/scratch/groups/rmccoy22/Ne_sQTL/sra/sqtl_junc')
 # leafcutter directory here
 leafCutter=$(echo /scratch/groups/rmccoy22/aseyedi2/leafcutter)
 
-mkdir intronclustering/
 
-sbatch --wait ${scripts}/../AWS/junc_cluster.sh
-
-cd intronclustering/
-
-sbatch --wait ${scripts}/../AWS/prepare_phen_table.sh
 
 ## Step 4 - VCF Preparation (optional, see doc for details)
 ################################################
@@ -51,13 +45,14 @@ ls *qqnorm*gz | sort -V > leafcutterphenotypes.txt
 # important: render these files compatible with QTLtools
 echo "Making phenotype files QTLtools compatible..."
 sbatch --wait ${scripts}/sh/QTLtools-Filter.sh
-ls *.qtltools | sort -V > qtltools-input.txt
+gzip *qqnorm*qtltools
+ls *.qtltools* | sort -V > qtltools-input.txt
 # generate the corresponding tbi files
 rm Ne*tbi
 
 interact -p shared -t 2:0:0
 ml htslib
-for i in {1..22}; do echo "Bedding chromosome $i"; tabix -p bed Ne-sQTL_perind.counts.gz.qqnorm_chr${i}.qtltools; done
+for i in {1..22}; do echo "Bedding chromosome $i"; tabix -p bed Ne-sQTL_perind.counts.gz.qqnorm_chr${i}.qtltools.gz; done
 exit
 
 cp ${data}/01-22-2019/GTExTissueKey.csv $PWD
@@ -149,17 +144,5 @@ exit
 
 ## Step 4 - Mapping sQTLs using QTLtools
 ###############################################
-# for line in $(cat GTExCovKey.csv); do
-   # full=$(echo $line | awk -F',' '{print $1}')    
-   # abb=$(echo $line | awk -F',' '{print $2}')
-   # if grep "$abb" tissuesused.txt; then
-
 numTis=$(wc -l GTExCovKey.csv | awk -F' ' '{print $1}')
 sbatch -a 2-$numTis ${scripts}/sh/QTLTools-Loop.sh
-
-# sbatch -a 2-$numTis ${scripts}/sh/PermPassReboot.sh
-      
-   # fi
-# done
-#figure out what to do here
-sbatch ${scripts}/sh/QQViz.sh $PWD $NULL LUNG.permutations_full.txt.gz ${data}/../analysis/SPRIME/sprime_calls.txt
