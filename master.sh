@@ -53,7 +53,7 @@ VCF=$(echo /scratch/groups/rmccoy22/Ne_sQTL/files/GTExWGSGenotypeMatrixBiallelic
 # leafcutter directory here
 leafCutter=$(echo /scratch/groups/rmccoy22/aseyedi2/leafcutter)
 # sprime
-sprime=$(echo ${data}/../analysis/SPRIME/sprime_calls.txt)
+sprime=$(echo ${data}/SPRIME/sprime_calls.txt)
 
 
 mkdir intronclustering/
@@ -79,9 +79,9 @@ interact -p shared -t 04:0:0 -c 3
 for i in {1..22}; do tabix -p bed Ne-sQTL_perind.counts.gz.qqnorm_chr${i}.gz.qtltools; echo "Bedding chromosome $i"; done
 exit
 
-cp ${data}/01-22-2019/GTExTissueKey.csv $PWD
+cp ${data}/GTExTissueKey.csv $PWD
 # get the tissue sites for each corresonding sra file
-Rscript ${scripts}/R/sraTissueExtract.R ${data}/Metadata/SraRunTable.txt GTExTissueKey.csv
+Rscript ${scripts}/R/sraTissueExtract.R ${data}/SraRunTable.txt GTExTissueKey.csv
 
 # submit each LF phenotype file to sraNameChangeSort as command line variable as well as tissue_table.txt
 for phen in *qqnorm*.gz.qtltools; do Rscript ${scripts}/R/sraNameChangeSort.R $phen tissue_table.txt ; done
@@ -132,7 +132,7 @@ wget https://storage.googleapis.com/gtex_analysis_v7/single_tissue_eqtl_data/GTE
 
 tar -xvf GTEx_Analysis_v7_eQTL_covariates.tar.gz
 
-cp $data/Metadata/GTExCovKey.csv $PWD
+cp $data/GTExCovKey.csv $PWD
 
 # Moves covariates to corresponding directory
 for line in $(cat GTExCovKey.csv)
@@ -160,7 +160,7 @@ cd /scratch/groups/rmccoy22/rmccoy22/sqtl_permutation_backup
 cp /work-zfs/rmccoy22/rmccoy22/sqtl/intron_clustering/tryagain/*/*permutation* .
 cp /work-zfs/rmccoy22/rmccoy22/sqtl/intron_clustering/tryagain/*/*pheno* .
 cp /work-zfs/rmccoy22/rmccoy22/sqtl/intron_clustering/tryagain/tissuenames.txt .
-cp ${data}/../analysis/SPRIME/sprime_calls.txt .
+cp $sprime .
 
 # concatenates permutation pass results
 for TISSUE in ADPSBQ ADPVSC ADRNLG ARTACRN ARTAORT ARTTBL BREAST BRNACC BRNAMY BRNCDT BRNCHA BRNCHB BRNCTXA BRNCTXB BRNHPP BRNHPT BRNNCC BRNPTM BRNSNG BRNSPC CLNSGM CLNTRN ESPGEJ ESPMCS ESPMSL FIBRLBLS HRTAA HRTLV LCL LIVER LUNG MSCLSK NERVET OVARY PNCREAS PRSTTE PTTARY SKINNS SKINS SLVRYG SNTTRM SPLEEN STMACH TESTIS THYROID UTERUS VAGINA WHLBLD

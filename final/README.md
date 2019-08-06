@@ -15,7 +15,7 @@ Additionally, you must make a modification to the LeafCutter's `scripts/prepare_
         if tmpvalRow.count("NA") > len(tmpvalRow)*0.4:
             continue
 ```
-By default, LeafCutter looks for intron clusters with excision ratios present in over 60% of the samples. However, we want the broadest possible scope, so we include all intron clusters regardless of how prevelant they are.
+By default, LeafCutter looks for intron clusters with excision ratios present in over 60% of the samples. However, we want the broadest possible scope, so we include all intron clusters regardless of how prevelant they are throughout the samples.
 ```
         # If ratio is missing for over 100% of the samples, skip
         if tmpvalRow.count("NA") > len(tmpvalRow)*1:
@@ -41,8 +41,6 @@ Step-by-step instructions with intermediate ends and full explanations of import
 
 ### Converting CRAM to JUNC
 This step we performed on an Amazon Web Services server. `src/AWS/make_junc.sh` will convert your CRAM files to JUNC so long as you provide the correct directory to `leafCutterDirectory` in `bam2junc.sh`. Once you have done this, execute the master script. This will then take care of the main LeafCutter steps, which is to intron cluster and prepare phenotype table. 
-
-Master will then 
 
 ### JUNC Intron Clustering
 Once you have all of your JUNC files, transfer them from AWS to your SLURM system. 
