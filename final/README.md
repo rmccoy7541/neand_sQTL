@@ -2,7 +2,7 @@
 ## Finding Neandertal-introgressed splice-altering variation and affected phenotypes
 
 ### Introduction
-Genetic variation influencing patterns of pre-mRNA splicing is increasingly recognized as a key source of phenotypic variation and disease risk among contemporary humans. Here, we use Leafcutter to compute splicing phenotypes and QTLTools to map them to the GTEx genotype data. 
+Genetic variation influencing patterns of pre-mRNA splicing is increasingly recognized as a key source of phenotypic variation and disease risk among contemporary humans. Little research has been done, however, into the role of splicing variation in hominin evolution. In our study, we quantified splice-altering effects of introgressed archaic alleles in human gene expression data by employing the use of LeafCutter, SPrime, and QTLTools.
 
 ### Getting Started
 This guide assumes that the user has already downloaded the .CRAM and .CRAI GTEx v7 analysis freeze sample files as well as the GTEx v7 genotype file.
