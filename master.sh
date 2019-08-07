@@ -58,12 +58,12 @@ sprime=$(echo ${data}/SPRIME/sprime_calls.txt)
 
 mkdir intronclustering/
 
-sbatch --wait ${scripts}/../AWS/junc_cluster.sh
+sbatch --wait ${scripts}/sh/junc_cluster.sh
 
 cd intronclustering/
 
 echo "Preparing phenotype table..."
-sbatch --wait ${scripts}/../AWS/prepare_phen_table.sh $leafCutter
+sbatch --wait ${scripts}/sh/prepare_phen_table.sh $leafCutter
 
 ## Step 5 - QTLtools Preparation
 ################################################
@@ -75,9 +75,7 @@ sbatch --wait ${scripts}/sh/QTLtools-Filter.sh
 ls *.qtltools >> qtltools-input.txt
 
 # generate the corresponding tbi files
-interact -p shared -t 04:0:0 -c 3
 for i in {1..22}; do tabix -p bed Ne-sQTL_perind.counts.gz.qqnorm_chr${i}.gz.qtltools; echo "Bedding chromosome $i"; done
-exit
 
 cp ${data}/GTExTissueKey.csv $PWD
 # get the tissue sites for each corresonding sra file
