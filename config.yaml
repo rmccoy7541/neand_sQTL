@@ -1,8 +1,12 @@
-channels:
-  - bioconda
-dependencies:
-  - snakemake-minimal =5.5.4
-  - python =3.7
-  - htslib =1.9
-  - bcftools =1.9
-  - gatk
+# data dir
+data: data/
+# WGS VCF
+vcf: {/path/to/}phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTEx_Analysis_2016-01-15_v7_WholeGenomeSeq_652Ind_GATK_HaplotypeCaller.vcf.gz
+
+# working directory; will be used to create subdirectories and perform computations. Must be able to hold vast stores
+# of data
+workdir: {/path/to/workdir}
+
+#
+sprime:
+leafcutter:
