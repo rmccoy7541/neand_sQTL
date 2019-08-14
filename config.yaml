@@ -1,12 +1,12 @@
 # data dir
-data: data/
+data: "data/"
 # WGS VCF
-vcf: {/path/to/}phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTEx_Analysis_2016-01-15_v7_WholeGenomeSeq_652Ind_GATK_HaplotypeCaller.vcf.gz
+vcf: "{/path/to/}phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTEx_Analysis_2016-01-15_v7_WholeGenomeSeq_635Ind_PASS_AB02_GQ20_HETX_MISS15_PLINKQC.vcf.gz"
 
-# working directory; will be used to create subdirectories and perform computations. Must be able to hold vast stores
-# of data
-workdir: {/path/to/workdir}
+# sprime calls
+sprime: "metadata/sprime/sprime_calls.txt"
 
-#
-sprime:
-leafcutter:
+# download leafcutter
+leafcutter: {path/to/LC}
+
+backupdir:

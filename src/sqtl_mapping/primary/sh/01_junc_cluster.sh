@@ -28,5 +28,5 @@ mv stripped/* .
 
 rmdir stripped/
 
-# init intron clustering
-sbatch --export=LC=$(echo $LC) ${scripts}/sh/02_intronclustering.sh 
+# # init intron clustering
+# sbatch --export=LC=$(echo $LC) ${scripts}/sh/02_intronclustering.sh 
