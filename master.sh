@@ -1,32 +1,16 @@
 #!/bin/bash
-#SBATCH --partition=unlimited
-#SBATCH --job-name=master-shell
-#SBATCH --time=14-0:0:0
-#SBATCH --nodes=1
-#SBATCH --ntasks-per-node=1
-#SBATCH --cpus-per-task=1
-######################
-# Begin work section #
 ##########################################################################################################################################
-#  ███╗   ██╗███████╗ █████╗ ███╗   ██╗██████╗ ███████╗██████╗ ████████╗██╗  ██╗ █████╗ ██╗         ███████╗ ██████╗ ████████╗██╗     
-#  ████╗  ██║██╔════╝██╔══██╗████╗  ██║██╔══██╗██╔════╝██╔══██╗╚══██╔══╝██║  ██║██╔══██╗██║         ██╔════╝██╔═══██╗╚══██╔══╝██║     
-#  ██╔██╗ ██║█████╗  ███████║██╔██╗ ██║██║  ██║█████╗  ██████╔╝   ██║   ███████║███████║██║         ███████╗██║   ██║   ██║   ██║     
-#  ██║╚██╗██║██╔══╝  ██╔══██║██║╚██╗██║██║  ██║██╔══╝  ██╔══██╗   ██║   ██╔══██║██╔══██║██║         ╚════██║██║▄▄ ██║   ██║   ██║     
-#  ██║ ╚████║███████╗██║  ██║██║ ╚████║██████╔╝███████╗██║  ██║   ██║   ██║  ██║██║  ██║███████╗    ███████║╚██████╔╝   ██║   ███████╗
-#  ╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═════╝ ╚══════╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝    ╚══════╝ ╚══▀▀═╝    ╚═╝   ╚══════╝
+#  ███╗   ██╗███████╗ █████╗ ███╗   ██╗██████╗ ███████╗██████╗ ████████╗██╗  ██╗ █████╗ ██╗         ███████╗ ██████╗ ████████╗██╗        #
+#  ████╗  ██║██╔════╝██╔══██╗████╗  ██║██╔══██╗██╔════╝██╔══██╗╚══██╔══╝██║  ██║██╔══██╗██║         ██╔════╝██╔═══██╗╚══██╔══╝██║        #
+#  ██╔██╗ ██║█████╗  ███████║██╔██╗ ██║██║  ██║█████╗  ██████╔╝   ██║   ███████║███████║██║         ███████╗██║   ██║   ██║   ██║        #
+#  ██║╚██╗██║██╔══╝  ██╔══██║██║╚██╗██║██║  ██║██╔══╝  ██╔══██╗   ██║   ██╔══██║██╔══██║██║         ╚════██║██║▄▄ ██║   ██║   ██║        #
+#  ██║ ╚████║███████╗██║  ██║██║ ╚████║██████╔╝███████╗██║  ██║   ██║   ██║  ██║██║  ██║███████╗    ███████║╚██████╔╝   ██║   ███████╗   #
+#  ╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═════╝ ╚══════╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝    ╚══════╝ ╚══▀▀═╝    ╚═╝   ╚══════╝   #
 ##########################################################################################################################################
 # Fill out the variables below with the appropriate full paths for each of the corresponding directories.                                #
-# Also make sure to adjust the interactive session below for how long you think the whole pipeline will take. Err on the side of longer. #
-#																																		                                                                     #
-# It is also assumed that the GTEx VCF file for the whole genome has already been downloaded (and processed) and resides in ncbi/files/	 #
-# 	(see Documentation for details)																										                                                   #
-#																																		                                                                     #
-# It's also worth mentioning that though I've made variables for the pipeline, many of the shell scripts use absolute paths when calling #
-# programs such as samtools, QTLtools, sra-tools etc. due to restraints in the HPC. I would recommend going through the shell scripts    #
-# adapting them to your specific situation.																								                                               #
+# It is also assumed that the GTEx VCF file for the whole genome has already been downloaded (and processed)                        	 #
+# 	(see Documentation for details)																										 #
 ##########################################################################################################################################
-
-# adjust for the interactive session time length you might need here
 
 # load modules
 ml bedtools
@@ -40,18 +24,14 @@ ml gcc
 ml
 
 #### Fill the Directories appropriately here
-# top-level directory, above ncbi/
-homeDir=$(echo ~/work/)
 # this project's scripts dir
-scripts=$(echo /work-zfs/rmccoy22/aseyedi2/neanderthal-sqtl/src/primary/)
+scripts=$(echo {path/to}/neanderthal-sqtl/src/primary/)
 # data dir
-data=$(echo /work-zfs/rmccoy22/aseyedi2/neanderthal-sqtl/data/)
-# ncbi/files/
-ncbiFiles=$(echo /scratch/groups/rmccoy22/Ne_sQTL/files/)
+data=$(echo {path/to}/neanderthal-sqtl/data/)
 # IF YOU ALREADY HAVE NON-BIALLELIC INDEXED VCF
-VCF=$(echo /scratch/groups/rmccoy22/Ne_sQTL/files/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz)
+VCF=$(echo {path/to}/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz)
 # leafcutter directory here
-leafCutter=$(echo /scratch/groups/rmccoy22/aseyedi2/leafcutter)
+leafCutter=$(echo {path/to}/leafCutter/)
 # sprime
 sprime=$(echo ${data}/SPRIME/sprime_calls.txt)
 # base working dir
@@ -152,7 +132,6 @@ done
 ################################################
 numTissues=$(wc -l GTExCovKey.csv)
 
-# potentially upload results and wget the results and snakemake can skip this step
 # Will take at least 3 weeks lol
 sbatch --wait \
   --export=scripts=$scripts,data=$data,vcf=$vcf,sprime=$sprime \
@@ -186,7 +165,8 @@ for i in $(ls *_permutations.txt | sort -V); do echo $i | cut -d'_' -f 1; done >
 
 wget ftp://ftp.ncbi.nlm.nih.gov/sra/reports/Assembly/GRCh37-HG19_Broad_variant/Homo_sapiens_assembly19.fasta
 
-sbatch --export=VCF=$VCF $scripts/sh/12_VariantToTable.sh
+# get allele frequences from VCF
+sbatch --export=VCF=$VCF $scripts/sh/13_VariantToTable.sh
 
 # concat the GTEx AF VCF chunks
 cat GTExWGS.AF.chr1.txt > GTExWGS.AF.all.txt
