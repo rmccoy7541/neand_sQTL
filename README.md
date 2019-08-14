@@ -1,48 +1,62 @@
-﻿# neanderthal-sqtl
+# Neandertal-sQTL
+### Finding Neandertal-introgressed splice-altering variation
 
-## Introduction
+### Introduction
+Genetic variation influencing patterns of pre-mRNA splicing is increasingly recognized as a key source of phenotypic variation and disease risk among contemporary humans. Little research has been done, however, into the role of splicing variation in hominin evolution. In our study, we quantified splice-altering effects of introgressed archaic alleles in human gene expression data by employing the use of LeafCutter, SPrime, and QTLTools.
 
-This is my (Arta Seyedian) first project with Dr. Rajiv McCoy's group. Today is 9/26/2018 and I am applying the general guidelines for documentation and organziation to this project repository. Most of the work I have done so far 
-has been without this method of organization so please forgive me if it's a bit hard to go through these directories and files and fully understand what I have been going for here.
+### Getting Started
+1. This guide assumes that the user has already downloaded the .CRAM and .CRAI GTEx v7 analysis freeze sample files as well as the GTEx v7 genotype file.
 
-The crux of this project is to find sQTLs (splicing quantitative trait loci) among the DNA modern humans have inherited from neanderthals as a result of interbreeding that took place between 100,000 - 40,000 years ago [1]. 
-These sQTLs basically determine mRNA transcript splicing patterns, which lead to different proportions of mRNA isoforms which leads to differential protein expression, which impacts the expression of quantitative traits,
-such as height [2].
+2. You must also first filter the VCF of all non-biallelic sites. See `filter_vcf.sh` for details. 
+
+3. Additionally, you must make a modification to the LeafCutter's `scripts/prepare_phenotype_table.py`, line 84:
+```
+        # If ratio is missing for over 40% of the samples, skip
+        if tmpvalRow.count("NA") > len(tmpvalRow)*0.4:
+            continue
+```
+
+	By default, LeafCutter looks for intron clusters with excision ratios present in over 60% of the samples. However, we want the broadest possible scope, so we include all intron clusters regardless of how prevelant they are throughout the samples.
 
 
-## Getting Started
-Placeholder for ultimately instructing users on how to run all of these scripts to get identical output.
+```
+        # If ratio is missing for over 100% of the samples, skip
+        if tmpvalRow.count("NA") > len(tmpvalRow)*1:
+            continue
+```
 
-### Prerequisites
+4. **Lastly, set the directory variables for your project. They can be found at the top of the master script.** This is vital and failure to do so will prevent the pipeline from working.
+
+#### Prerequisites
 * LeafCutter 0.2.8
-* QTLtools
-* SAMtools or HTSlib
-* SRA-Toolkit
-* GTEx RNA-Seq SRAs downloaded using SRA-Toolkit's `prefetch`
-* GTEx_Analysis_2016-01-15_v7_WholeGenomeSeq_635Ind_PASS_AB02_GQ20_HETX_MISS15_PLINKQC.vcf.gz
- downloaded using SRA-Toolkit's `prefetch` and Aspera
-	* SHA1SUM: 723684f4bc6dac3c7d14e0aa27069be7f958d5b7
+* QTLtools (v1.1)
+* HTSlib (v1.9)
+* BCFtools (v1.9)
+* SRA-Toolkit (v2.9.6-1)
+* Genome Analysis Toolkit (v4.1.3.0)
+* GTEx WGS VCF downloaded using SRA-Toolkit's prefetch and Aspera
+	* SHA1SUM of phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1.GRU.tar: 3ef252d20b52da537de95bc00ca42c49093771eb
 	* Downloaded Tue 11 Dec 2018 6:44:34 PM EST
-* GTEx WGS VCF TBI (index) generated using `htslib`'s `tabix -p vcf`
-	* SHA1SUM:  
-* GTEx SRA Run Table from dbGaP
-	* SHA1SUM: 5482b35ec85d10a9a378a0d4915f61a783a6d09a
-	* Downloaded Sun 30 Dec 2018 05∶29∶53 PM EST
-
-
-### Installing
-How to install what they will need to install.
+* High performance cluster running with SLURM (v19.05)	
 
 ## Running the Tests
 Step-by-step instructions with intermediate ends and full explanations of important code.
+
+### Filter Bi-allelic Sites from 
+
+### Converting CRAM to JUNC
+This step we performed on an Amazon Web Services server. `src/AWS/make_junc.sh` will convert your CRAM files to JUNC so long as you provide the correct directory to `leafCutterDirectory` in `bam2junc.sh`.
+
+### JUNC Intron Clustering
+Once you have all of your JUNC files, transfer them from AWS to your SLURM system and into a working directory. Obtain the path of your working directory and use it to set `$basewd` in `master.sh`. Call `master.sh` **after you make sure that the project variables at the top of the file are filled out with the correct paths.**
 
 ## Built With
 * R 3.4.4 (2018-03-15) -- "Someone to Lean On"
 * Python 2.7-anaconda
 * Bash
 * MARCC - Maryland Advanced Research Computing Center
-* LeafCutter
-* 
+* LeafCutter 0.2.8
+
 
 ## Contributing
 * Thank the important people
@@ -51,8 +65,3 @@ Step-by-step instructions with intermediate ends and full explanations of import
 ## Authors
 
 ## Acknowledgements
-	
-## Bibliography
-
-1. Rogers Ackermann, Rebecca & Mackay, Alex & L. Arnold, Michael. (2015). The Hybrid Origin of “Modern” Humans. Evolutionary Biology. 43. 10.1007/s11692-015-9348-1. 
-2. Silver, L. (2001). QTL (Quantitative Trait Locus). Encyclopedia of Genetics, 1593-1595. doi:10.1006/rwgn.2001.1054

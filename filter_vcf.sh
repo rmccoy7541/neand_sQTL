@@ -2,12 +2,17 @@
 
 ## Step 4 - Genotype & Covariates Preparation
 ################################################
-scripts=$(echo /home-1/aseyedi2@jhu.edu/work/aseyedi2/neand_sQTL/src/primary/)
+# insert scripts dir below
+scripts=$(echo /work-zfs/rmccoy22/aseyedi2/neanderthal-sqtl/src/primary/)
+# insert the full path for GTEx_Analysis_2016-01-15_v7_WholeGenomeSeq_652Ind_GATK_HaplotypeCaller.vcf.gz
+vcf=$(echo /scratch/groups/rmccoy22/Ne_sQTL/files/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTEx_Analysis_2016-01-15_v7_WholeGenomeSeq_652Ind_GATK_HaplotypeCaller.vcf.gz)
+# WGS directory
+wgs=$(echo /scratch/groups/rmccoy22/Ne_sQTL/files/)
 
 # filter the non-biallelic sites from genotype file using bcftools; see script for details
-sbatch --wait ${scripts}/sh/bcftools_filter.sh /scratch/groups/rmccoy22/Ne_sQTL/files
+sbatch --wait --export=vcf=$vcf ${scripts}/sh/bcftools_filter.sh
 # index our friend with tabix
 echo "Indexing our friend..."
 interact -p shared -t 360:00 -c 6
-ml htslib; tabix -p vcf /scratch/groups/rmccoy22/Ne_sQTL/files/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz
+ml htslib; tabix -p vcf $wgs/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz
 exit
