@@ -1,12 +1,12 @@
 configfile: "config.yaml"
 #localrules:
 
-
 rule filter_vcf:
     input:
-        vcf=config["vcf"]
+        vcf=config["vcf"],
+        ncbiFiles=config["ncbiFiles"]
     output:
-        "GTExWGSGenotypeMatrixBiallelicOnly.HQ.vcf.gz"
+        "{ncbiFiles}GTExWGSGenotypeMatrixBiallelicOnly.HQ.vcf.gz"
     shell:
         "sbatch --wait --export=vcf={vcf},outdir=$PWD src/sqtl_mapping/primary/sh/00a_bcftools_filter.sh"
 
@@ -22,5 +22,21 @@ rule junc_cluster:
     input:
         LC=config["leafcutter"]
     shell:
-        "sbatch --wait --export=LC={LC} src/sqtl_mapping/sh/01_junc_cluster.sh"
+        "sbatch --wait src/sqtl_mapping/sh/01_junc_cluster.sh"
+
+rule intron_clustering:
+    input:
+        LC=config["leafcutter"]
+    shell:
+        "sbatch --wait src/sqtl_mapping/sh/02_intronclustering.sh;"
+        "cd intronclustering/"
+
+rule prepare_phen_table:
+    input:
+        LC=config["leafcutter"]
+
+
+
+
+
 

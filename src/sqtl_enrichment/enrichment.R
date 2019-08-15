@@ -8,7 +8,7 @@ library(qvalue)
 # cmd_args[1] is tissue name, e.g., THYROID
 cmd_args <- commandArgs(trailingOnly = TRUE)
 tissue_input <- cmd_args[1]
-tissue_input <- "THYROID"
+# tissue_input <- "THYROID"
 
 # read perm pass
 perm <- fread(paste0("/work-zfs/rmccoy22/aseyedi2/sqtl_permutation_backup/", tissue_input, "_permutations.txt")) %>%
