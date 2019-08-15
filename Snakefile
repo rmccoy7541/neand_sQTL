@@ -6,7 +6,7 @@ rule filter_vcf:
         vcf=config["vcf"],
         ncbiFiles=config["ncbiFiles"]
     output:
-        "{ncbiFiles}GTExWGSGenotypeMatrixBiallelicOnly.HQ.vcf.gz"
+        "{ncbiFiles}/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTExWGSGenotypeMatrixBiallelicOnly.HQ.vcf.gz"
     shell:
         "sbatch --wait --export=vcf={vcf},outdir=$PWD src/sqtl_mapping/primary/sh/00a_bcftools_filter.sh"
 

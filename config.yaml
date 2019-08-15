@@ -1,12 +1,12 @@
 # data dir
 data: "data/"
 # WGS VCF
-vcf: "{/path/to/}phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTEx_Analysis_2016-01-15_v7_WholeGenomeSeq_635Ind_PASS_AB02_GQ20_HETX_MISS15_PLINKQC.vcf.gz"
-ncbiFiles: "{/path/to/ncbi/files}"
+vcf: "/scratch/groups/rmccoy22/Ne_sQTL/files/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTEx_Analysis_2016-01-15_v7_WholeGenomeSeq_635Ind_PASS_AB02_GQ20_HETX_MISS15_PLINKQC.vcf.gz"
+ncbiFiles: "/scratch/groups/rmccoy22/Ne_sQTL/files"
 # sprime calls
 sprime: "metadata/sprime/sprime_calls.txt"
 
 # download leafcutter
-leafcutter: "{path/to/LC}"
+leafcutter: "/scratch/groups/rmccoy22/aseyedi2/leafcutter"
 
-backupdir:
+#backupdir:
