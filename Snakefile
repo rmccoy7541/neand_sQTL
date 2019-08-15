@@ -21,14 +21,14 @@ rule index_vcf:
         "{ncbiFiles}/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTExWGSGenotypeMatrixBiallelicOnly.HQ.vcf.gz"
     output:
         "{ncbiFiles}/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz.tbi",
-        ".index_vcf.chkpnt"
+        "{ncbiFiles}/.index_vcf.chkpnt"
     shell:
         "sbatch --export=outdir=$PWD src/sqtl_mapping/primary/sh/00b_index_vcf.sh;"
-        "touch .index_vcf.chkpnt"
+        "{ncbiFiles}/touch .index_vcf.chkpnt"
 
 rule junc_cluster:
     input:
-        ".index_vcf.chkpnt"
+        "{ncbiFiles}/.index_vcf.chkpnt"
     output:
         ".junc_cluster.chkpnt"
     shell:
