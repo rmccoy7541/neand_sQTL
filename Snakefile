@@ -9,7 +9,7 @@ configfile: "config.yaml"
 vcf=config["vcf"],
 ncbiFiles=config["ncbiFiles"]
 LC=config["leafcutter"]
-chkpntDir=config["chkpntDir"]
+# chkpntDir=config["chkpntDir"]
 
 
 
