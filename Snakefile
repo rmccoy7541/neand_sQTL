@@ -44,7 +44,7 @@ rule prepare_phen_table:
     output:
         ".prepare_phen_table.chkpnt"
     shell:
-        "sbatch --wait /sh/03_prepare_phen_table.sh {LC}"
+        "sbatch --wait src/sqtl_mapping/sh/03_prepare_phen_table.sh {LC}"
 
 
 
