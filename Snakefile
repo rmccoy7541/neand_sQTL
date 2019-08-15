@@ -2,6 +2,7 @@ configfile: "config.yaml"
 #localrules:
 vcf=config["vcf"],
 ncbiFiles=config["ncbiFiles"]
+LC=config["leafcutter"]
 
 rule all:
     input: ".prepare_phen_table.chkpnt"
@@ -27,8 +28,7 @@ rule index_vcf:
 
 rule junc_cluster:
     input:
-        ".index_vcf.chkpnt",
-        LC=config["leafcutter"]
+        ".index_vcf.chkpnt"
     output:
         ".junc_cluster.chkpnt"
     shell:
@@ -37,12 +37,11 @@ rule junc_cluster:
 
 rule intron_clustering:
     input:
-        ".junc_cluster.chkpnt",
-        LC=config["leafcutter"]
+        ".junc_cluster.chkpnt"
     output:
         ".intron_clustering.chkpnt"
     shell:
-        "sbatch --wait src/sqtl_mapping/sh/02_intronclustering.sh;"
+        "sbatch --wait src/sqtl_mapping/sh/02_intronclustering.sh {LC};"
         "touch .intron_clustering.chkpnt;"
         "cd intronclustering/"
 
