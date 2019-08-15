@@ -53,7 +53,8 @@ rule intron_clustering:
 
 rule prepare_phen_table:
     input:
-        LC
+        LC,
+        ".intron_clustering.chkpnt"
     output:
         ".prepare_phen_table.chkpnt"
     shell:
