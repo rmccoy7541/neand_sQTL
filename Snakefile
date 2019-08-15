@@ -8,8 +8,8 @@ rule all:
 
 rule filter_vcf:
     input:
-        vcf,
-        ncbiFiles
+        vcf=config["vcf"],
+        ncbiFiles=config["ncbiFiles"]
     output:
         "{ncbiFiles}/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTExWGSGenotypeMatrixBiallelicOnly.HQ.vcf.gz"
     shell:
@@ -17,7 +17,9 @@ rule filter_vcf:
 
 rule index_vcf:
     input:
-        "{ncbiFiles}/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTExWGSGenotypeMatrixBiallelicOnly.HQ.vcf.gz"
+        "{ncbiFiles}/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTExWGSGenotypeMatrixBiallelicOnly.HQ.vcf.gz",
+        vcf=config["vcf"],
+        ncbiFiles=config["ncbiFiles"]
     output:
         "{ncbiFiles}/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz.tbi",
         ".index_vcf.chkpnt"
