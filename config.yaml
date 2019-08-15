@@ -9,4 +9,6 @@ sprime: "metadata/sprime/sprime_calls.txt"
 # download leafcutter
 leafcutter: "/scratch/groups/rmccoy22/aseyedi2/leafcutter"
 
+chkpntDir: "/scratch/groups/rmccoy22/aseyedi2/neand_sQTL/.chkpnts"
+
 #backupdir:

@@ -9,6 +9,9 @@ configfile: "config.yaml"
 vcf=config["vcf"],
 ncbiFiles=config["ncbiFiles"]
 LC=config["leafcutter"]
+chkpntDir=config["chkpntDir"]
+
+
 
 rule all:
     input: ".prepare_phen_table.chkpnt"
@@ -20,6 +23,7 @@ rule filter_vcf:
     output:
         "{ncbiFiles}/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTExWGSGenotypeMatrixBiallelicOnly.HQ.vcf.gz"
     shell:
+        "mkdir -p {chkpntDir};"
         "sbatch --wait --export=vcf={vcf},outdir=$PWD src/sqtl_mapping/primary/sh/00a_bcftools_filter.sh"
 
 rule index_vcf:
@@ -27,39 +31,39 @@ rule index_vcf:
         "{ncbiFiles}/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTExWGSGenotypeMatrixBiallelicOnly.HQ.vcf.gz"
     output:
         "{ncbiFiles}/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz.tbi",
-        "{ncbiFiles}/.index_vcf.chkpnt"
+        "{chkpntDir}/.index_vcf.chkpnt"
     shell:
         "sbatch --export=outdir=$PWD src/sqtl_mapping/primary/sh/00b_index_vcf.sh;"
-        "{ncbiFiles}/touch .index_vcf.chkpnt"
+        "{chkpntDir}/touch .index_vcf.chkpnt"
 
 rule junc_cluster:
     input:
-        "{ncbiFiles}/.index_vcf.chkpnt"
+        "{chkpntDir}/.index_vcf.chkpnt"
     output:
-        "{ncbiFiles}/.junc_cluster.chkpnt"
+        "{chkpntDir}/.junc_cluster.chkpnt"
     shell:
         "sbatch --wait src/sqtl_mapping/sh/01_junc_cluster.sh;"
         "touch {ncbiFiles}/.junc_cluster.chkpnt"
 
 rule intron_clustering:
     input:
-        ".junc_cluster.chkpnt"
+        "{chkpntDir}/.junc_cluster.chkpnt"
     output:
-        ".intron_clustering.chkpnt"
+        "{chkpntDir}/.intron_clustering.chkpnt"
     shell:
         "sbatch --wait src/sqtl_mapping/sh/02_intronclustering.sh {LC};"
-        "touch .intron_clustering.chkpnt;"
+        "touch {chkpntDir}/.intron_clustering.chkpnt;"
         "cd intronclustering/"
 
 rule prepare_phen_table:
     input:
         LC,
-        ".intron_clustering.chkpnt"
+        "{chkpntDir}/.intron_clustering.chkpnt"
     output:
-        ".prepare_phen_table.chkpnt"
+        "{chkpntDir}/.prepare_phen_table.chkpnt"
     shell:
         "sbatch --wait src/sqtl_mapping/sh/03_prepare_phen_table.sh {LC};"
-        "touch .prepare_phen_table.chkpnt"
+        "touch {chkpntDir}/.prepare_phen_table.chkpnt"
 
 
 
