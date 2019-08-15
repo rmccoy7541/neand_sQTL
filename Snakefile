@@ -37,6 +37,7 @@ rule index_vcf:
 
 rule junc_cluster:
     input:
+        "{ncbiFiles}/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz.tbi",
         "{ncbiFiles}/.index_vcf.chkpnt"
     output:
         ".junc_cluster.chkpnt"
