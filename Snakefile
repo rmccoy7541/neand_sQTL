@@ -36,10 +36,10 @@ rule junc_cluster:
     input:
         "{ncbiFiles}/.index_vcf.chkpnt"
     output:
-        ".junc_cluster.chkpnt"
+        "{ncbiFiles}/.junc_cluster.chkpnt"
     shell:
         "sbatch --wait src/sqtl_mapping/sh/01_junc_cluster.sh;"
-        "touch .junc_cluster.chkpnt"
+        "touch {ncbiFiles}/.junc_cluster.chkpnt"
 
 rule intron_clustering:
     input:
