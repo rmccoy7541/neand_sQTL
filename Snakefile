@@ -18,8 +18,8 @@ rule all:
 
 rule filter_vcf:
     input:
-        vcf,
-        ncbiFiles
+        expand("{vcf}", vcf=config["vcf"]),
+        expand("{ncbiFiles}", ncbiFiles=config["ncbiFiles"])
     output:
         expand("{ncbiFiles}/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTExWGSGenotypeMatrixBiallelicOnly.HQ.vcf.gz", ncbiFiles=config["ncbiFiles"])
     shell:
