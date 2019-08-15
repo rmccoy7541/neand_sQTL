@@ -21,29 +21,28 @@ rule filter_vcf:
         vcf,
         ncbiFiles
     output:
-        "{ncbiFiles}/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTExWGSGenotypeMatrixBiallelicOnly.HQ.vcf.gz"
+        expand("{ncbiFiles}/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTExWGSGenotypeMatrixBiallelicOnly.HQ.vcf.gz", ncbiFiles=config["ncbiFiles"])
     shell:
-        "sbatch --wait --export=vcf={vcf},outdir=$PWD src/sqtl_mapping/primary/sh/00a_bcftools_filter.sh"
+        expand("sbatch --wait --export=vcf={vcf},outdir=$PWD src/sqtl_mapping/primary/sh/00a_bcftools_filter.sh", vcf=config["vcf"])
 
 rule index_vcf:
     input:
-        "{ncbiFiles}/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTExWGSGenotypeMatrixBiallelicOnly.HQ.vcf.gz"
+        expand("{ncbiFiles}/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTExWGSGenotypeMatrixBiallelicOnly.HQ.vcf.gz", ncbiFiles=config["ncbiFiles"])
     output:
-        "{ncbiFiles}/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz.tbi",
-        "{ncbiFiles}/.index_vcf.chkpnt"
+        expand("{ncbiFiles}/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz.tbi",ncbiFiles=config["ncbiFiles"]),
+        expand("{ncbiFiles}/.index_vcf.chkpnt",ncbiFiles=config["ncbiFiles"])
     shell:
-        "sbatch --export=outdir=$PWD src/sqtl_mapping/primary/sh/00b_index_vcf.sh;"
-        "touch {ncbiFiles}/.index_vcf.chkpnt"
+        expand("sbatch --export=outdir=$PWD src/sqtl_mapping/primary/sh/00b_index_vcf.sh;"
+        "touch {ncbiFiles}/.index_vcf.chkpnt",ncbiFiles=config["ncbiFiles"])
 
 rule junc_cluster:
     input:
-        "{ncbiFiles}/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz.tbi",
-        "{ncbiFiles}/.index_vcf.chkpnt"
+        expand("{ncbiFiles}/.index_vcf.chkpnt", ncbiFiles=config["ncbiFiles"])
     output:
-        "{ncbiFiles}/.junc_cluster.chkpnt"
+        ".junc_cluster.chkpnt"
     shell:
         "sbatch --wait src/sqtl_mapping/sh/01_junc_cluster.sh;"
-        "touch {ncbiFiles}/.junc_cluster.chkpnt"
+        "touch .junc_cluster.chkpnt"
 
 rule intron_clustering:
     input:
