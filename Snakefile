@@ -33,7 +33,7 @@ rule index_vcf:
         "{ncbiFiles}/.index_vcf.chkpnt"
     shell:
         "sbatch --export=outdir=$PWD src/sqtl_mapping/primary/sh/00b_index_vcf.sh;"
-        "{ncbiFiles}/touch .index_vcf.chkpnt"
+        "touch {ncbiFiles}/.index_vcf.chkpnt"
 
 rule junc_cluster:
     input:
