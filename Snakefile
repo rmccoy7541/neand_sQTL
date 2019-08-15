@@ -18,9 +18,9 @@ rule filter_vcf:
 
 rule index_vcf:
     input:
-        "/scratch/groups/rmccoy22/Ne_sQTL/files/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTExWGSGenotypeMatrixBiallelicOnly.HQ.vcf.gz"
+        "{ncbiFiles}/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTExWGSGenotypeMatrixBiallelicOnly.HQ.vcf.gz"
     output:
-        "/scratch/groups/rmccoy22/Ne_sQTL/files/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz.tbi",
+        "{ncbiFiles}/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz.tbi",
         ".index_vcf.chkpnt"
     shell:
         "sbatch --export=outdir=$PWD src/sqtl_mapping/primary/sh/00b_index_vcf.sh;"
@@ -47,7 +47,7 @@ rule intron_clustering:
 
 rule prepare_phen_table:
     input:
-        LC=config["leafcutter"]
+        LC
     output:
         ".prepare_phen_table.chkpnt"
     shell:
