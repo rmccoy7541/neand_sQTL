@@ -1,6 +1,9 @@
 configfile: "config.yaml"
 #localrules:
 
+rule all:
+    input: ".prepare_phen_table.chkpnt"
+
 rule filter_vcf:
     input:
         vcf=config["vcf"],
