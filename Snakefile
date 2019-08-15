@@ -21,12 +21,16 @@ rule index_vcf:
 rule junc_cluster:
     input:
         LC=config["leafcutter"]
+    output:
+        ".junc_cluster.chkpnt"
     shell:
         "sbatch --wait src/sqtl_mapping/sh/01_junc_cluster.sh"
 
 rule intron_clustering:
     input:
         LC=config["leafcutter"]
+    output:
+        ".intron_clustering.chkpnt"
     shell:
         "sbatch --wait src/sqtl_mapping/sh/02_intronclustering.sh;"
         "cd intronclustering/"
@@ -34,6 +38,10 @@ rule intron_clustering:
 rule prepare_phen_table:
     input:
         LC=config["leafcutter"]
+    output:
+        ".prepare_phen_table.chkpnt"
+    shell:
+        "sbatch --wait /sh/03_prepare_phen_table.sh {LC}"
 
 
 

@@ -27,6 +27,9 @@ rm GTEX*
 mv stripped/* .
 
 rmdir stripped/
+ls GTEX* | sort -V > juncfiles.txt
+
+touch .junc_cluster.chkpnt
 
 # # init intron clustering
 # sbatch --export=LC=$(echo $LC) ${scripts}/sh/02_intronclustering.sh 
