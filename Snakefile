@@ -11,7 +11,7 @@ ncbiFiles=config["ncbiFiles"]
 LC=config["leafcutter"]
 # chkpntDir=config["chkpntDir"]
 
-
+ruleorder: filter_vcf > index_vcf
 
 rule all:
     input: ".prepare_phen_table.chkpnt"
