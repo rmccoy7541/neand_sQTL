@@ -16,9 +16,9 @@ rule filter_vcf:
         expand("{ncbiFiles}", ncbiFiles=config["ncbiFiles"])
     output:
         expand("{ncbiFiles}/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTExWGSGenotypeMatrixBiallelicOnly.HQ.vcf.gz", ncbiFiles=config["ncbiFiles"])
+    threads: 23 # in addition to the 1 thread, so 24 total
     shell:
-        "src/sqtl_mapping/primary/sh/00a_bcftools_filter.sh"
-
+        "bcftools view -m2 -M2 -v snps --threads {threads} -O z -o {output} {vcf}"
 
 rule index_vcf:
     input:
@@ -49,14 +49,24 @@ rule intron_clustering:
     shell:
         "src/sqtl_mapping/sh/02_intronclustering.sh {params.LC}"
 
-
 rule prepare_phen_table:
     input:
         config["leafcutter"],
         ".intron_clustering.chkpnt"
     output:
         touch(".prepare_phen_table.chkpnt")
+    message:
+        "Preparing phenotype table..."
     params:
         LC=config["leafcutter"]
     shell:
         "src/sqtl_mapping/sh/03_prepare_phen_table.sh {params.LC}"
+
+rule write_LC_phen:
+    input:
+        ".prepare_phen_table.chkpnt"
+    output:
+        "leafcutterphenotypes.txt"
+    shell:
+        "ls *qqnorm* > {output}"
+
