@@ -9,7 +9,7 @@ configfile: "config.yaml"
 vcf=config["vcf"],
 ncbiFiles=config["ncbiFiles"]
 LC=config["leafcutter"]
-# chkpntDir=config["chkpntDir"]
+
 
 rule all:
     input: ".prepare_phen_table.chkpnt"
@@ -48,9 +48,9 @@ rule intron_clustering:
     output:
         ".intron_clustering.chkpnt"
     shell:
-        "sbatch --wait src/sqtl_mapping/sh/02_intronclustering.sh {LC};"
+        expand("sbatch --wait src/sqtl_mapping/sh/02_intronclustering.sh {LC};"
         "touch .intron_clustering.chkpnt;"
-        "cd intronclustering/"
+        "cd intronclustering/", LC=config["leafcutter"])
 
 rule prepare_phen_table:
     input:
@@ -59,8 +59,8 @@ rule prepare_phen_table:
     output:
         ".prepare_phen_table.chkpnt"
     shell:
-        "sbatch --wait src/sqtl_mapping/sh/03_prepare_phen_table.sh {LC};"
-        "touch .prepare_phen_table.chkpnt"
+        expand("sbatch --wait src/sqtl_mapping/sh/03_prepare_phen_table.sh {LC};"
+        "touch .prepare_phen_table.chkpnt",LC=config["leafcutter"])
 
 
 
