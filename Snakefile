@@ -18,7 +18,7 @@ rule filter_vcf:
         expand("{ncbiFiles}/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTExWGSGenotypeMatrixBiallelicOnly.HQ.vcf.gz", ncbiFiles=config["ncbiFiles"])
     threads: 23 # in addition to the 1 thread, so 24 total
     shell:
-        "bcftools view -m2 -M2 -v snps --threads {threads} -O z -o {output} {vcf}"
+        "bcftools view -m2 -M2 -v snps --threads {threads} -O z -o {output} {input.vcf}"
 
 rule index_vcf:
     input:
