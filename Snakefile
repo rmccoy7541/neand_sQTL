@@ -18,6 +18,7 @@ rule filter_vcf:
         expand("{ncbiFiles}/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTExWGSGenotypeMatrixBiallelicOnly.HQ.vcf.gz", ncbiFiles=config["ncbiFiles"])
     threads: 23 # in addition to the 1 thread, so 24 total
     shell:
+         #ml bcftools
         "bcftools view -m2 -M2 -v snps --threads {threads} -O z -o {output} {input.vcf}"
 
 rule index_vcf:
@@ -27,7 +28,8 @@ rule index_vcf:
         expand("{ncbiFiles}/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz.tbi",ncbiFiles=config["ncbiFiles"]),
         touch(expand("{ncbiFiles}/.index_vcf.chkpnt",ncbiFiles=config["ncbiFiles"]))
     shell:
-        "src/sqtl_mapping/primary/sh/00b_index_vcf.sh"
+        #ml htslib
+        "tabix -p vcf $outdir/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz"
 
 
 rule junc_cluster:
