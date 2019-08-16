@@ -8,7 +8,7 @@ configfile: "config.yaml"
 
 rule all:
     input: 
-        ".prepare_phen_table.chkpnt"
+        "leafcutterphenotypes.txt"
 
 rule filter_vcf:
     input:
