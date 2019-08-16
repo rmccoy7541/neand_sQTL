@@ -22,7 +22,7 @@ rule filter_vcf:
     threads:
         24
     shell:
-        "bcftools view -m2 -M2 -v snps --threads 23 -O z -o {output} {wildcards.vcf}"
+        "bcftools view -m2 -M2 -v snps --threads 23 -O z -o {output} {vcf}"
 #
 # rule index_vcf:
 #     input:
