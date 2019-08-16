@@ -12,7 +12,7 @@ ncbiFiles=config["ncbiFiles"]
 LC=config["leafcutter"]
 
 rule all:
-     input: ".prepare_phen_table.chkpnt"
+     input: "{ncbiFiles}/.index_vcf.chkpnt"
 
 rule filter_vcf:
     output:
