@@ -6,6 +6,7 @@
 
 configfile: "config.yaml"
 #localrules:
+
 vcf=config["vcf"],
 ncbiFiles=config["ncbiFiles"]
 LC=config["leafcutter"]
@@ -14,9 +15,6 @@ LC=config["leafcutter"]
 #     input: ".prepare_phen_table.chkpnt"
 
 rule filter_vcf:
-    input:
-        expand("{vcf}", vcf=config["vcf"]),
-        expand("{ncbiFiles}", ncbiFiles=config["ncbiFiles"])
     output:
         expand("{ncbiFiles}/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTExWGSGenotypeMatrixBiallelicOnly.HQ.vcf.gz", ncbiFiles=config["ncbiFiles"])
     threads:
