@@ -27,7 +27,7 @@ rule index_vcf:
         "{ncbiFiles}/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTExWGSGenotypeMatrixBiallelicOnly.HQ.vcf.gz"
      output:
         "{ncbiFiles}/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz.tbi",
-        touch(".index_vcf.chkpnt")
+        touch("{ncbiFiles}/.index_vcf.chkpnt")
      shell:
         "tabix -p vcf {input}"
 #
