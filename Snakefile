@@ -12,8 +12,8 @@ rule all:
 
 rule filter_vcf:
     input:
-        expand("{vcf}", vcf=config["vcf"]),
-        expand("{ncbiFiles}", ncbiFiles=config["ncbiFiles"])
+        vcf=expand("{vcf}", vcf=config["vcf"]),
+        ncbiFiles=expand("{ncbiFiles}", ncbiFiles=config["ncbiFiles"])
     output:
         expand("{ncbiFiles}/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTExWGSGenotypeMatrixBiallelicOnly.HQ.vcf.gz", ncbiFiles=config["ncbiFiles"])
     threads: 23 # in addition to the 1 thread, so 24 total
