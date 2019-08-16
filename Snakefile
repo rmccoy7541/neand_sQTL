@@ -11,26 +11,25 @@ vcf=config["vcf"],
 ncbiFiles=config["ncbiFiles"]
 LC=config["leafcutter"]
 
-# rule all:
-#     input: ".prepare_phen_table.chkpnt"
+rule all:
+     input: ".prepare_phen_table.chkpnt"
 
 rule filter_vcf:
     output:
-        expand("{ncbiFiles}/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTExWGSGenotypeMatrixBiallelicOnly.HQ.vcf.gz", ncbiFiles=config["ncbiFiles"])
+        "{ncbiFiles}/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTExWGSGenotypeMatrixBiallelicOnly.HQ.vcf.gz"
     threads:
         24
     shell:
         "bcftools view -m2 -M2 -v snps --threads 23 -O z -o {output} {vcf}"
-#
-# rule index_vcf:
-#     input:
-#         expand("{ncbiFiles}/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTExWGSGenotypeMatrixBiallelicOnly.HQ.vcf.gz", ncbiFiles=config["ncbiFiles"])
-#     output:
-#         expand("{ncbiFiles}/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz.tbi",ncbiFiles=config["ncbiFiles"]),
-#         expand("{ncbiFiles}/.index_vcf.chkpnt",ncbiFiles=config["ncbiFiles"])
-#     shell:
-#         expand("sbatch --export=outdir=$PWD src/sqtl_mapping/primary/sh/00b_index_vcf.sh;"
-#         "touch {ncbiFiles}/.index_vcf.chkpnt",ncbiFiles=config["ncbiFiles"])
+
+rule index_vcf:
+     input:
+        "{ncbiFiles}/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTExWGSGenotypeMatrixBiallelicOnly.HQ.vcf.gz"
+     output:
+        "{ncbiFiles}/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz.tbi",
+        touch(".index_vcf.chkpnt")
+     shell:
+        "tabix -p vcf {input}"
 #
 # rule junc_cluster:
 #     input:
