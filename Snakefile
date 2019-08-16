@@ -1,3 +1,9 @@
+# module load python/3.7
+# python -m venv ./venv
+# source ./venv/bin/activate
+# pip install snakemake
+# snakemake --version
+
 configfile: "config.yaml"
 
 rule all:
