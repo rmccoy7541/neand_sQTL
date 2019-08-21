@@ -82,7 +82,7 @@ rule prepare_phen_table:
 
 rule QTLtools_filter:
     input:
-        file=expand("Ne-sQTL_perind.counts.gz.qqnorm_chr{i}.gz",i=range(1,22)),
+        file="Ne-sQTL_perind.counts.gz.qqnorm_chr{i}.gz",i=range(1,22),
         chk=".prepare_phen_table.chkpnt"
     output:
         expand("{input.file}.qtltools")
