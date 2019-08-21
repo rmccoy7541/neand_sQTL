@@ -142,9 +142,14 @@ rule make_tis_dirs:
         "for i in 1_*.txt; do echo $i | cut -d'_' -f 2| cut -d'.' -f 1 >> tissuesused.txt; done;"
         "for i in *_*.txt; do echo $i | awk -F'[_.]' '{print $2}' | xargs -I '{}' mv $i '{}' ; done"
 
+def read_tissues_output():
+    with open('tissuesused.txt') as f:
+        samples = [sample for sample in f.read().split('\n') if len(sample) > 0]  # we dont want empty lines
+        return expand("tissue_{sample}.txt", sample=samples)
+
 rule sort_zip_ind_pheno:
     input:
-        tis=fileAsList("tissuesused.txt"),
+        read_tissues_output(),
         chk=".make_tis_dirs.chkpnt"
     output:
         touch(".sort_zip_ind_pheno.chkpnt")
@@ -153,6 +158,9 @@ rule sort_zip_ind_pheno:
         {input.tis}/{input.tis}.pheno.bed;"
         "bgzip -f {input.tis}/{input.tis}.pheno.bed;"
         "tabix -p bed {input.tis}/{input.tis}.pheno.bed.gz"
+
+
+
 
 #######
 ## Starting from the end
