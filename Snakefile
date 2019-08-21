@@ -8,7 +8,7 @@ configfile: "config.yaml"
 
 rule all:
     input: 
-        "leafcutterphenotypes.txt"
+        expand("Ne-sQTL_perind.counts.gz.qqnorm_chr{i}.qtltools",i=range(1,22))
 
 rule filter_vcf:
     input:
@@ -18,7 +18,6 @@ rule filter_vcf:
         expand("{ncbiFiles}/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTExWGSGenotypeMatrixBiallelicOnly.HQ.vcf.gz", ncbiFiles=config["ncbiFiles"])
     threads: 23 # in addition to the 1 thread, so 24 total
     shell:
-         #ml bcftools
         "bcftools view -m2 -M2 -v snps --threads {threads} -O z -o {output} {input.vcf}"
 
 rule index_vcf:
@@ -28,8 +27,7 @@ rule index_vcf:
         expand("{ncbiFiles}/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz.tbi",ncbiFiles=config["ncbiFiles"]),
         touch(expand("{ncbiFiles}/.index_vcf.chkpnt",ncbiFiles=config["ncbiFiles"]))
     shell:
-        #ml htslib
-        "tabix -p vcf $outdir/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz"
+        "tabix -p vcf {input}"
 
 
 rule junc_cluster:
@@ -46,10 +44,18 @@ rule intron_clustering:
         ".junc_cluster.chkpnt"
     output:
         touch(".intron_clustering.chkpnt")
+    message:
+        "Intron clustering..."
     params:
         LC=config["leafcutter"]
     shell:
-        "src/sqtl_mapping/sh/02_intronclustering.sh {params.LC}"
+        "mkdir intronclustering/;"
+        "python {params.LC}/clustering/leafcutter_cluster.py \
+        -j juncfiles.txt \
+        -r intronclustering/ \
+        -m 50 \
+        -o Ne-sQTL \
+        -l 500000"
 
 rule prepare_phen_table:
     input:
@@ -62,13 +68,39 @@ rule prepare_phen_table:
     params:
         LC=config["leafcutter"]
     shell:
-        "src/sqtl_mapping/sh/03_prepare_phen_table.sh {params.LC}"
+        "python {params.LC}/scripts/prepare_phenotype_table.py Ne-sQTL_perind.counts.gz -p 10"
 
-rule write_LC_phen:
+rule QTLtools_filter:
     input:
-        ".prepare_phen_table.chkpnt"
+         file=expand("Ne-sQTL_perind.counts.gz.qqnorm_chr{i}",i=range(1,22))
     output:
-        "leafcutterphenotypes.txt"
+        expand("{input.file}.qtltools")
+    message:
+        "Making phenotype files QTLtools compatible..."
     shell:
-        "ls *qqnorm* > {output}"
+        "cat {input.file} | awk '{ $4=$4\" . +\"; print $0 }' | tr " " \"\t\" | bgzip -c > {input.file}.qtltools"
 
+rule index_phen:
+    input:
+        expand("Ne-sQTL_perind.counts.gz.qqnorm_chr{i}.qtltools",i=range(1,22))
+    output:
+        expand("Ne-sQTL_perind.counts.gz.qqnorm_chr{i}.qtltools.tbi",i=range(1,22))
+    message:
+        "Indexing phenotype files..."
+    shell:
+        "tabix -p bed {input}"
+
+rule sra_tissue_xtract:
+    input:
+        "metadata/SraRunTable.txt",
+        "metadata/GTExTissueKey.csv"
+    output:
+        "tissue_table.txt"
+    message:
+        "Extracting tested tissues..."
+    script:
+        "src/sqtl_mapping/primary/R/05_sraTissueExtract.R"
+
+#######
+## Starting from the end
+#######

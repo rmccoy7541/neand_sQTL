@@ -16,11 +16,10 @@ done
 mkdir stripped
 
 # removing mitochondrial sequences
-time {
 for i in $(ls GTEX*); do
 	grep -v '^MT' $i > stripped/${i}
 done
-}
+
 
 rm GTEX*
 
