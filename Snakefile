@@ -4,11 +4,20 @@
 # pip install snakemake
 # snakemake --version
 
+def fileAsList(file):
+    with open(file) as f:
+        for line in f:
+            lis = []
+            spl = line.split()
+            lis.append(spl[0])
+        return lis
+
+
 configfile: "config.yaml"
 
 rule all:
     input: 
-        expand("Ne-sQTL_perind.counts.gz.qqnorm_chr{i}.qtltools",i=range(1,22))
+        ".sort_zip_ind_pheno.chkpnt"
 
 rule filter_vcf:
     input:
@@ -100,6 +109,48 @@ rule sra_tissue_xtract:
         "Extracting tested tissues..."
     script:
         "src/sqtl_mapping/primary/R/05_sraTissueExtract.R"
+
+rule sra_name_change_sort:
+    input:
+        expand("Ne-sQTL_perind.counts.gz.qqnorm_chr{i}.qtltools",i=range(1,22)),
+        "tissue_table.txt"
+    output:
+        touch(".sra_name_change.chkpnt")
+    script:
+        "src/sqtl_mapping/primary/R/06_sraNameChangeSort.R"
+
+rule get_tis_names:
+    input:
+        "tissue_table.txt"
+    output:
+        "tissuenames.txt"
+    shell:
+        "cat {input} | cut -f3 | awk '{if(NR>1)print}' |  awk '!seen[$0]++' > {output}"
+
+rule make_tis_dirs:
+    input:
+        ".sra_name_change.chkpnt"
+    output:
+        touch(".make_tis_dirs.chkpnt")
+    message:
+        "Making directories for each type of tissue, saving tissue types in a file, and "
+        "moving each outputted file into its respective tissue folder..."
+    shell:
+        "for i in 1_*.txt; do echo $i | cut -d'_' -f 2| cut -d'.' -f 1 | xargs mkdir; done;"
+        "for i in 1_*.txt; do echo $i | cut -d'_' -f 2| cut -d'.' -f 1 >> tissuesused.txt; done;"
+        "for i in *_*.txt; do echo $i | awk -F'[_.]' '{print $2}' | xargs -I '{}' mv $i '{}' ; done"
+
+rule sort_zip_ind_pheno:
+    input:
+        tis=fileAsList("tissuesused.txt"),
+        chk=".make_tis_dirs.chkpnt"
+    output:
+        touch(".sort_zip_ind_pheno.chkpnt")
+    shell:
+        "bedtools sort -header -i {input.tis}/{input.tis}.phen_fastqtl.bed > \
+        {input.tis}/{input.tis}.pheno.bed;"
+        "bgzip -f {input.tis}/{input.tis}.pheno.bed;"
+        "tabix -p bed {input.tis}/{input.tis}.pheno.bed.gz"
 
 #######
 ## Starting from the end

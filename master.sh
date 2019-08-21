@@ -48,7 +48,7 @@ cd intronclustering/
 
 echo "Preparing phenotype table..."
 sbatch --wait ${scripts}/sh/03_prepare_phen_table.sh $leafCutter
-
+#
 ## Step 5 - QTLtools Preparation
 ################################################
 # prepare files for QTLtools
@@ -56,6 +56,7 @@ ls *qqnorm* > leafcutterphenotypes.txt
 # important: render these files compatible with QTLtools
 echo "Making phenotype files QTLtools compatible..."
 sbatch --wait ${scripts}/sqtl_mapping/sh/04_QTLtools-Filter.sh
+#
 ls *.qtltools >> qtltools-input.txt
 
 # generate the corresponding tbi files
@@ -64,6 +65,8 @@ for i in {1..22}; do tabix -p bed Ne-sQTL_perind.counts.gz.qqnorm_chr${i}.gz.qtl
 cp ${data}/GTExTissueKey.csv $PWD
 # get the tissue sites for each corresonding sra file
 Rscript ${scripts}/sqtl_mapping/R/05_sraTissueExtract.R ${data}/SraRunTable.txt GTExTissueKey.csv
+
+#
 
 # submit each LF phenotype file to sraNameChangeSort as command line variable as well as tissue_table.txt
 for phen in *qqnorm*.gz.qtltools; do Rscript ${scripts}/sqtl_mapping/R/06_sraNameChangeSort.R $phen tissue_table.txt ; done
