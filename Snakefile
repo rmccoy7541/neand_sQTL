@@ -12,9 +12,6 @@ def fileAsList(file):
             lis.append(spl[0])
         return lis
 
-def expandChromo(wildcards):
-    return expand("Ne-sQTL_perind.counts.gz.qqnorm_chr{i}.gz",i=range(1,22))
-
 
 configfile: "config.yaml"
 
@@ -75,6 +72,7 @@ rule prepare_phen_table:
         ".intron_clustering.chkpnt"
     output:
         touch(".prepare_phen_table.chkpnt"),
+        expand("Ne-sQTL_perind.counts.gz.qqnorm_chr{i}.gz",i=range(1,22))
     message:
         "Preparing phenotype table..."
     params:
@@ -84,14 +82,14 @@ rule prepare_phen_table:
 
 rule QTLtools_filter:
     input:
-        expandChromo,
+        file=expand("Ne-sQTL_perind.counts.gz.qqnorm_chr{i}.gz",i=range(1,22)),
         chk=".prepare_phen_table.chkpnt"
     output:
-        expand("{wildcards.expandChromo}.qtltools")
+        expand("{input.file}.qtltools")
     message:
         "Making phenotype files QTLtools compatible..."
     shell:
-        "cat {wildcards.expandChromo} | awk '{ $4=$4\" . +\"; print $0 }' | tr " " \"\t\" | bgzip -c > {wildcards.expandChromo}.qtltools"
+        "cat {input.file} | awk '{ $4=$4\" . +\"; print $0 }' | tr " " \"\t\" | bgzip -c > {input.file}.qtltools"
 
 rule index_phen:
     input:
