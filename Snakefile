@@ -82,7 +82,7 @@ rule prepare_phen_table:
 
 rule QTLtools_filter:
     input:
-        file="Ne-sQTL_perind.counts.gz.qqnorm_chr{i}.gz",
+        file="{i}.gz",
         chk=".prepare_phen_table.chkpnt"
     output:
         "{i}.qtltools"
