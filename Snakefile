@@ -81,16 +81,17 @@ rule prepare_phen_table:
     shell:
         "python {params.LC}/scripts/prepare_phenotype_table.py Ne-sQTL_perind.counts.gz -p 10"
 
+# not sure how this rule below works with the inputs and outputs being so vague but ok
 rule QTLtools_filter:
     input:
-        "{i}.gz",
-        ".prepare_phen_table.chkpnt"
+        phen="{i}.gz",
+        chk=".prepare_phen_table.chkpnt"
     output:
         "{i}.qtltools"
     message:
         "Making phenotype files QTLtools compatible..."
     shell:
-        "cat {input} | awk '{{ $4=$4\" . +\"; print $0 }}' | tr " " \"\t\" | bgzip -c > {output}"
+        "cat {input.phen} | awk '{{ $4=$4\" . +\"; print $0 }}' | tr " " \"\t\" | bgzip -c > {output}"
 
 rule index_phen:
     input:
