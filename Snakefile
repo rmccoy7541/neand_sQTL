@@ -82,14 +82,14 @@ rule prepare_phen_table:
 
 rule QTLtools_filter:
     input:
-        file="Ne-sQTL_perind.counts.gz.qqnorm_chr{i}.gz",i=range(1,22),
+        file="Ne-sQTL_perind.counts.gz.qqnorm_chr{i}.gz",
         chk=".prepare_phen_table.chkpnt"
     output:
-        expand("{input.file}.qtltools")
+        "{i}.qtltools"
     message:
         "Making phenotype files QTLtools compatible..."
     shell:
-        "cat {input.file} | awk '{ $4=$4\" . +\"; print $0 }' | tr " " \"\t\" | bgzip -c > {input.file}.qtltools"
+        "cat {input.file} | awk '{{ $4=$4\" . +\"; print $0 }}' | tr " " \"\t\" | bgzip -c > {output}"
 
 rule index_phen:
     input:
