@@ -12,6 +12,7 @@ def fileAsList(file):
             lis.append(spl[0])
         return lis
 
+# snakemake --dag -n -F | dot -Tsvg > dag.svg
 
 configfile: "config.yaml"
 
@@ -104,7 +105,8 @@ rule index_phen:
 rule sra_tissue_xtract:
     input:
         "metadata/SraRunTable.txt",
-        "metadata/GTExTissueKey.csv"
+        "metadata/GTExTissueKey.csv",
+        ".prepare_phen_table.chkpnt"
     output:
         "tissue_table.txt"
     message:
