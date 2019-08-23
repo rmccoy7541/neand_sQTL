@@ -108,7 +108,8 @@ rule sra_tissue_xtract:
         "metadata/SraRunTable.txt",
         "metadata/GTExTissueKey.csv",
     output:
-        "tissue_table.txt"
+        "tissue_table.txt",
+        touch(".tst")
     message:
         "Extracting tested tissues..."
     script:
@@ -125,7 +126,8 @@ rule sra_name_change_sort:
 
 rule get_tis_names:
     input:
-        "tissue_table.txt"
+        "tissue_table.txt",
+        ".tst"
     output:
         "tissuenames.txt"
     shell:
@@ -162,6 +164,8 @@ def read_tissues_output():
     with open('tissuesused.txt') as f:
         samples = [sample for sample in f.read().split('\n') if len(sample) > 0]  # we dont want empty lines
         return samples
+
+
 
 rule sort_zip_ind_pheno:
     input:
