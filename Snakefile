@@ -106,7 +106,7 @@ rule sra_tissue_xtract:
     input:
         "metadata/SraRunTable.txt",
         "metadata/GTExTissueKey.csv",
-        "Ne-sQTL_perind.counts.gz.qqnorm_chr{i}.qtltools.tbi"
+        "{i}.qtltools.tbi"
     output:
         "tissue_table.txt"
     message:
