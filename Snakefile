@@ -18,7 +18,7 @@ configfile: "config.yaml"
 
 rule all:
     input: 
-        ".move_tis.chkpnt"
+        ".sort_zip_ind_pheno.chkpnt"
 
 rule filter_vcf:
     input:
@@ -108,8 +108,7 @@ rule sra_tissue_xtract:
         "metadata/SraRunTable.txt",
         "metadata/GTExTissueKey.csv",
     output:
-        "tissue_table.txt",
-        touch(".tst")
+        "tissue_table.txt"
     message:
         "Extracting tested tissues..."
     script:
@@ -127,7 +126,6 @@ rule sra_name_change_sort:
 rule get_tis_names:
     input:
         "tissue_table.txt",
-        ".tst"
     output:
         "tissuenames.txt"
     shell:
