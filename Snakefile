@@ -82,14 +82,14 @@ rule prepare_phen_table:
 
 rule QTLtools_filter:
     input:
-        file="{i}.gz",
-        chk=".prepare_phen_table.chkpnt"
+        "{i}.gz",
+        ".prepare_phen_table.chkpnt"
     output:
         "{i}.qtltools"
     message:
         "Making phenotype files QTLtools compatible..."
     shell:
-        "cat {input.file} | awk '{{ $4=$4\" . +\"; print $0 }}' | tr " " \"\t\" | bgzip -c > {output}"
+        "cat {input} | awk '{{ $4=$4\" . +\"; print $0 }}' | tr " " \"\t\" | bgzip -c > {output}"
 
 rule index_phen:
     input:
