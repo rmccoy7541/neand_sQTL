@@ -127,7 +127,7 @@ rule get_tis_names:
     output:
         "tissuenames.txt"
     shell:
-        "cat {input} | cut -f3 | awk '{if(NR>1)print}' |  awk '!seen[$0]++' > {output}"
+        "cat {input} | cut -f3 | awk '{{if(NR>1)print}}' |  awk '!seen[$0]++' > {output}"
 
 rule make_tis_dirs:
     input:
@@ -154,7 +154,7 @@ rule move_tis:
     output:
         touch(".move_tis.chkpnt")
     shell:
-        "for i in *_*.txt; do echo $i | awk -F'[_.]' '{print $2}' | xargs -I '{}' mv $i '{}' ; done"
+        "for i in *_*.txt; do echo $i | awk -F'[_.]' '{{print $2}}' | xargs -I '{{}}' mv $i '{{}}' ; done"
 
 # def read_tissues_output():
 #     with open('tissuesused.txt') as f:
