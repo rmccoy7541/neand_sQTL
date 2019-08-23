@@ -17,7 +17,7 @@ configfile: "config.yaml"
 
 rule all:
     input: 
-        ".sort_zip_ind_pheno.chkpnt"
+        ".move_tis.chkpnt"
 
 rule filter_vcf:
     input:
@@ -156,22 +156,22 @@ rule move_tis:
     shell:
         "for i in *_*.txt; do echo $i | awk -F'[_.]' '{print $2}' | xargs -I '{}' mv $i '{}' ; done"
 
-def read_tissues_output():
-    with open('tissuesused.txt') as f:
-        samples = [sample for sample in f.read().split('\n') if len(sample) > 0]  # we dont want empty lines
-        return samples
-
-rule sort_zip_ind_pheno:
-    input:
-        read_tissues_output(),
-        ".move_tis.chkpnt"
-    output:
-        touch(".sort_zip_ind_pheno.chkpnt")
-    shell:
-        "bedtools sort -header -i {input.tis}/{input.tis}.phen_fastqtl.bed > \
-        {input.tis}/{input.tis}.pheno.bed;"
-        "bgzip -f {input.tis}/{input.tis}.pheno.bed;"
-        "tabix -p bed {input.tis}/{input.tis}.pheno.bed.gz"
+# def read_tissues_output():
+#     with open('tissuesused.txt') as f:
+#         samples = [sample for sample in f.read().split('\n') if len(sample) > 0]  # we dont want empty lines
+#         return samples
+#
+# rule sort_zip_ind_pheno:
+#     input:
+#         read_tissues_output(),
+#         ".move_tis.chkpnt"
+#     output:
+#         touch(".sort_zip_ind_pheno.chkpnt")
+#     shell:
+#         "bedtools sort -header -i {input.tis}/{input.tis}.phen_fastqtl.bed > \
+#         {input.tis}/{input.tis}.pheno.bed;"
+#         "bgzip -f {input.tis}/{input.tis}.pheno.bed;"
+#         "tabix -p bed {input.tis}/{input.tis}.pheno.bed.gz"
 
 
 
