@@ -84,7 +84,7 @@ rule prepare_phen_table:
 # not sure how this rule below works with the inputs and outputs being so vague but ok
 rule QTLtools_filter:
     input:
-        phen="Ne-sQTL_perind.counts.gz.qqnorm_chr{i}.gz",
+        phen="{i}.gz",
         chk=".prepare_phen_table.chkpnt"
     output:
         "{i}.qtltools"
@@ -93,21 +93,21 @@ rule QTLtools_filter:
     shell:
         "cat {input.phen} | awk '{{ $4=$4\" . +\"; print $0 }}' | tr " " \"\t\" | bgzip -c > {output}"
 
-rule index_phen:
-    input:
-        expand("Ne-sQTL_perind.counts.gz.qqnorm_chr{i}.qtltools",i=range(1,22))
-    output:
-        expand("Ne-sQTL_perind.counts.gz.qqnorm_chr{i}.qtltools.tbi",i=range(1,22))
-    message:
-        "Indexing phenotype files..."
-    shell:
-        "tabix -p bed {input}"
+# rule index_phen:
+#     input:
+#         expand("Ne-sQTL_perind.counts.gz.qqnorm_chr{i}.qtltools",i=range(1,22))
+#     output:
+#         expand("Ne-sQTL_perind.counts.gz.qqnorm_chr{i}.qtltools.tbi",i=range(1,22))
+#     message:
+#         "Indexing phenotype files..."
+#     shell:
+#         "tabix -p bed {input}"
 
 rule sra_tissue_xtract:
     input:
         "metadata/SraRunTable.txt",
         "metadata/GTExTissueKey.csv",
-        expand("Ne-sQTL_perind.counts.gz.qqnorm_chr{i}.qtltools.tbi",i=range(1,22))
+        expand("Ne-sQTL_perind.counts.gz.qqnorm_chr{i}.qtltools",i=range(1,22))
     output:
         "tissue_table.txt"
     message:
@@ -130,7 +130,7 @@ rule get_tis_names:
     output:
         "tissuenames.txt"
     shell:
-        "cat {input} | cut -f3 | awk '{{if(NR>1)print}}' |  awk '!seen[$0]++' > {output}"
+        "cat {input} | cut -f3 | awk '{{ if(NR>1)print }}' |  awk '!seen[$0]++' > {output}"
 
 rule make_tis_dirs:
     input:
@@ -159,22 +159,22 @@ rule move_tis:
     shell:
         "for i in *_*.txt; do echo $i | awk -F'[_.]' '{{print $2}}' | xargs -I '{{}}' mv $i '{{}}' ; done"
 
-# def read_tissues_output():
-#     with open('tissuesused.txt') as f:
-#         samples = [sample for sample in f.read().split('\n') if len(sample) > 0]  # we dont want empty lines
-#         return samples
-#
-# rule sort_zip_ind_pheno:
-#     input:
-#         read_tissues_output(),
-#         ".move_tis.chkpnt"
-#     output:
-#         touch(".sort_zip_ind_pheno.chkpnt")
-#     shell:
-#         "bedtools sort -header -i {input.tis}/{input.tis}.phen_fastqtl.bed > \
-#         {input.tis}/{input.tis}.pheno.bed;"
-#         "bgzip -f {input.tis}/{input.tis}.pheno.bed;"
-#         "tabix -p bed {input.tis}/{input.tis}.pheno.bed.gz"
+def read_tissues_output():
+    with open('tissuesused.txt') as f:
+        samples = [sample for sample in f.read().split('\n') if len(sample) > 0]  # we dont want empty lines
+        return samples
+
+rule sort_zip_ind_pheno:
+    input:
+        read_tissues_output(),
+        ".move_tis.chkpnt"
+    output:
+        touch(".sort_zip_ind_pheno.chkpnt")
+    shell:
+        "bedtools sort -header -i {input.tis}/{input.tis}.phen_fastqtl.bed > \
+        {input.tis}/{input.tis}.pheno.bed;"
+        "bgzip -f {input.tis}/{input.tis}.pheno.bed;"
+        "tabix -p bed {input.tis}/{input.tis}.pheno.bed.gz"
 
 
 

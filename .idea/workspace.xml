@@ -24,8 +24,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Snakefile">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="337">
-              <caret line="86" column="56" selection-start-line="86" selection-start-column="56" selection-end-line="86" selection-end-column="56" />
+            <state relative-caret-position="206">
+              <caret line="165" selection-start-line="165" selection-end-line="165" />
             </state>
           </provider>
         </entry>
@@ -45,6 +45,7 @@
     <findStrings>
       <find>QTLtools_filter</find>
       <find>sra_t</find>
+      <find>tissuenames</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -160,8 +161,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Snakefile">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="337">
-          <caret line="86" column="56" selection-start-line="86" selection-start-column="56" selection-end-line="86" selection-end-column="56" />
+        <state relative-caret-position="206">
+          <caret line="165" selection-start-line="165" selection-end-line="165" />
         </state>
       </provider>
     </entry>
