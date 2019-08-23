@@ -1,13 +1,13 @@
 #!/usr/bin/env Rscript
 require("data.table")
 # arg 1 is leafcutter PCs, arg 2 is GTEx covariate file for tissue, 3 is tissue_table.txt
-args = commandArgs(trailingOnly=TRUE)
+# args = commandArgs(trailingOnly=TRUE)
 library("data.table")
-leafcut <- fread(args[1], colClasses = "character")
+leafcut <- fread(snakemake@input[[1]], colClasses = "character")
 #leafcut <- fread(as.character("Ne-sQTL_perind.counts.gz.PCs"))
-gtexPC <- fread(args[2], colClasses = "character")
+gtexPC <- fread(snakemake@input[[2]], colClasses = "character")
 #gtexPC <- fread("Adipose_Subcutaneous.v7.covariates.txt")
-lookup <- fread(args[3], colClasses = "character")
+lookup <- fread(snakemake@input[[3]], colClasses = "character")
 #lookup <- fread("tissue_table.txt")
 # make the use of "id" header standard
 setnames(gtexPC, "ID", "id")
