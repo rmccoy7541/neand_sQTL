@@ -1,8 +1,8 @@
 library("data.table")
-# args = commandArgs(trailingOnly=TRUE)
+args = commandArgs(trailingOnly=TRUE)
 # SraRunTable.txt is args[1], tissue key is args[2]
-sratabl <- fread(snakemake@input[[1]])
-tiskey <- fread(snakemake@input[[2]])
+sratabl <- fread(args[1])
+tiskey <- fread(args[2])
 
 tissuesite <- subset(sratabl, select=c("Run", "Sample_Name", "body_site", "submitted_subject_id"))
 

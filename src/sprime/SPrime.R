@@ -7,8 +7,9 @@ library(parallel)
 # could not be assigned due to coverage, mapping, or other quality issues.
 
 # TO DO: replace hard-coded paths with command-line arguments
-
-sprime <- fread("/scratch/users/rmccoy22@jhu.edu/archaic_splicing/gtex_sprime/output/results.score")
+args = commandArgs(trailingOnly=TRUE)
+# args[1] is results.score, args[2] is splice ai directory
+sprime <- fread(args[1])
 
 compare_gt <- function(ref_allele, alt_allele, archaic_allele, genotype) {
   if (startsWith(genotype, "./.")) {
@@ -63,11 +64,11 @@ get_archaic_gt <- function(sprime_line, archaic_dir) {
 # apply to all SNPs in parallel
 results <- do.call(rbind, 
                    mclapply(1:nrow(sprime), 
-                            function(x) get_archaic_gt(sprime[x,], "/scratch/users/rmccoy22@jhu.edu/archaic_splicing/spliceai"), 
+                            function(x) get_archaic_gt(sprime[x,], args[2]), 
                             mc.cores = getOption("mc.cores", 8L)))
 
 fwrite(results, 
-       file = "/scratch/users/rmccoy22@jhu.edu/archaic_splicing/gtex_sprime/output/sprime_calls.txt", 
+       file = "sprime_calls.txt", 
        quote = FALSE, 
        sep = "\t", 
        col.names = TRUE, 

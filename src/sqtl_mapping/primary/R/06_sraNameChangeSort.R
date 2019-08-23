@@ -1,12 +1,12 @@
 require("data.table")
 require("R.utils")
-# args = commandArgs(trailingOnly=TRUE)
+args = commandArgs(trailingOnly=TRUE)
 #args[1] is the leafcutter-generated phenotypes, args[2] is the tissue table
-NE <- fread(paste0("zcat ", snakemake@input[[1]]))
+NE <- fread(paste0("zcat ", args[1]))
 
 setnames(NE, c('ID', '.', '+'), c('PID', 'GID', 'Strand'))
 
-tistab <- fread(snakemake@input[[2]])
+tistab <- fread(args[2])
 
 # below takes the SRR IDs found in NE column headers, matches them to those found in the
 # tissue table, and then changes them the GTEX sample ID

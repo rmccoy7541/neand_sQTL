@@ -1,22 +1,39 @@
 #!/usr/bin/env bash
+#SBATCH --job-name=SPrime
+#SBATCH --time=12:00:00
+#SBATCH --partition=shared
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=24
 
-# note: currently written to be executed on development node
-# could modify as an array job for SLURM
+# TODO: rewrite as snakemake workflow; many of these steps could be parallelized but depend on other 
+# steps that cannot be parallelized.
 
 ml bcftools
 ml vcftools
 ml htslib
 ml java
 
-cd /scratch/users/rmccoy22@jhu.edu/gtex_sprime
+# gtex-sprime directory
+gtex_sprime=$(echo )
+# 1kg project direcotry (1kg-hs37d5/)
+1kg=$(echo ) 
+# original gtex vcf (prefilter) GTEx_Analysis_2016-01-15_v7_WholeGenomeSeq_635Ind_PASS_AB02_GQ20_HETX_MISS15_PLINKQC.vcf.gz
+vcf=$(echo )
+
+cd $gtex_sprime
 
 # get a list of Yoruban samples from 1kg project (negligible Neanderthal introgression) 
-cat /scratch/groups/rmccoy22/resources/1kg-hs37d5/integrated_call_samples_v3.20130502.ALL.panel | grep 'YRI' | cut -f1 > yri.txt
+cat $1kg/integrated_call_samples_v3.20130502.ALL.panel | grep 'YRI' | cut -f1 > yri.txt
+wget http://bochet.gcc.biostat.washington.edu/beagle/genetic_maps/plink.GRCh37.map.zip
+mkdir genetic_map
+gunzip plink.GRCh37.map.zip
+mv plink.GRCh37.map/* genetic_map/
+rmdir plink.GRCh37.map/
 
 # split the GTEx VCF by chromosome
 for i in {1..22}
 do
-  tabix GTEx_Analysis_2016-01-15_v7_WholeGenomeSeq_635Ind_PASS_AB02_GQ20_HETX_MISS15_PLINKQC.vcf.gz ${i} > gtex_chr${i}.vcf &
+  tabix $vcf ${i} > gtex_chr${i}.vcf &
 done
 
 wait
@@ -25,7 +42,7 @@ wait
 for i in {1..22}
 do
 vcftools \
-  --gzvcf /scratch/groups/rmccoy22/resources/1kg-hs37d5/ALL.chr${i}.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz \
+  --gzvcf $1kg/ALL.chr${i}.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz \
   --keep yri.txt \
   --remove-indels \
   --recode \
@@ -88,7 +105,7 @@ done
 # get a list of merged, filtered VCFs to concatenate
 for i in {1..22}
 do
-  echo "/scratch/users/rmccoy22@jhu.edu/archaic_splicing/gtex_sprime/merged_filtered_chr"${i}".vcf.gz" >> processed_vcf_list.txt
+  echo "${gtex_sprime}/merged_filtered_chr${i}.vcf.gz" >> processed_vcf_list.txt
 done
 
 # concatenate VCFs
@@ -121,6 +138,11 @@ do
     outgroup=yri.txt \
     map=genetic_map/plink.all_autosomes.GRCh37.map \
     out=output/results.chr${i} & 
+done
+
+for i in {1..22}
+do
+  cat output/results.chr${i} >> results.score
 done
 
 wait

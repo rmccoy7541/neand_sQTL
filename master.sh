@@ -25,7 +25,7 @@ ml
 
 #### Fill the Directories appropriately here
 # this project's scripts dir
-scripts=$(echo {path/to}/neanderthal-sqtl/src/primary/)
+scripts=$(echo {path/to}/neanderthal-sqtl/src/)
 # data dir
 data=$(echo {path/to}/neanderthal-sqtl/data/)
 # IF YOU ALREADY HAVE NON-BIALLELIC INDEXED VCF
@@ -42,12 +42,12 @@ backupdir=$(echo )
 cd $basewd
 
 echo "Clustering introns..."
-sbatch --wait --export=LC=$(echo $leafCutter) ${scripts}/sqtl_mapping/sh/01_junc_cluster.sh
+sbatch --wait --export=LC=$(echo $leafCutter) ${scripts}/sqtl_mapping/primary/sh/01_junc_cluster.sh
 
 cd intronclustering/
 
 echo "Preparing phenotype table..."
-sbatch --wait ${scripts}/sh/03_prepare_phen_table.sh $leafCutter
+sbatch --wait ${scripts}sqtl_mapping/primary/sh/03_prepare_phen_table.sh $leafCutter
 #
 ## Step 5 - QTLtools Preparation
 ################################################
@@ -55,7 +55,7 @@ sbatch --wait ${scripts}/sh/03_prepare_phen_table.sh $leafCutter
 ls *qqnorm* > leafcutterphenotypes.txt 
 # important: render these files compatible with QTLtools
 echo "Making phenotype files QTLtools compatible..."
-sbatch --wait ${scripts}/sqtl_mapping/sh/04_QTLtools-Filter.sh
+sbatch --wait ${scripts}/sqtl_mapping/primary/sh/04_QTLtools-Filter.sh
 #
 ls *.qtltools >> qtltools-input.txt
 
@@ -64,7 +64,7 @@ for i in {1..22}; do tabix -p bed Ne-sQTL_perind.counts.gz.qqnorm_chr${i}.gz.qtl
 
 cp ${data}/GTExTissueKey.csv $PWD
 # get the tissue sites for each corresonding sra file
-Rscript ${scripts}/sqtl_mapping/R/05_sraTissueExtract.R ${data}/SraRunTable.txt GTExTissueKey.csv
+Rscript ${scripts}/sqtl_mapping/primary/R/05_sraTissueExtract.R ${data}/SraRunTable.txt GTExTissueKey.csv
 
 #
 
@@ -126,7 +126,7 @@ do
    abb=$(echo $line | awk -F',' '{print $2}')
    if grep "$abb" tissuesused.txt; then
       cp GTEx_Analysis_v7_eQTL_covariates/$full.v7.covariates.txt $abb
-      Rscript ${scripts}/R/07_mergePCs.R Ne-sQTL_perind.counts.gz.PCs $abb/$full.v7.covariates.txt tissuetable/tissue_table.txt
+      Rscript ${scripts}/sqtl_mapping/primary/R/07_mergePCs.R Ne-sQTL_perind.counts.gz.PCs $abb/$full.v7.covariates.txt tissuetable/tissue_table.txt
       mv $full.v7.covariates_output.txt $abb
    fi
 done
@@ -139,7 +139,7 @@ numTissues=$(wc -l GTExCovKey.csv)
 sbatch --wait \
   --export=scripts=$scripts,data=$data,vcf=$vcf,sprime=$sprime \
   -a 2-$numTissues \
-  ${scripts}/sh/08_QTLTools-Loop.sh 
+  ${scripts}/sqtl_mapping/primary/sh/08_QTLTools-Loop.sh 
 
 mkdir -p $backupdir
 mkdir $backupdir/all_noms
@@ -169,7 +169,7 @@ for i in $(ls *_permutations.txt | sort -V); do echo $i | cut -d'_' -f 1; done >
 wget ftp://ftp.ncbi.nlm.nih.gov/sra/reports/Assembly/GRCh37-HG19_Broad_variant/Homo_sapiens_assembly19.fasta
 
 # get allele frequences from VCF
-sbatch --export=VCF=$VCF $scripts/sh/13_VariantToTable.sh
+sbatch --export=VCF=$VCF $scripts/sqtl_mapping/primary/sh/13_VariantToTable.sh
 
 # concat the GTEx AF VCF chunks
 cat GTExWGS.AF.chr1.txt > GTExWGS.AF.all.txt
