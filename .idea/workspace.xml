@@ -24,8 +24,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Snakefile">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="206">
-              <caret line="165" selection-start-line="165" selection-end-line="165" />
+            <state relative-caret-position="320">
+              <caret line="114" column="47" selection-start-line="114" selection-start-column="47" selection-end-line="114" selection-end-column="47" />
             </state>
           </provider>
         </entry>
@@ -161,8 +161,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Snakefile">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="206">
-          <caret line="165" selection-start-line="165" selection-end-line="165" />
+        <state relative-caret-position="320">
+          <caret line="114" column="47" selection-start-line="114" selection-start-column="47" selection-end-line="114" selection-end-column="47" />
         </state>
       </provider>
     </entry>
