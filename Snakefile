@@ -133,7 +133,8 @@ rule get_tis_names:
 
 rule make_tis_dirs:
     input:
-        ".sra_name_change.chkpnt"
+        ".sra_name_change.chkpnt",
+
     output:
         touch(".make_tis_dirs.chkpnt")
     message:
@@ -158,17 +159,20 @@ rule move_tis:
     shell:
         "for i in *_*.txt; do echo $i | awk -F'[_.]' '{{print $2}}' | xargs -I '{{}}' mv $i '{{}}' ; done"
 
+# rule cat_phen_files:
+#     input:
+#         "tissuesused.txt",
+#         ""
+
 def read_tissues_output():
     with open('tissuesused.txt') as f:
         samples = [sample for sample in f.read().split('\n') if len(sample) > 0]  # we dont want empty lines
         return samples
 
-
-
 rule sort_zip_ind_pheno:
     input:
-        read_tissues_output(),
-        ".move_tis.chkpnt"
+        tis=read_tissues_output(),
+        chk=".move_tis.chkpnt"
     output:
         touch(".sort_zip_ind_pheno.chkpnt")
     shell:
