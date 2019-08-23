@@ -84,7 +84,7 @@ rule prepare_phen_table:
 # not sure how this rule below works with the inputs and outputs being so vague but ok
 rule QTLtools_filter:
     input:
-        phen="{i}.gz",
+        phen="Ne-sQTL_perind.counts.gz.qqnorm_chr{i}.gz",
         chk=".prepare_phen_table.chkpnt"
     output:
         "{i}.qtltools"
