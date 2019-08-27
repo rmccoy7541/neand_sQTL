@@ -14,69 +14,8 @@ def read_tissues_output(wildcard):
 configfile: "config.yaml"
 
 rule all:
-    input: 
+    input:
         ".sort_zip_ind_pheno.chkpnt"
-
-rule filter_vcf:
-    input:
-        vcf=expand("{vcf}", vcf=config["vcf"]),
-        ncbiFiles=expand("{ncbiFiles}", ncbiFiles=config["ncbiFiles"])
-    output:
-        protected(expand("{ncbiFiles}/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTExWGSGenotypeMatrixBiallelicOnly.HQ.vcf.gz", ncbiFiles=config["ncbiFiles"]))
-    threads: 23 # in addition to the 1 thread, so 24 total
-    shell:
-        "bcftools view -m2 -M2 -v snps --threads {threads} -O z -o {output} {input.vcf}"
-
-rule index_vcf:
-    input:
-        expand("{ncbiFiles}/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTExWGSGenotypeMatrixBiallelicOnly.HQ.vcf.gz", ncbiFiles=config["ncbiFiles"])
-    output:
-        expand("{ncbiFiles}/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTExWGSGenotypeMatrixBiallelicOnly.vcf.gz.tbi",ncbiFiles=config["ncbiFiles"]),
-        touch(expand("{ncbiFiles}/.index_vcf.chkpnt",ncbiFiles=config["ncbiFiles"]))
-    shell:
-        "tabix -p vcf {input}"
-
-
-rule junc_cluster:
-    input:
-        expand("{ncbiFiles}/.index_vcf.chkpnt", ncbiFiles=config["ncbiFiles"])
-    output:
-        touch(".junc_cluster.chkpnt")
-    shell:
-        "src/sqtl_mapping/sh/01_junc_cluster.sh"
-
-
-rule intron_clustering:
-    input:
-        ".junc_cluster.chkpnt"
-    output:
-        touch(".intron_clustering.chkpnt")
-    message:
-        "Intron clustering..."
-    params:
-        LC=config["leafcutter"]
-    shell:
-        "mkdir intronclustering/;"
-        "python {params.LC}/clustering/leafcutter_cluster.py \
-        -j juncfiles.txt \
-        -r intronclustering/ \
-        -m 50 \
-        -o Ne-sQTL \
-        -l 500000"
-
-rule prepare_phen_table:
-    input:
-        config["leafcutter"],
-        ".intron_clustering.chkpnt"
-    output:
-        touch(".prepare_phen_table.chkpnt"),
-        expand("Ne-sQTL_perind.counts.gz.qqnorm_chr{i}.gz",i=range(1,22))
-    message:
-        "Preparing phenotype table..."
-    params:
-        LC=config["leafcutter"]
-    shell:
-        "python {params.LC}/scripts/prepare_phenotype_table.py Ne-sQTL_perind.counts.gz -p 10"
 
 # not sure how this rule below works with the inputs and outputs being so vague but ok
 rule QTLtools_filter:
@@ -89,16 +28,6 @@ rule QTLtools_filter:
         "Making phenotype files QTLtools compatible..."
     shell:
         "cat {input.phen} | awk '{{ $4=$4\" . +\"; print $0 }}' | tr " " \"\t\" | bgzip -c > {output}"
-
-# rule index_phen:
-#     input:
-#         expand("Ne-sQTL_perind.counts.gz.qqnorm_chr{i}.qtltools",i=range(1,22))
-#     output:
-#         expand("Ne-sQTL_perind.counts.gz.qqnorm_chr{i}.qtltools.tbi",i=range(1,22))
-#     message:
-#         "Indexing phenotype files..."
-#     shell:
-#         "tabix -p bed {input}"
 
 rule sra_tissue_xtract:
     input:
@@ -178,7 +107,44 @@ rule sort_zip_ind_pheno:
         "bedtools sort -header -i {input.tis}/{input.tis}.phen_fastqtl.bed > \
         {input.tis}/{input.tis}.pheno.bed;"
         "bgzip -f {input.tis}/{input.tis}.pheno.bed;"
-        "tabix -p bed {input.tis}/{input.tis}.pheno.bed.gz"
+        "tabix -p bed {input.tis}/{input.tis}.pheno.bed.gz;"
+        "mkdir {input.tis}/sepfiles;"
+        "mv {input.tis}/*_{input.tis} {input.tis}/sepfiles/"
+
+rule DL_cov:
+    input:
+        cov="https://storage.googleapis.com/gtex_analysis_v8/single_tissue_qtl_data/GTEx_Analysis_v8_sQTL_covariates.tar.gz"
+    output:
+        "GTEx_Analysis_v8_sQTL_covariates.tar.gz"
+    shell:
+        "wget {input.cov}"
+
+rule move_cov:
+    input:
+        cov=read_tissues_output('metadata/GTExCovKey.csv'),
+        unpack="GTEx_Analysis_v8_sQTL_covariates.tar.gz",
+        tis="tissuesused.txt"
+    output:
+        touch(".move_cove.chkpnt")
+    shell:
+        "tar -xvf {input.unpack};"
+        "full=$(echo {input.cov} | awk -F',' '{{ print $1 }}');"
+        "abb=$(echo {input.cov} | awk -F',' '{{ print $2 }}');"
+        "if grep \"$abb\" {input.tis}; then"
+        "cp GTEx_Analysis_v8_sQTL_covariates/$full.v7.covariates.txt $abb;"
+        "done"
+
+rule QTLtools_Loop:
+    input:
+        vcf=expand("{vcf}", vcf=config["vcf"])
+    output:
+        touch(".QTLtools_loop.chkpnt")
+    shell: # include bash script but parallelize alone two different dimensions
+        "sbatch --wait \
+        --export=scripts=$scripts,data=$data,vcf=$vcf,sprime=$sprime \
+        -a 2-$numTissues \
+        ${scripts}/sh/08_QTLTools-Loop.sh"
+
 
 
 # for line in $(cat tissuesused.txt)
