@@ -1,1 +1,0 @@
-# QTLtools permutation pass output

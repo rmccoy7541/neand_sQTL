@@ -5,6 +5,9 @@ These updates are read from most recent date at the top to initial entry at the 
 REMEMBER
 - You need to make the pipeline generalizable, especially the part after separating the phenotype table by tissue.
 
+### 08/29/19
+The sheer extent to which we have been scooped is amazing. Everything in this log is basically meaningless. 
+
 ### 08/28/19
 v8 is out and now we must be punished for our sins.
 
