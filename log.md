@@ -5,6 +5,11 @@ These updates are read from most recent date at the top to initial entry at the 
 REMEMBER
 - You need to make the pipeline generalizable, especially the part after separating the phenotype table by tissue.
 
+### 08/28/19
+v8 is out and now we must be punished for our sins.
+
+`862a86af94fb325ef5c137fd9b072ac66d5a1e93  GTEx_Analysis_v8_sQTL_phenotype_matrices.tar`
+
 ### 07/30/2019 
 Oops! We screwed up and used the wrong VCF for the pipeline. The correct VCF is GTEx_Analysis_2016-01-15_v7_WholeGenomeSeq_635Ind_PASS_AB02_GQ20_HETX_MISS15_PLINKQC.vcf.gz. I'm going to need to index it as well.
 

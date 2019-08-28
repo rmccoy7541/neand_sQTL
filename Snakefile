@@ -17,10 +17,9 @@ rule all:
     input:
         ".sort_zip_ind_pheno.chkpnt"
 
-# not sure how this rule below works with the inputs and outputs being so vague but ok
 rule QTLtools_filter:
     input:
-        phen="{i}.gz",
+        phen=".gz",
         chk=".prepare_phen_table.chkpnt"
     output:
         "{i}.qtltools"
@@ -140,10 +139,7 @@ rule QTLtools_Loop:
     output:
         touch(".QTLtools_loop.chkpnt")
     shell: # include bash script but parallelize alone two different dimensions
-        "sbatch --wait \
-        --export=scripts=$scripts,data=$data,vcf=$vcf,sprime=$sprime \
-        -a 2-$numTissues \
-        ${scripts}/sh/08_QTLTools-Loop.sh"
+        "sbatch --wait --export=scripts=$scripts,data=$data,vcf=$vcf,sprime=$sprime -a 2-$numTissues ${scripts}/sh/08_QTLTools-Loop.sh"
 
 
 
