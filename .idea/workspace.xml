@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e883254f-267f-47be-8882-f07d424396f2" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/Snakefile" beforeDir="false" afterPath="$PROJECT_DIR$/Snakefile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/envs/environment.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/envs/environment.yaml" afterDir="false" />
-    </list>
+    <list default="true" id="e883254f-267f-47be-8882-f07d424396f2" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
