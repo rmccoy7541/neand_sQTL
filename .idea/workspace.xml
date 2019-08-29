@@ -2,44 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e883254f-267f-47be-8882-f07d424396f2" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/00_filter_vcf.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Snakefile" beforeDir="false" afterPath="$PROJECT_DIR$/Snakefile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/envs/environment.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/envs/environment.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/log.md" beforeDir="false" afterPath="$PROJECT_DIR$/log.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/master.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/metadata/GTExCovKey.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/metadata/GTExTissueKey.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/metadata/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/metadata/SraRunTable.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/metadata/sprime_calls.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/metadata/tissuenames.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/results/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sqtl_mapping/AWS/bam2junc.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sqtl_mapping/AWS/make_junc.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sqtl_mapping/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sqtl_mapping/primary/R/.Rhistory" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sqtl_mapping/primary/R/05_sraTissueExtract.R" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sqtl_mapping/primary/R/06_sraNameChangeSort.R" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sqtl_mapping/primary/R/07_mergePCs.R" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sqtl_mapping/primary/R/12_NomPassExtract.R" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sqtl_mapping/primary/R/QQPlot-Viz.R" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sqtl_mapping/primary/R/count_sqtl.R" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sqtl_mapping/primary/R/plot_permutation_pass.R" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sqtl_mapping/primary/sh/00a_bcftools_filter.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sqtl_mapping/primary/sh/00b_index_vcf.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sqtl_mapping/primary/sh/01_junc_cluster.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sqtl_mapping/primary/sh/02_intronclustering.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sqtl_mapping/primary/sh/03_prepare_phen_table.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sqtl_mapping/primary/sh/04_QTLtools-Filter.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sqtl_mapping/primary/sh/08_QTLTools-Loop.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sqtl_mapping/primary/sh/09_NomPass.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sqtl_mapping/primary/sh/10_NomPassExtractCall.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sqtl_mapping/primary/sh/11_PermPass.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sqtl_mapping/primary/sh/13_VariantToTable.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sqtl_mapping/primary/sh/QQViz.sh" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -48,12 +13,12 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Snakefile">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="555">
-              <caret line="37" selection-start-line="37" selection-end-line="37" />
+            <state relative-caret-position="525">
+              <caret line="35" lean-forward="true" selection-start-line="35" selection-end-line="35" />
             </state>
           </provider>
         </entry>
@@ -61,8 +26,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/config.yaml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="30">
-              <caret line="2" selection-start-line="2" selection-end-line="2" />
+            <state relative-caret-position="15">
+              <caret line="1" column="131" lean-forward="true" selection-start-line="1" selection-start-column="131" selection-end-line="1" selection-end-column="131" />
             </state>
           </provider>
         </entry>
@@ -70,8 +35,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/envs/environment.yaml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="7" column="12" selection-start-line="7" selection-start-column="12" selection-end-line="7" selection-end-column="12" />
+            <state relative-caret-position="75">
+              <caret line="5" selection-start-line="5" selection-end-line="5" />
             </state>
           </provider>
         </entry>
@@ -93,15 +58,16 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
+        <option value="$PROJECT_DIR$/Snakefile" />
         <option value="$PROJECT_DIR$/envs/environment.yaml" />
         <option value="$PROJECT_DIR$/config.yaml" />
-        <option value="$PROJECT_DIR$/Snakefile" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="972" />
     <option name="y" value="23" />
-    <option name="width" value="996" />
+    <option name="width" value="948" />
     <option name="height" value="986" />
   </component>
   <component name="ProjectId" id="1Q1Rho4bxWY6ANoxPn9hlevEas2" />
@@ -164,13 +130,9 @@
     <frame x="0" y="23" width="1920" height="986" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Favorites" side_tool="true" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24973376" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.13365282" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Version Control" />
-      <window_info anchor="bottom" id="Python Console" />
-      <window_info anchor="bottom" id="Terminal" />
-      <window_info anchor="bottom" id="Event Log" side_tool="true" />
+      <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" />
@@ -178,12 +140,16 @@
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="right" id="R Packages" />
-      <window_info anchor="right" x="0" y="0" width="430" height="786" id="Documentation" side_tool="true" weight="0.32960597" />
-      <window_info anchor="right" id="R Graphics" />
+      <window_info anchor="bottom" id="Version Control" order="7" />
+      <window_info anchor="bottom" id="Terminal" order="8" />
+      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
+      <window_info anchor="bottom" id="Python Console" order="10" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="R Graphics" order="3" />
+      <window_info anchor="right" id="R Packages" order="4" />
+      <window_info anchor="right" x="0" y="0" width="430" height="786" id="Documentation" order="5" side_tool="true" weight="0.32960597" />
     </layout>
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -222,22 +188,22 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/envs/environment.yaml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" column="12" selection-start-line="7" selection-start-column="12" selection-end-line="7" selection-end-column="12" />
+        <state relative-caret-position="75">
+          <caret line="5" selection-start-line="5" selection-end-line="5" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/config.yaml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" selection-start-line="2" selection-end-line="2" />
+        <state relative-caret-position="15">
+          <caret line="1" column="131" lean-forward="true" selection-start-line="1" selection-start-column="131" selection-end-line="1" selection-end-column="131" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Snakefile">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="555">
-          <caret line="37" selection-start-line="37" selection-end-line="37" />
+        <state relative-caret-position="525">
+          <caret line="35" lean-forward="true" selection-start-line="35" selection-end-line="35" />
         </state>
       </provider>
     </entry>

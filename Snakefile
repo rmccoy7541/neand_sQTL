@@ -10,9 +10,7 @@ configfile: "config.yaml"
 
 rule all:
     input:
-        "phg001219.v1.GTEx_v8_WGS.genotype-calls-vcf.c1.GRU/",
-        "GTEx_Analysis_v8_sQTL/",
-        "GTEx_Analysis_v8_sQTL_phenotype_matrices/"
+        "TODO"
 
 rule dl_files:
     params:

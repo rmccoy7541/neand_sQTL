@@ -1,16 +1,2 @@
-ncbiEmail: "aseyedi2@jhu.edu"
-
-# data dir
-data: "data/"
-# WGS VCF
-vcf: "/scratch/groups/rmccoy22/Ne_sQTL/files/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTEx_Analysis_2016-01-15_v7_WholeGenomeSeq_635Ind_PASS_AB02_GQ20_HETX_MISS15_PLINKQC.vcf.gz"
-ncbiFiles: "/scratch/groups/rmccoy22/Ne_sQTL/files"
-# sprime calls
-sprime: "metadata/sprime/sprime_calls.txt"
-
-# download leafcutter
-leafcutter: "/scratch/groups/rmccoy22/aseyedi2/leafcutter"
-
-#chkpntDir: "/scratch/groups/rmccoy22/aseyedi2/neand_sQTL/.chkpnts"
-
-#backupdir:
+# v8 VCF, GTEx_Analysis_2017-06-05_v8_WholeGenomeSeq_838Indiv_Analysis_Freeze.vcf.gz
+vcf: "/scratch/groups/rmccoy22/aseyedi2/sQTLv8/data/vcf/GTEx_Analysis_2017-06-05_v8_WholeGenomeSeq_838Indiv_Analysis_Freeze.vcf.gz"

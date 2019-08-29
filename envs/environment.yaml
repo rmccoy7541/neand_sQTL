@@ -3,6 +3,3 @@ channels:
   - conda-forge
   - r
 dependencies:
-  - google-cloud-sdk =260.0.0
-  - sra-tools =2.10.0
-  # gcutils?
