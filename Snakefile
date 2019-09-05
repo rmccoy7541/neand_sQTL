@@ -8,9 +8,6 @@ configfile: "config.yaml"
 
 rule all:
     input:
-        expand("gtex_vcf/gtex_chr{i}.vcf",i=range(1,22)),
-        "gtex_vcf/gtex_chrX.vcf",
-        expand("kg_vcf/1kg_yri_chr{i}.vcf.gz", i=range(1,22),
         "kg_vcf/1kg_yri_chrX.vcf.gz",
         expand("{kg_dir}/ALL.chr{i}.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz", kg_dir=config["kg_dir"], i=range(1,22))
 
