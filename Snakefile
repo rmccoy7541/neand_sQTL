@@ -41,7 +41,7 @@ rule vcf_split1_22:
     threads:
         22
     shell:
-        "tabix -h {input.vcf} chr{wildcards.i}"
+        "tabix -h {input.vcf} chr{wildcards.i} > {output}"
 
 
 
