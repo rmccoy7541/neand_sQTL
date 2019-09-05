@@ -38,11 +38,9 @@ rule decomp:
 
 rule mkdir_vcf:
     output:
-        "gtex_vcf/",
-        "kg_vcf/",
+        directory("gtex_vcf/"),
+        directory("kg_vcf/"),
         touch(".mkdir_vcf.chkpnt")
-    shell:
-        "mkdir -p {output}"
 
 rule vcf_split1_23:
     input:
@@ -58,4 +56,4 @@ rule vcf_split1_23:
 rule YRI_select:
     input:
         "metadata/yri.txt",
-        
+
