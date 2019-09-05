@@ -12,7 +12,7 @@ rule all:
         "gtex_vcf/gtex_chrX.vcf",
         expand("kg_vcf/1kg_yri_chr{i}.vcf.gz", i=range(1,22),
         "kg_vcf/1kg_yri_chrX.vcf.gz",
-        expand("{kg_dir}/ALL.chr{i}.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz", kg_dir=config["kg_dir"], i=range(1,22))
+#         expand("{kg_dir}/ALL.chr{i}.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz", kg_dir=config["kg_dir"], i=range(1,22))
 
 rule dl_files:
     params:
@@ -59,12 +59,12 @@ rule YRI_select:
         yri="metadata/yri.txt",
         kg_proj_dir=config["kg_dir"]
     output:
-        "kg_vcf/1kg_yri_chr{i}.vcf.gz",
-        "{file}.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz"
+        "kg_vcf/1kg_yri_chr{i}.vcf.gz"
+#         "{file}.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz"
     shell:
         "bcftools view --force-samples "
         "-S yri.txt "
         "-V indels "
         "-O z "
         "-o kg_vcf/1kg_yri_chr{i}.vcf.gz "
-        "{file}.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz"
+#         "{file}.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz"
