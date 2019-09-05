@@ -34,6 +34,8 @@ rule decomp:
         "tar -xvf {input.sqtl}; tar -xvf {input.phen};"
         "rm {input.sqtl}; rm {input.phen}"
 
+### Consider making a sub workflow
+
 rule mkdir_vcf:
     output:
         "gtex_vcf/",
@@ -53,3 +55,7 @@ rule vcf_split1_23:
     shell:
         "tabix -h {input.vcf} chr{wildcards.i} > {output}"
 
+rule YRI_select:
+    input:
+        "metadata/yri.txt",
+        
