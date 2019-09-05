@@ -10,9 +10,9 @@ rule all:
     input:
         expand("gtex_vcf/gtex_chr{i}.vcf",i=range(1,22)),
         "gtex_vcf/gtex_chrX.vcf",
-#         expand("kg_vcf/1kg_yri_chr{i}.vcf.gz", i=range(1,22),
-#         "kg_vcf/1kg_yri_chrX.vcf.gz",
-#         expand("{kg_dir}/ALL.chr{i}.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz", kg_dir=config["kg_dir"], i=range(1,22))
+        expand("kg_vcf/1kg_yri_chr{q}.vcf.gz", q=range(1,22),
+        "kg_vcf/1kg_yri_chrX.vcf.gz",
+        expand("{kg_dir}/ALL.chr{p}.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz", kg_dir=config["kg_dir"], p=range(1,22))
 
 rule dl_files:
     params:
@@ -56,15 +56,14 @@ rule vcf_split1_23:
 
 rule YRI_select:
     input:
-        yri="metadata/yri.txt",
-        kg_proj_dir=config["kg_dir"]
+        "metadata/yri.txt"
     output:
         "kg_vcf/1kg_yri_chr{i}.vcf.gz"
-#         "{file}.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz"
+        "{file}.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz"
     shell:
         "bcftools view --force-samples "
-        "-S yri.txt "
+        "-S {input} "
         "-V indels "
         "-O z "
-        "-o kg_vcf/1kg_yri_chr{i}.vcf.gz "
-#         "{file}.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz"
+        "-o kg_vcf/1kg_yri_chr{wildcards.q}.vcf.gz "
+        "{wildcards.kg_dir}/ALL.chr{wildcards.p}.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz"
