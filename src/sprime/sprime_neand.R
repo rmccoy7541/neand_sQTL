@@ -1,15 +1,33 @@
 library(data.table)
 library(tidyverse)
 library(parallel)
+library(pbmcapply)
+library(rtracklayer)
 
 # this script reads sprime output and annotates matching (homozygous or heterozygous)
 # to archaic genome VCFs. The tag "notcomp" refers to cases where a confident archaic genotype
 # could not be assigned due to coverage, mapping, or other quality issues.
 
-# TO DO: replace hard-coded paths with command-line arguments
-args = commandArgs(trailingOnly=TRUE)
-# args[1] is results.score, args[2] is splice ai directory
-sprime <- fread(args[1])
+args = commandArgs(trailingOnly = TRUE)
+# snakemake@input[[1]] is results.score file (the output of SPrime), 
+# snakemake@input[[2]] is directory containing merged archaic VCFs ("/scratch/users/rmccoy22@jhu.edu/archaic_splicing/spliceai/")
+sprime <- fread(snakemake@input[[1]])
+
+# liftover the coordinates to hg19 to retrieve archaic alleles from their corresponding VCFs
+sprime[, strand_orientation := "+"]
+hg38_coords <- makeGRangesFromDataFrame(sprime, 
+                                        seqnames.field = "CHROM", 
+                                        start.field = "POS", 
+                                        end.field = "POS", 
+                                        strand.field = "strand_orientation", 
+                                        ignore.strand = FALSE)
+
+chain <- import.chain("/work-zfs/rmccoy22/resources/reference/liftover/hg38ToHg19.over.chain")
+hg19_coords <- liftOver(hg38_coords, chain) %>%
+  as.data.table() %>%
+  setnames(., "group", "index")
+sprime[, index := .I]
+sprime <- merge(sprime, hg19_coords, "index", all.x = TRUE)
 
 compare_gt <- function(ref_allele, alt_allele, archaic_allele, genotype) {
   if (startsWith(genotype, "./.")) {
@@ -43,8 +61,11 @@ get_archaic_gt <- function(sprime_line, archaic_dir) {
   introgressed_allele <- unlist(strsplit(paste(sprime_line$REF, sprime_line$ALT, sep = ","), split = ","))[sprime_line$ALLELE + 1]
   
   # get archaic genotypes from VCF
-  archaic_vcf <- paste0(archaic_dir, "/chr", sprime_line$CHROM, "_mq25_mapab100.vcf.gz")
-  archaic_gt <- suppressWarnings(fread(cmd = paste0("tabix ", archaic_vcf, " ", sprime_line$CHROM, ":", sprime_line$POS, "-", sprime_line$POS), sep = "\t"))
+  archaic_vcf <- paste0(archaic_dir, "/", sprime_line$seqnames, "_mq25_mapab100.vcf.gz")
+  if (is.na(sprime_line$seqnames)) {
+    return(data.table(sprime_line, altai_match = "notcomp", vindija_match = "notcomp", denisova_match = "notcomp"))
+  }
+  archaic_gt <- suppressWarnings(fread(cmd = paste0("tabix ", archaic_vcf, " ", gsub("chr", "", sprime_line$seqnames), ":", sprime_line$start, "-", sprime_line$start), sep = "\t"))
   
   # test whether archaic genotypes match putative introgressed allele
   if (nrow(archaic_gt) == 0) {
@@ -52,7 +73,7 @@ get_archaic_gt <- function(sprime_line, archaic_dir) {
   } else {
     archaic_gt <- archaic_gt[, c(1:5, 10:12)] %>%
       setnames(., c("chrom", "pos", "id", "ref", "alt", "altai", "vindija", "denisova"))
-   
+    
     sprime_line[, altai_match := compare_gt(archaic_gt$ref, archaic_gt$alt, introgressed_allele, archaic_gt$altai)]
     sprime_line[, vindija_match := compare_gt(archaic_gt$ref, archaic_gt$alt, introgressed_allele, archaic_gt$vindija)]
     sprime_line[, denisova_match := compare_gt(archaic_gt$ref, archaic_gt$alt, introgressed_allele, archaic_gt$denisova)]
@@ -63,9 +84,9 @@ get_archaic_gt <- function(sprime_line, archaic_dir) {
 
 # apply to all SNPs in parallel
 results <- do.call(rbind, 
-                   mclapply(1:nrow(sprime), 
-                            function(x) get_archaic_gt(sprime[x,], args[2]), 
-                            mc.cores = getOption("mc.cores", 8L)))
+                   pbmclapply(1:nrow(sprime), 
+                              function(x) get_archaic_gt(sprime[x,], snakemake@input[[2]]), 
+                              mc.cores = getOption("mc.cores", 48L)))
 
 fwrite(results, 
        file = "sprime_calls.txt", 

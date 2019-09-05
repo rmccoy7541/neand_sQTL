@@ -10,7 +10,7 @@ configfile: "config.yaml"
 
 rule all:
     input:
-        "TODO"
+        expand("gtex_vcf/gtex_chr${i}.vcf",i=range(1,22))
 
 rule dl_files:
     params:
@@ -33,7 +33,18 @@ rule decomp:
         "tar -xvf {input.sqtl}; tar -xvf {input.phen};"
         "rm {input.sqtl}; rm {input.phen}"
 
+rule vcf_split1_22:
+    input:
+        vcf=config["vcf"]
+    output:
+        "gtex_vcf/gtex_chr{i}.vcf"
+    threads:
+        22
+    shell:
+        "tabix -h {input.vcf} chr{wildcards.i}"
 
 
 
-# GTEx Scooped us lol
+
+
+

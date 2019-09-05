@@ -1,2 +1,4 @@
 # v8 VCF, GTEx_Analysis_2017-06-05_v8_WholeGenomeSeq_838Indiv_Analysis_Freeze.vcf.gz
 vcf: "/scratch/groups/rmccoy22/aseyedi2/sQTLv8/data/vcf/GTEx_Analysis_2017-06-05_v8_WholeGenomeSeq_838Indiv_Analysis_Freeze.vcf.gz"
+
+sprime_dir: "/scratch/groups/rmccoy22/aseyedi2/sQTLv8/sprime"
