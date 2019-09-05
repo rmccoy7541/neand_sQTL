@@ -44,7 +44,8 @@ rule mkdir_vcf:
 
 rule vcf_split1_23:
     input:
-        vcf=config["vcf"]
+        vcf=config["vcf"],
+        dir=".mkdir_vcf.chkpnt"
     output:
         "gtex_vcf/gtex_chr{i}.vcf"
     threads:
