@@ -10,7 +10,7 @@ configfile: "config.yaml"
 
 rule all:
     input:
-        expand("gtex_vcf/gtex_chr${i}.vcf",i=range(1,22)),
+        expand("gtex_vcf/gtex_chr{i}.vcf",i=range(1,22)),
         "gtex_vcf/gtex_chrX.vcf"
 
 rule dl_files:
@@ -34,15 +34,17 @@ rule decomp:
         "tar -xvf {input.sqtl}; tar -xvf {input.phen};"
         "rm {input.sqtl}; rm {input.phen}"
 
-rule mkdir_gtex_vcf:
+rule mkdir_vcf:
     output:
-        "gtex_vcf/"
+        "gtex_vcf/",
+        "kg_vcf/"
     shell:
         "mkdir -p {output}"
 
 rule vcf_split1_23:
     input:
-        vcf=config["vcf"]
+        vcf=config["vcf"],
+        rules.mkdir_vcf.output
     output:
         "gtex_vcf/gtex_chr{i}.vcf"
     threads:
