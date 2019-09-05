@@ -6,12 +6,13 @@
 
 configfile: "config.yaml"
 
-# gcloud auth application-default login
-
 rule all:
     input:
         expand("gtex_vcf/gtex_chr{i}.vcf",i=range(1,22)),
-        "gtex_vcf/gtex_chrX.vcf"
+        "gtex_vcf/gtex_chrX.vcf",
+        expand("kg_vcf/1kg_yri_chr{i}.vcf.gz", i=range(1,22),
+        "kg_vcf/1kg_yri_chrX.vcf.gz",
+        expand("{kg_dir}/ALL.chr{i}.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz", kg_dir=config["kg_dir"], i=range(1,22))
 
 rule dl_files:
     params:
@@ -36,16 +37,16 @@ rule decomp:
 
 ### Consider making a sub workflow
 
-rule mkdir_vcf:
-    output:
-        directory("gtex_vcf/"),
-        directory("kg_vcf/"),
-        touch(".mkdir_vcf.chkpnt")
+# rule mkdir_vcf:
+#     output:
+#         directory("gtex_vcf/"),
+#         directory("kg_vcf/")
+#     shell:
+#         "mkdir -p {output}"
 
 rule vcf_split1_23:
     input:
-        vcf=config["vcf"],
-        dir=".mkdir_vcf.chkpnt"
+        vcf=config["vcf"]
     output:
         "gtex_vcf/gtex_chr{i}.vcf"
     threads:
@@ -55,5 +56,16 @@ rule vcf_split1_23:
 
 rule YRI_select:
     input:
-        "metadata/yri.txt",
-
+        yri="metadata/yri.txt",
+#         kg_vcf_dir="kg_vcf/",
+        kg_proj_dir=config["kg_dir"]
+    output:
+        "kg_vcf/1kg_yri_chr{i}.vcf.gz",
+        "{file}.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz"
+    shell:
+        "bcftools view --force-samples "
+        "-S yri.txt "
+        "-V indels "
+        "-O z "
+        "-o {vcf_file}.vcf.gz "
+        "{hate}.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz"
