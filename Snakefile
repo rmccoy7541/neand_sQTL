@@ -11,7 +11,7 @@ configfile: "config.yaml"
 rule all:
     input:
         expand("gtex_vcf/gtex_chr${i}.vcf",i=range(1,22)),
-        
+        "gtex_vcf/gtex_chrX.vcf"
 
 rule dl_files:
     params:
@@ -34,6 +34,12 @@ rule decomp:
         "tar -xvf {input.sqtl}; tar -xvf {input.phen};"
         "rm {input.sqtl}; rm {input.phen}"
 
+rule mkdir_gtex_vcf:
+    output:
+        "gtex_vcf/"
+    shell:
+        "mkdir -p {output}"
+
 rule vcf_split1_23:
     input:
         vcf=config["vcf"]
@@ -43,9 +49,4 @@ rule vcf_split1_23:
         23
     shell:
         "tabix -h {input.vcf} chr{wildcards.i} > {output}"
-
-
-
-
-
 
