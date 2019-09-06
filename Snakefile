@@ -10,8 +10,6 @@ rule all:
     input:
         "GTEx_Analysis_v8_sQTL/",
         "GTEx_Analysis_v8_sQTL_phenotype_matrices/",
-        expand("gtex_vcf/gtex_chr{i}.vcf",i=range(1,22)),
-        "gtex_vcf/gtex_chrX.vcf",
         expand("kg_vcf/1kg_yri_chr{q}.vcf.gz", q=range(1,22)),
         "kg_vcf/1kg_yri_chrX.vcf.gz",
         expand("{kg_dir}/ALL.chr{q}.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz", kg_dir=config["kg_dir"], q=range(1,22))
@@ -40,18 +38,17 @@ rule decomp:
 
 ### Consider making a sub workflow
 
-rule mkdir_vcf:
-    output:
-        directory("gtex_vcf/"),
-        directory("kg_vcf/"),
-        touch(".mkdir_vcf.chkpnt")
-    shell:
-        "mkdir -p {output}"
+# rule mkdir_vcf:
+#     output:
+#         directory("gtex_vcf/"),
+#         directory("kg_vcf/"),
+#         touch(".mkdir_vcf.chkpnt")
+#     shell:
+#         "mkdir -p {output}"
 
 rule vcf_split1_23:
     input:
-        vcf=config["vcf"],
-        mkdir_chkpnt=".mkdir_vcf.chkpnt"
+        vcf=config["vcf"]
     output:
         "gtex_vcf/gtex_chr{i}.vcf"
     threads:
@@ -72,3 +69,27 @@ rule YRI_select:
         "-O z "
         "-o {output.yri} "
         "{output.phased}"
+
+rule GTEx_select:
+    input:
+        expand("gtex_vcf/gtex_chr{i}.vcf",i=range(1,22)),
+        "gtex_vcf/gtex_chrX.vcf",
+    output:
+        "gtex_vcf/gtex_chr{v}.snps.recode.vcf"
+    shell:
+        "vcftools \
+            --vcf {input} \
+            --remove-indels \
+            --recode \
+            --out gtex_vcf/gtex_chr{v}.snps"
+
+rule bgzip_n_tabix_index:
+    input:
+        expand("gtex_vcf/gtex_chr{v}.snps.recode.vcf", v=range(1,22)),
+        "gtex_vcf/gtex_chrX.snps.recode.vcf"
+    output:
+          "{input}.gz",
+          "{input}.gz.tbi"
+    shell:
+        "bgzip {input};"
+        "tabix -p vcf {input}.gz"
