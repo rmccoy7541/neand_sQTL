@@ -40,12 +40,12 @@ rule decomp:
 
 ### Consider making a sub workflow
 
-# rule mkdir_vcf:
-#     output:
-#         directory("gtex_vcf/"),
-#         directory("kg_vcf/")
-#     shell:
-#         "mkdir -p {output}"
+rule mkdir_vcf:
+    output:
+        directory("gtex_vcf/"),
+        directory("kg_vcf/")
+    shell:
+        "mkdir -p {output}"
 
 rule vcf_split1_23:
     input:
