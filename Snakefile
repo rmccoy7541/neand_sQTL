@@ -13,7 +13,9 @@ include: "sprime_prep_Snakefile"
 rule all:
     input:
         expand("filtered_vcf/merged_filtered_chr{i}.vcf.gz", i=range(1,22)),
-        "filtered_vcf/merged_filtered_chrX.vcf.gz"
+        "filtered_vcf/merged_filtered_chrX.vcf.gz",
+        "GTEx_Analysis_v8_sQTL/",
+        "GTEx_Analysis_v8_sQTL_phenotype_matrices/"
 #     input:
 #         "GTEx_Analysis_v8_sQTL/",
 #         "GTEx_Analysis_v8_sQTL_phenotype_matrices/",
