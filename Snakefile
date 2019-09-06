@@ -22,7 +22,7 @@ rule all:
     input:
         "GTEx_Analysis_v8_sQTL/",
         "GTEx_Analysis_v8_sQTL_phenotype_matrices/",
-        expand("kg_vcf/1kg_yri_chr{q}.vcf.gz", q=range(1,23))),
+        expand("kg_vcf/1kg_yri_chr{q}.vcf.gz", q=range(1,23)),
         "kg_vcf/1kg_yri_chrX.vcf.gz",
         expand("{kg_dir}/ALL.chr{q}.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz", kg_dir=config["kg_dir"], q=range(1,23)),
         expand("gtex_vcf/gtex_chr{v}.snps.recode.vcf.gz", v=range(1,23)),
