@@ -7,6 +7,7 @@
 configfile: "config.yaml"
 
 ruleorder: vcf_split1_23 > GTEx_select
+ruleorder: YRI_select > bgzip_n_tabix_index
 
 rule all:
     input:
