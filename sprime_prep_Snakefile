@@ -1,8 +1,8 @@
 configfile: "config.yaml"
 
 ruleorder: vcf_split1_23 > GTEx_select
-ruleorder: YRI_select > bgzip_n_tabix_index
-ruleorder: GTEx_select > bgzip_n_tabix_index
+ruleorder: YRI_select > bgzip_n_tabix_index_recode
+ruleorder: GTEx_select > bgzip_n_tabix_index_recode
 
 rule vcf_split1_23:
     input:
@@ -41,7 +41,7 @@ rule GTEx_select:
             --recode \
             --out gtex_vcf/gtex_chr{wildcards.v}.snps"
 
-rule bgzip_n_tabix_index:
+rule bgzip_n_tabix_index_recode:
     input:
         expand("gtex_vcf/gtex_chr{v}.snps.recode.vcf", v=range(1,23)),
         "gtex_vcf/gtex_chrX.snps.recode.vcf"
@@ -51,3 +51,27 @@ rule bgzip_n_tabix_index:
     shell:
         "bgzip {input};"
         "tabix -p vcf {input}.gz"
+
+rule bgzip_n_tabix_index_kg_vcf:
+    input:
+         expand("kg_vcf/1kg_yri_chr{q}.vcf.gz",o=range(1,23)),
+         "kg_vcf/1kg_yri_chrX.vcf.gz"
+    output:
+         "kg_vcf/1kg_yri_chr{q}.vcf.gz.tbi"
+    shell:
+        "tabix -p vcf {input}"
+
+rule merge_YRI_GTEx:
+    input:
+        kg=expand("kg_vcf/1kg_yri_chr{q}.vcf.gz", q=range(1,23)) & "kg_vcf/1kg_yri_chrX.vcf.gz",
+        gtex=expand("gtex_vcf/gtex_chr{v}.snps.recode.vcf.gz", v=range(1, 23)) & "gtex_vcf/gtex_chrX.snps.recode.vcf.gz"
+    output:
+        "merged/merged_chr{i}.vcf.gz",
+        "merged/merged_chrX.vcf.gz"
+    shell:
+        "bcftools merge \
+            -0 \
+            -O z \
+            -o {output} \
+            {input.kg} \
+            {input.gtex}"
