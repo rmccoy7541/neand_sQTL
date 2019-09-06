@@ -92,8 +92,8 @@ rule bgzip_n_tabix_index:
         expand("gtex_vcf/gtex_chr{v}.snps.recode.vcf", v=range(1,22)),
         "gtex_vcf/gtex_chrX.snps.recode.vcf"
     output:
-          "{input}.gz",
-          "{input}.gz.tbi"
+          "gtex_vcf/gtex_chr{v}.snps.recode.vcf.gz",
+          "gtex_vcf/gtex_chr{v}.snps.recode.vcf.gz.tbi"
     shell:
         "bgzip {input};"
         "tabix -p vcf {input}.gz"
