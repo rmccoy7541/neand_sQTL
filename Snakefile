@@ -43,13 +43,15 @@ rule decomp:
 rule mkdir_vcf:
     output:
         directory("gtex_vcf/"),
-        directory("kg_vcf/")
+        directory("kg_vcf/"),
+        touch(".mkdir_vcf.chkpnt")
     shell:
         "mkdir -p {output}"
 
 rule vcf_split1_23:
     input:
-        vcf=config["vcf"]
+        vcf=config["vcf"],
+        mkdir_chkpnt=".mkdir_vcf.chkpnt"
     output:
         "gtex_vcf/gtex_chr{i}.vcf"
     threads:
