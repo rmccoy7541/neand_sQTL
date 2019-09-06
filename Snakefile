@@ -6,6 +6,8 @@
 
 configfile: "config.yaml"
 
+ruleorder: vcf_split1_23 > GTEx_select
+
 rule all:
     input:
         "GTEx_Analysis_v8_sQTL/",
