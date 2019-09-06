@@ -85,7 +85,7 @@ rule GTEx_select:
             --vcf {input} \
             --remove-indels \
             --recode \
-            --out gtex_vcf/gtex_chr{v}.snps"
+            --out gtex_vcf/gtex_chr{wildcards.v}.snps"
 
 rule bgzip_n_tabix_index:
     input:
