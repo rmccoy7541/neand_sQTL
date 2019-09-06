@@ -16,7 +16,7 @@
         <entry file="file://$PROJECT_DIR$/Snakefile">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="120">
-              <caret line="8" selection-start-line="8" selection-start-column="2" selection-end-line="14" selection-end-column="45" />
+              <caret line="8" selection-start-line="8" selection-end-line="15" />
             </state>
           </provider>
         </entry>
@@ -178,7 +178,7 @@
     <entry file="file://$PROJECT_DIR$/Snakefile">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
-          <caret line="8" selection-start-line="8" selection-start-column="2" selection-end-line="14" selection-end-column="45" />
+          <caret line="8" selection-start-line="8" selection-end-line="15" />
         </state>
       </provider>
     </entry>
