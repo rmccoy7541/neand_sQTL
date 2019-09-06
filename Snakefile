@@ -4,15 +4,19 @@
 # pip install snakemake
 # snakemake --version
 
+# snakemake --dag -n | dot -Tsvg > dag.svg
+
 configfile: "config.yaml"
 
-subworkflow sprime_prep:
-    workdir:
-           "."
-    snakefile:
-            "sprime_Snakefile"
-    configfile:
-            "config.yaml"
+# subworkflow sprime_prep:
+#     workdir:
+#            "."
+#     snakefile:
+#             "sprime_Snakefile"
+#     configfile:
+#             "config.yaml"
+
+include: "sprime_Snakefile"
 
 rule all:
     input:
