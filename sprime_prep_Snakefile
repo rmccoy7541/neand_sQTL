@@ -17,7 +17,7 @@ rule mkdir_vcf:
     shell:
         "mkdir -p {output}"
 
-rule vcf_split1_23:
+rule vcf_split1_23X:
     input:
         vcf=config["vcf"],
         chk=".mkdir.chkpnt"
@@ -30,7 +30,7 @@ rule vcf_split1_23:
 
 rule YRI_select:
     input:
-        "metadata/yri.txt"
+        ancient("metadata/yri.txt")
     output:
         yri="kg_vcf/1kg_yri_chr{q}.vcf.gz",
         phased="{q}.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz"
