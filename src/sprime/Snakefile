@@ -4,6 +4,12 @@ ruleorder: vcf_split1_23 > GTEx_select
 ruleorder: YRI_select > bgzip_n_tabix_index
 ruleorder: GTEx_select > bgzip_n_tabix_index
 
+rule all:
+        expand("kg_vcf/1kg_yri_chr{q}.vcf.gz", q=range(1,23)),
+        "kg_vcf/1kg_yri_chrX.vcf.gz",
+        expand("{kg_dir}/ALL.chr{q}.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz", kg_dir=config["kg_dir"], q=range(1,23)),
+        expand("gtex_vcf/gtex_chr{v}.snps.recode.vcf.gz", v=range(1,23)),
+        "gtex_vcf/gtex_chrX.snps.recode.vcf.gz.tbi"
 
 rule vcf_split1_23:
     input:
