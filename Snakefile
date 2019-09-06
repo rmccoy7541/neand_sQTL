@@ -14,10 +14,10 @@ rule all:
     input:
         "GTEx_Analysis_v8_sQTL/",
         "GTEx_Analysis_v8_sQTL_phenotype_matrices/",
-        expand("kg_vcf/1kg_yri_chr{q}.vcf.gz", q=range(1,22)),
+        expand("kg_vcf/1kg_yri_chr{q}.vcf.gz", q=range(1,23)),
         "kg_vcf/1kg_yri_chrX.vcf.gz",
-        expand("{kg_dir}/ALL.chr{q}.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz", kg_dir=config["kg_dir"], q=range(1,22)),
-        expand("gtex_vcf/gtex_chr{v}.snps.recode.vcf.gz", v=range(1,22)),
+        expand("{kg_dir}/ALL.chr{q}.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz", kg_dir=config["kg_dir"], q=range(1,23)),
+        expand("gtex_vcf/gtex_chr{v}.snps.recode.vcf.gz", v=range(1,23)),
         "gtex_vcf/gtex_chrX.snps.recode.vcf.gz.tbi"
 
 
@@ -78,7 +78,7 @@ rule YRI_select:
 
 rule GTEx_select:
     input:
-        expand("gtex_vcf/gtex_chr{i}.vcf",i=range(1,22)),
+        expand("gtex_vcf/gtex_chr{i}.vcf",i=range(1,23)),
         "gtex_vcf/gtex_chrX.vcf",
     output:
         "gtex_vcf/gtex_chr{v}.snps.recode.vcf"
@@ -91,7 +91,7 @@ rule GTEx_select:
 
 rule bgzip_n_tabix_index:
     input:
-        expand("gtex_vcf/gtex_chr{v}.snps.recode.vcf", v=range(1,22)),
+        expand("gtex_vcf/gtex_chr{v}.snps.recode.vcf", v=range(1,23)),
         "gtex_vcf/gtex_chrX.snps.recode.vcf"
     output:
           "gtex_vcf/gtex_chr{v}.snps.recode.vcf.gz",
