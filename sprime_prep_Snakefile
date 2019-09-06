@@ -4,6 +4,8 @@ ruleorder: vcf_split1_23 > GTEx_select
 ruleorder: YRI_select > bgzip_n_tabix_index_recode
 ruleorder: GTEx_select > bgzip_n_tabix_index_recode
 
+# TODO: Make directories for all of these steps, maybe in one rule up front
+
 rule vcf_split1_23:
     input:
         vcf=config["vcf"]
@@ -64,7 +66,9 @@ rule bgzip_n_tabix_index_kg_vcf:
 rule merge_YRI_GTEx_1_22:
     input:
         kg=expand("kg_vcf/1kg_yri_chr{q}.vcf.gz", q=range(1,23)),
-        gtex=expand("gtex_vcf/gtex_chr{v}.snps.recode.vcf.gz", v=range(1, 23))
+        kgX="kg_vcf/1kg_yri_chrX.vcf.gz",
+        gtex=expand("gtex_vcf/gtex_chr{v}.snps.recode.vcf.gz", v=range(1, 23)),
+        gtexX="gtex_vcf/gtex_chrX.snps.recode.vcf.gz"
     output:
         "merged/merged_chr{i}.vcf.gz"
     shell:
@@ -75,16 +79,30 @@ rule merge_YRI_GTEx_1_22:
             {input.kg} \
             {input.gtex}"
 
-rule merge_YRI_GTEx_X:
+# rule merge_YRI_GTEx_X:
+#     input:
+#         kg="kg_vcf/1kg_yri_chrX.vcf.gz",
+#         gtex="gtex_vcf/gtex_chrX.snps.recode.vcf.gz"
+#     output:
+#         "merged/merged_chrX.vcf.gz"
+#     shell:
+#         "bcftools merge \
+#             -0 \
+#             -O z \
+#             -o {output} \
+#             {input.kg} \
+#             {input.gtex}"
+
+rule bcftools_filter_1_22:
     input:
-        kg="kg_vcf/1kg_yri_chrX.vcf.gz",
-        gtex="gtex_vcf/gtex_chrX.snps.recode.vcf.gz"
-    output:
+        expand("merged/merged_chr{i}.vcf.gz", i=range(1,23)),
         "merged/merged_chrX.vcf.gz"
+    output:
+        "filtered_vcf/merged_filtered_chr{i}.vcf.gz"
     shell:
-        "bcftools merge \
-            -0 \
+        "bcftools filter \
+            --include 'AN=1890 && AC > 0' \
+            --threads 4 \
             -O z \
             -o {output} \
-            {input.kg} \
-            {input.gtex}"
+            {input}"
