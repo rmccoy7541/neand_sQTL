@@ -49,12 +49,6 @@ rule decomp:
 
 ### Consider making a sub workflow
 
-# rule mkdir_vcf:
-#     output:
-#         directory("gtex_vcf/"),
-#         directory("kg_vcf/"),
-#         touch(".mkdir_vcf.chkpnt")
-#     shell:
-#         "mkdir -p {output}"
+
 
 

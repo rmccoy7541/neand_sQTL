@@ -1,10 +1,20 @@
 configfile: "config.yaml"
 
+ruleorder: mkdir_vcf > vcf_split1_23
 ruleorder: vcf_split1_23 > GTEx_select
 ruleorder: YRI_select > bgzip_n_tabix_index_recode
 ruleorder: GTEx_select > bgzip_n_tabix_index_recode
 
 # TODO: Make directories for all of these steps, maybe in one rule up front
+
+rule mkdir_vcf:
+    output:
+        directory("gtex_vcf/"),
+        directory("kg_vcf/"),
+        directory("merged/"),
+        directory("filtered_vcf/")
+    shell:
+        "mkdir -p {output}"
 
 rule vcf_split1_23:
     input:
