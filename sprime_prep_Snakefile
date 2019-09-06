@@ -12,13 +12,15 @@ rule mkdir_vcf:
         directory("gtex_vcf/"),
         directory("kg_vcf/"),
         directory("merged/"),
-        directory("filtered_vcf/")
+        directory("filtered_vcf/"),
+        touch(".mkdir.chkpnt")
     shell:
         "mkdir -p {output}"
 
 rule vcf_split1_23:
     input:
-        vcf=config["vcf"]
+        vcf=config["vcf"],
+        chk=".mkdir.chkpnt"
     output:
         "gtex_vcf/gtex_chr{i}.vcf"
     threads:
