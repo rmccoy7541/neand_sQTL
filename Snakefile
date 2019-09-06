@@ -58,7 +58,7 @@ rule YRI_select:
     input:
         "metadata/yri.txt"
     output:
-        "kg_vcf/1kg_yri_chr{i}.vcf.gz"
+        "kg_vcf/1kg_yri_chr{i}.vcf.gz",
         "{file}.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz"
     shell:
         "bcftools view --force-samples "
