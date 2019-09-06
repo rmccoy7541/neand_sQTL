@@ -19,7 +19,7 @@ rule YRI_select:
         "metadata/yri.txt"
     output:
         yri="kg_vcf/1kg_yri_chr{q}.vcf.gz",
-        phased=expand("{dir}/ALL.chr{q}", dir=config["kg_dir"]
+        phased=expand("{dir}/ALL.chr{q}", dir=config["kg_dir"])
     shell:
         "bcftools view --force-samples "
         "-S {input} "
