@@ -1,0 +1,54 @@
+configfile: "config.yaml"
+
+ruleorder: vcf_split1_23 > GTEx_select
+ruleorder: YRI_select > bgzip_n_tabix_index
+ruleorder: GTEx_select > bgzip_n_tabix_index
+
+
+rule vcf_split1_23:
+    input:
+        vcf=config["vcf"]
+    output:
+        "gtex_vcf/gtex_chr{i}.vcf"
+    threads:
+        23
+    shell:
+        "tabix -h {input.vcf} chr{wildcards.i} > {output}"
+
+rule YRI_select:
+    input:
+        "metadata/yri.txt"
+    output:
+        yri="kg_vcf/1kg_yri_chr{q}.vcf.gz",
+        phased="ALL.chr{q}.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz"
+    shell:
+        "bcftools view --force-samples "
+        "-S {input} "
+        "-V indels "
+        "-O z "
+        "-o {output.yri} "
+        "{output.phased}"
+
+rule GTEx_select:
+    input:
+        expand("gtex_vcf/gtex_chr{i}.vcf",i=range(1,23)),
+        "gtex_vcf/gtex_chrX.vcf",
+    output:
+        "gtex_vcf/gtex_chr{v}.snps.recode.vcf"
+    shell:
+        "vcftools \
+            --vcf {input} \
+            --remove-indels \
+            --recode \
+            --out gtex_vcf/gtex_chr{wildcards.v}.snps"
+
+rule bgzip_n_tabix_index:
+    input:
+        expand("gtex_vcf/gtex_chr{v}.snps.recode.vcf", v=range(1,23)),
+        "gtex_vcf/gtex_chrX.snps.recode.vcf"
+    output:
+          "gtex_vcf/gtex_chr{v}.snps.recode.vcf.gz",
+          "gtex_vcf/gtex_chr{v}.snps.recode.vcf.gz.tbi"
+    shell:
+        "bgzip {input};"
+        "tabix -p vcf {input}.gz"
