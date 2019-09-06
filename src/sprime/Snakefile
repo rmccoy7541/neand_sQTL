@@ -16,7 +16,7 @@ rule vcf_split1_23:
 
 rule YRI_select:
     input:
-        "metadata/yri.txt"
+        "../../metadata/yri.txt"
     output:
         yri="kg_vcf/1kg_yri_chr{q}.vcf.gz",
         phased="ALL.chr{q}.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz"
