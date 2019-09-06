@@ -61,12 +61,25 @@ rule bgzip_n_tabix_index_kg_vcf:
     shell:
         "tabix -p vcf {input}"
 
-rule merge_YRI_GTEx:
+rule merge_YRI_GTEx_1_22:
     input:
-        kg=expand("kg_vcf/1kg_yri_chr{q}.vcf.gz", q=range(1,23)) & "kg_vcf/1kg_yri_chrX.vcf.gz",
-        gtex=expand("gtex_vcf/gtex_chr{v}.snps.recode.vcf.gz", v=range(1, 23)) & "gtex_vcf/gtex_chrX.snps.recode.vcf.gz"
+        kg=expand("kg_vcf/1kg_yri_chr{q}.vcf.gz", q=range(1,23)),
+        gtex=expand("gtex_vcf/gtex_chr{v}.snps.recode.vcf.gz", v=range(1, 23))
     output:
-        "merged/merged_chr{i}.vcf.gz",
+        "merged/merged_chr{i}.vcf.gz"
+    shell:
+        "bcftools merge \
+            -0 \
+            -O z \
+            -o {output} \
+            {input.kg} \
+            {input.gtex}"
+
+rule merge_YRI_GTEx_X:
+    input:
+        kg="kg_vcf/1kg_yri_chrX.vcf.gz",
+        gtex="gtex_vcf/gtex_chrX.snps.recode.vcf.gz"
+    output:
         "merged/merged_chrX.vcf.gz"
     shell:
         "bcftools merge \
