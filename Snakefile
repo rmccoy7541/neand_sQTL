@@ -59,11 +59,11 @@ rule YRI_select:
         "metadata/yri.txt"
     output:
         "kg_vcf/1kg_yri_chr{q}.vcf.gz",
-        "{file}.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz"
+        "{kg_dir}/ALL.chr{p}.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz"
     shell:
         "bcftools view --force-samples "
         "-S {input} "
         "-V indels "
         "-O z "
         "-o kg_vcf/1kg_yri_chr{wildcards.q}.vcf.gz "
-        "{wildcards.p}.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz"
+        "{wildcards.kg_dir}/ALL.chr{wildcards.p}.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz"
