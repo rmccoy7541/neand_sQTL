@@ -8,11 +8,11 @@ configfile: "config.yaml"
 
 subworkflow sprime_prep:
     workdir:
-           "src/sprime"
+           "."
     snakefile:
-            "src/sprime/Snakefile"
+            "sprime_Snakefile"
     configfile:
-            "src/sprime/sprime_config.yaml"
+            "sprime_config.yaml"
 
 rule all:
     input:

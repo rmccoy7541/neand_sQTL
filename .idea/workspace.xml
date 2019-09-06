@@ -3,6 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="e883254f-267f-47be-8882-f07d424396f2" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/Snakefile" beforeDir="false" afterPath="$PROJECT_DIR$/Snakefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sprime/Snakefile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sprime/sprime_config.yaml" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -15,8 +17,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Snakefile">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="8" selection-start-line="8" selection-end-line="15" />
+            <state relative-caret-position="210">
+              <caret line="14" column="13" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
             </state>
           </provider>
         </entry>
@@ -177,8 +179,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Snakefile">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" selection-start-line="8" selection-end-line="15" />
+        <state relative-caret-position="210">
+          <caret line="14" column="13" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
         </state>
       </provider>
     </entry>
