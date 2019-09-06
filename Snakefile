@@ -12,7 +12,7 @@ subworkflow sprime_prep:
     snakefile:
             "sprime_Snakefile"
     configfile:
-            "sprime_config.yaml"
+            "config.yaml"
 
 rule all:
     input:
