@@ -54,7 +54,7 @@ rule bgzip_n_tabix_index_recode:
 
 rule bgzip_n_tabix_index_kg_vcf:
     input:
-         expand("kg_vcf/1kg_yri_chr{q}.vcf.gz",o=range(1,23)),
+         expand("kg_vcf/1kg_yri_chr{q}.vcf.gz",q=range(1,23)),
          "kg_vcf/1kg_yri_chrX.vcf.gz"
     output:
          "kg_vcf/1kg_yri_chr{q}.vcf.gz.tbi"
