@@ -6,19 +6,20 @@
 
 configfile: "config.yaml"
 
-subworkflow sprime_prep:
-    workdir:
-           "src/sprime"
-    snakefile:
-            "src/sprime/Snakefile"
-    configfile:
-            "src/sprime/sprime_config.yaml"
+# subworkflow sprime_prep:
+#     workdir:
+#            "src/sprime"
+#     snakefile:
+#             "src/sprime/Snakefile"
+#     configfile:
+#             "src/sprime/sprime_config.yaml"
+
+include: "src/sprime/Snakefile"
 
 rule all:
     input:
         "GTEx_Analysis_v8_sQTL/",
         "GTEx_Analysis_v8_sQTL_phenotype_matrices/",
-
 
 
 rule dl_files:
