@@ -87,7 +87,7 @@ rule merge_YRI_GTEx:
 
 rule bcftools_filter:
     input:
-        expand("merged/merged_chr{i}.vcf.gz", i=range(1,23))
+        merged=expand("merged/merged_chr{i}.vcf.gz", i=range(1,23))
     output:
         filt="filtered_vcf/merged_filtered_chr{i}.vcf.gz",
         chk=touch(".bcftools_filter.chkpnt")
@@ -99,4 +99,4 @@ rule bcftools_filter:
             --threads {threads} \
             -O z \
             -o {output.filt} \
-            {input}"
+            {input.merged}"
