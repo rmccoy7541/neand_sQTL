@@ -1,1 +1,79 @@
 configfile: "config.yaml"
+
+include: "sprime_prep_Snakefile"
+
+rule mkdir_geneticMap:
+    output:
+        touch(".mkdir_geneticMap.chkpnt")
+    params:
+        dir="genetic_map/",
+        sprime_dir=config["sprime_dir"]
+    shell:
+        "mkdir -p {params.sprime_dir}/{params.dir}"
+
+
+rule download_GRCh38_map:
+    input:
+        url="http://bochet.gcc.biostat.washington.edu/beagle/genetic_maps/plink.GRCh38.map.zip",
+        chk=".mkdir_geneticMap.chkpnt"
+    output:
+        "plink.GRCh38.map.zip"
+    params:
+        expand("{sprime_dir}/genetic_map/",sprime_dir=config["sprime_dir"])
+    shell:
+        "wget {input.url} {params}"
+
+rule unzip_GRCh38_map:
+    input:
+        "plink.GRCh38.map.zip"
+    output:
+        touch(".unzip_GRCh38_map.chkpnt")
+    params:
+        expand("{sprime_dir}/genetic_map/",sprime_dir=config["sprime_dir"])
+    shell:
+        "unzip {params}/{input}"
+
+rule cat_genetic_maps:
+    input:
+        ".unzip_GRCh38_map.chkpnt"
+    output:
+        "plink.all_autosomes.GRCh38.map"
+    params:
+        expand("{sprime_dir}/genetic_map/",sprime_dir=config["sprime_dir"])
+    shell:
+        "for i in {{1..22}}; do \
+        cat {params}/plink.chr${i}.GRCh38.map | awk \'{{print \"chr\"$0}}\' >> \
+        {params}/{output}; done"
+
+rule list_merged_filtered_vcfs:
+    input:
+        ".bcftools_filter.chkpnt"
+    output:
+        "processed_vcf_list.txt"
+    shell:
+        "for i in {{1..22}}; do \ "
+        "echo \"{config[sprime_dir]}/filtered_vcf/merged_filtered_chr${{i}}.vcf.gz\" >> \
+        {output}; done"
+
+rule bcftools_concat:
+    input:
+        rules.list_merged_filtered_vcfs.output
+    output:
+        "merged_filtered_all_autosomes.vcf.gz"
+    threads:
+        12
+    shell:
+        "bcftools concat \
+            --file-list {input} \
+            --naive \
+            --threads {threads} \
+            -O z \
+            -o {output}"
+
+rule index_merged:
+    input:
+        rules.bcftools_concat.output
+    output:
+        "merged_filtered_all_autosomes.vcf.gz.tbi"
+    shell:
+        "tabix -p vcf {input}"

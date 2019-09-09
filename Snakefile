@@ -8,12 +8,11 @@
 
 configfile: "config.yaml"
 
-include: "sprime_prep_Snakefile"
+include: "sprime_run_Snakemake"
 
 rule all:
     input:
-        expand("filtered_vcf/merged_filtered_chr{i}.vcf.gz", i=range(1,22)),
-        "filtered_vcf/merged_filtered_chrX.vcf.gz",
+        "sprime_calls.txt"
         "GTEx_Analysis_v8_sQTL/",
         "GTEx_Analysis_v8_sQTL_phenotype_matrices/"
 #     input:
@@ -47,7 +46,22 @@ rule decomp:
         "tar -xvf {input.sqtl}; tar -xvf {input.phen};"
         "rm {input.sqtl}; rm {input.phen}"
 
-### Consider making a sub workflow
+rule over_chain:
+    output:
+        "metadata/hg38ToHg19.over.chain"
+    shell:
+        "wget https://hgdownload.soe.ucsc.edu/goldenPath/hg38/liftOver/hg38ToHg19.over.chain.gz metadata/;"
+        "unzip {output}"
+
+rule sprime_R:
+    input:
+        results=expand("{sprime_dir}/output/results.chr{z}.score", sprime_dir=config["sprime_dir"], z=range(1,22)),
+        arch_vcf=config["arch_vcf"],
+        over_chain=rules.over_chain.output
+    output:
+        "sprime_calls.txt"
+    script:
+        "src/sprime/sprime_neand.R"
 
 
 

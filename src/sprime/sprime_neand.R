@@ -22,7 +22,7 @@ hg38_coords <- makeGRangesFromDataFrame(sprime,
                                         strand.field = "strand_orientation", 
                                         ignore.strand = FALSE)
 
-chain <- import.chain("/work-zfs/rmccoy22/resources/reference/liftover/hg38ToHg19.over.chain")
+chain <- import.chain(snakemake@input[[3]])
 hg19_coords <- liftOver(hg38_coords, chain) %>%
   as.data.table() %>%
   setnames(., "group", "index")

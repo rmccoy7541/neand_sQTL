@@ -1,16 +1,20 @@
 configfile: "config.yaml"
 
-ruleorder: mkdir_vcf > vcf_split1_23
-ruleorder: vcf_split1_23 > GTEx_select
+ruleorder: mkdir_vcf > vcf_split1_23X
+ruleorder: vcf_split1_23X > GTEx_select
 ruleorder: YRI_select > bgzip_n_tabix_index_recode
 ruleorder: GTEx_select > bgzip_n_tabix_index_recode
 
-# TODO: Make directories for all of these steps, maybe in one rule up front
-
-folders = ["gtex_vcf/", "kg_vcf/", "merged/", "filtered_vcf/"]
-
-for i in folders:
-    shell("mkdir -p ", i)
+rule mkdir_vcf:
+    output:
+        touch(".mkdir.chkpnt")
+    params:
+        "gtex_vcf/",
+        "kg_vcf/",
+        "merged/",
+        "filtered_vcf/"
+    shell:
+        "mkdir -p {output} {params}"
 
 rule vcf_split1_23X:
     input:
@@ -39,8 +43,7 @@ rule YRI_select:
 
 rule GTEx_select:
     input:
-        expand("gtex_vcf/gtex_chr{i}.vcf",i=range(1,23)),
-        "gtex_vcf/gtex_chrX.vcf",
+        expand("gtex_vcf/gtex_chr{i}.vcf",i=range(1,23))
     output:
         "gtex_vcf/gtex_chr{v}.snps.recode.vcf"
     shell:
@@ -52,8 +55,7 @@ rule GTEx_select:
 
 rule bgzip_n_tabix_index_recode:
     input:
-        expand("gtex_vcf/gtex_chr{v}.snps.recode.vcf", v=range(1,23)),
-        "gtex_vcf/gtex_chrX.snps.recode.vcf"
+        expand("gtex_vcf/gtex_chr{v}.snps.recode.vcf", v=range(1,23))
     output:
           "gtex_vcf/gtex_chr{v}.snps.recode.vcf.gz",
           "gtex_vcf/gtex_chr{v}.snps.recode.vcf.gz.tbi"
@@ -63,8 +65,7 @@ rule bgzip_n_tabix_index_recode:
 
 rule bgzip_n_tabix_index_kg_vcf:
     input:
-         expand("kg_vcf/1kg_yri_chr{q}.vcf.gz",q=range(1,23)),
-         "kg_vcf/1kg_yri_chrX.vcf.gz"
+         expand("kg_vcf/1kg_yri_chr{q}.vcf.gz",q=range(1,23))
     output:
          "kg_vcf/1kg_yri_chr{q}.vcf.gz.tbi"
     shell:
@@ -73,9 +74,7 @@ rule bgzip_n_tabix_index_kg_vcf:
 rule merge_YRI_GTEx:
     input:
         kg=expand("kg_vcf/1kg_yri_chr{q}.vcf.gz", q=range(1,23)),
-        kgX="kg_vcf/1kg_yri_chrX.vcf.gz",
-        gtex=expand("gtex_vcf/gtex_chr{v}.snps.recode.vcf.gz", v=range(1, 23)),
-        gtexX="gtex_vcf/gtex_chrX.snps.recode.vcf.gz"
+        gtex=expand("gtex_vcf/gtex_chr{v}.snps.recode.vcf.gz", v=range(1, 23))
     output:
         "merged/merged_chr{i}.vcf.gz"
     shell:
@@ -89,9 +88,9 @@ rule merge_YRI_GTEx:
 rule bcftools_filter:
     input:
         expand("merged/merged_chr{i}.vcf.gz", i=range(1,23)),
-        "merged/merged_chrX.vcf.gz"
     output:
-        "filtered_vcf/merged_filtered_chr{i}.vcf.gz"
+        "filtered_vcf/merged_filtered_chr{i}.vcf.gz",
+        touch(".bcftools_filter.chkpnt")
     threads:
         4
     shell:
