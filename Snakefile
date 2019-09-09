@@ -12,7 +12,7 @@ include: "sprime_run_Snakemake"
 
 rule all:
     input:
-        "sprime_calls.txt"
+        "sprime_calls.txt",
         "GTEx_Analysis_v8_sQTL/",
         "GTEx_Analysis_v8_sQTL_phenotype_matrices/"
 #     input:
