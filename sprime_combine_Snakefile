@@ -25,7 +25,7 @@ rule download_GRCh38_map:
 
 rule unzip_GRCh38_map:
     input:
-        "plink.GRCh38.map.zip"
+        rules.download_GRCh38_map.output
     output:
         touch(".unzip_GRCh38_map.chkpnt")
     params:
