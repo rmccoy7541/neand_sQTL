@@ -14,7 +14,8 @@ rule all:
     input:
         "sprime_calls.txt",
         "GTEx_Analysis_v8_sQTL/",
-        "GTEx_Analysis_v8_sQTL_phenotype_matrices/"
+        "GTEx_Analysis_v8_sQTL_phenotype_matrices/",
+        expand("{sprime_dir}/output/results.chr{z}.score", sprime_dir=config["sprime_dir"], z=range(1,23))
 #     input:
 #         "GTEx_Analysis_v8_sQTL/",
 #         "GTEx_Analysis_v8_sQTL_phenotype_matrices/",
