@@ -25,7 +25,7 @@ rule sprime_run:
         ind_mer=rules.index_merged.output,
         all_auto=rules.cat_genetic_maps.output
     output:
-        protected(expand("{sprime_dir}/output/results.chr{z}.score", sprime_dir=config["sprime_dir"], z=range(1,23)))
+        "results.chr{z}"
     params:
         sprime=config["sprime_dir"],
         sprime_out=expand("{sprime_dir}/output", sprime_dir=config["sprime_dir"])
@@ -35,4 +35,4 @@ rule sprime_run:
             chrom=chr{wildcards.z} \
             outgroup=yri.txt \
             map={params.sprime}/genetic_map/{input.all_auto} \
-            out={output}"
+            out={params.sprime_out}/{output}"
