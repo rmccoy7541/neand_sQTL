@@ -89,7 +89,7 @@ rule bcftools_filter:
     input:
         expand("merged/merged_chr{i}.vcf.gz", i=range(1,23))
     output:
-        chk=touch(".bcftools_filter.chkpnt.{num}",
+        chk=touch(".bcftools_filter.chkpnt.{num}"),
         merge_filt=expand("filtered_vcf/merged_filtered_chr{num}.vcf.gz", num=range(1,23))
     threads:
         4
