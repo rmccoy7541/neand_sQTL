@@ -9,8 +9,6 @@
 configfile: "config.yaml"
 
 include: "sprime_run_Snakemake"
-include: "sprime_combine_Snakefile"
-include: "sprime_prep_Snakefile"
 
 rule all:
     input:
