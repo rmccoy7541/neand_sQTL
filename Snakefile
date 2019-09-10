@@ -57,7 +57,7 @@ rule over_chain:
 
 rule sprime_R:
     input:
-        results=rules.sprime_run.output,
+        results=ancient(rules.sprime_run.output),
         arch_vcf=config["arch_vcf"],
         over_chain=rules.over_chain.output
     output:
