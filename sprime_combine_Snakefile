@@ -42,7 +42,7 @@ rule cat_genetic_maps:
         expand("{sprime_dir}/genetic_map/",sprime_dir=config["sprime_dir"])
     shell:
         "for i in {{1..22}}; do \
-        cat {params}/plink.chr${i}.GRCh38.map | awk \'{{print \"chr\"$0}}\' >> \
+        cat {params}/plink.chr${{i}}.GRCh38.map | awk \'{{print \"chr\"$0}}\' >> \
         {params}/{output}; done"
 
 rule list_merged_filtered_vcfs:
