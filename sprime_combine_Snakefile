@@ -14,14 +14,14 @@ rule mkdir_geneticMap:
 
 rule download_GRCh38_map:
     input:
-        url="http://bochet.gcc.biostat.washington.edu/beagle/genetic_maps/plink.GRCh38.map.zip",
         chk=".mkdir_geneticMap.chkpnt"
     output:
-        "plink.GRCh38.map.zip"
+        expand("{sprime_dir}/genetic_map/plink.GRCh38.map.zip",sprime_dir=config["sprime_dir"])
     params:
-        expand("{sprime_dir}/genetic_map/",sprime_dir=config["sprime_dir"])
+        url="http://bochet.gcc.biostat.washington.edu/beagle/genetic_maps/plink.GRCh38.map.zip"
     shell:
-        "wget {input.url} {params}"
+        "wget {params.url} -O {output}"
+
 
 rule unzip_GRCh38_map:
     input:

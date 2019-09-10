@@ -49,9 +49,11 @@ rule decomp:
 rule over_chain:
     output:
         "metadata/hg38ToHg19.over.chain"
+    params:
+        url="https://hgdownload.soe.ucsc.edu/goldenPath/hg38/liftOver/hg38ToHg19.over.chain.gz"
     shell:
-        "wget https://hgdownload.soe.ucsc.edu/goldenPath/hg38/liftOver/hg38ToHg19.over.chain.gz metadata/;"
-        "unzip {output}"
+        "wget {params.url} metadata/;"
+        "gunzip {output}.gz"
 
 rule sprime_R:
     input:
