@@ -47,7 +47,7 @@ rule cat_genetic_maps:
 
 rule list_merged_filtered_vcfs:
     input:
-        ".bcftools_filter.chkpnt"
+        ".bcftools_filter.chkpnt.{num}"
     output:
         "processed_vcf_list.txt"
     shell:
