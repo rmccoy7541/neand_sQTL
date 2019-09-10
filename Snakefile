@@ -57,7 +57,7 @@ rule over_chain:
 
 rule sprime_R:
     input:
-        results=rules.sprime_run.output,
+        results=expand("{sprime_dir}/output/results.chr{z}", sprime_dir=config["sprime_dir"], z=range(1,23)),
         arch_vcf=config["arch_vcf"],
         over_chain=rules.over_chain.output
     output:
