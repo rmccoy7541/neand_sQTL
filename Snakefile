@@ -9,6 +9,8 @@
 configfile: "config.yaml"
 
 include: "sprime_run_Snakemake"
+include: "sprime_combine_Snakefile"
+include: "sprime_prep_Snakefile"
 
 rule all:
     input:
@@ -62,7 +64,3 @@ rule sprime_R:
         "sprime_calls.txt"
     script:
         "src/sprime/sprime_neand.R"
-
-
-
-
