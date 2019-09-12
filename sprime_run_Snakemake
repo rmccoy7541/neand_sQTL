@@ -25,14 +25,14 @@ rule sprime_run:
         ind_mer=rules.index_merged.output,
         all_auto=rules.cat_genetic_maps.output
     output:
-        "results.chr{z}"
+        "{sprime_dir}/output/results.chr{z}.score"
     params:
         sprime=config["sprime_dir"],
-        sprime_out=expand("{sprime_dir}/output", sprime_dir=config["params_dir"])
+        sprime_out=expand("{sprime_dir}/output", sprime_dir=config["sprime_dir"])
     shell:
         "java -Xmx12g -jar {params.sprime_out}/sprime.jar \
             gt={input.ind_mer} \
             chrom=chr{wildcards.z} \
             outgroup=yri.txt \
             map={params.sprime}/genetic_map/{input.all_auto} \
-            out={params.sprime_out}/{output}"
+            out={params.sprime_out}/results.chr{wildcards.z}"

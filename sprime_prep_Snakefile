@@ -89,8 +89,8 @@ rule bcftools_filter:
     input:
         expand("merged/merged_chr{i}.vcf.gz", i=range(1,23))
     output:
-        filt="filtered_vcf/merged_filtered_chr{z}.vcf.gz",
-        chk=touch(".bcftools_filter.chkpnt")
+        chk=touch(".bcftools_filter.chkpnt.{num}"),
+        merge_filt="filtered_vcf/merged_filtered_chr{num}.vcf.gz"
     threads:
         4
     shell:
@@ -98,5 +98,5 @@ rule bcftools_filter:
             --include 'AN=1890 && AC > 0' \
             --threads {threads} \
             -O z \
-            -o {output.filt} \
+            -o {output.merge_filt} \
             {input}"

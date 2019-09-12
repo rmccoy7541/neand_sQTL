@@ -11,8 +11,7 @@ library(rtracklayer)
 args = commandArgs(trailingOnly = TRUE)
 # snakemake@input[[1]] is results.score file (the output of SPrime), 
 # snakemake@input[[2]] is directory containing merged archaic VCFs ("/scratch/users/rmccoy22@jhu.edu/archaic_splicing/spliceai/")
-# snakemake@input[[3]] is "/work-zfs/rmccoy22/resources/reference/liftover/hg38ToHg19.over.chain"
-sprime <- fread(snakemake@input[[1]])
+sprime <- fread(snakemake@input[["results"]])
 
 # liftover the coordinates to hg19 to retrieve archaic alleles from their corresponding VCFs
 sprime[, strand_orientation := "+"]
@@ -23,7 +22,7 @@ hg38_coords <- makeGRangesFromDataFrame(sprime,
                                         strand.field = "strand_orientation", 
                                         ignore.strand = FALSE)
 
-chain <- import.chain(snakemake@input[[3]])
+chain <- import.chain(snakemake@input[["over_chain"]])
 hg19_coords <- liftOver(hg38_coords, chain) %>%
   as.data.table() %>%
   setnames(., "group", "index")
@@ -86,7 +85,7 @@ get_archaic_gt <- function(sprime_line, archaic_dir) {
 # apply to all SNPs in parallel
 results <- do.call(rbind, 
                    pbmclapply(1:nrow(sprime), 
-                              function(x) get_archaic_gt(sprime[x,], snakemake@input[[2]]), 
+                              function(x) get_archaic_gt(sprime[x,], snakemake@input[["arch_vcf"]]), 
                               mc.cores = getOption("mc.cores", 48L)))
 
 fwrite(results, 

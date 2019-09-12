@@ -14,18 +14,18 @@ rule mkdir_geneticMap:
 
 rule download_GRCh38_map:
     input:
-        url="http://bochet.gcc.biostat.washington.edu/beagle/genetic_maps/plink.GRCh38.map.zip",
         chk=".mkdir_geneticMap.chkpnt"
     output:
-        "plink.GRCh38.map.zip"
+        expand("{sprime_dir}/genetic_map/plink.GRCh38.map.zip",sprime_dir=config["sprime_dir"])
     params:
-        expand("{sprime_dir}/genetic_map/",sprime_dir=config["sprime_dir"])
+        url="http://bochet.gcc.biostat.washington.edu/beagle/genetic_maps/plink.GRCh38.map.zip"
     shell:
-        "wget {input.url} {params}"
+        "wget {params.url} -O {output}"
+
 
 rule unzip_GRCh38_map:
     input:
-        "plink.GRCh38.map.zip"
+        rules.download_GRCh38_map.output
     output:
         touch(".unzip_GRCh38_map.chkpnt")
     params:
@@ -42,12 +42,13 @@ rule cat_genetic_maps:
         expand("{sprime_dir}/genetic_map/",sprime_dir=config["sprime_dir"])
     shell:
         "for i in {{1..22}}; do \
-        cat {params}/plink.chr${i}.GRCh38.map | awk \'{{print \"chr\"$0}}\' >> \
+        cat {params}/plink.chr${{i}}.GRCh38.map | awk \'{{print \"chr\"$0}}\' >> \
         {params}/{output}; done"
 
 rule list_merged_filtered_vcfs:
     input:
-        rules.bcftools_filter.output.chk
+        expand(".bcftools_filter.chkpnt.{num}", num=range(1,23)),
+        expand("filtered_vcf/merged_filtered_chr{num}.vcf.gz", num=range(1,23))
     output:
         "processed_vcf_list.txt"
     shell:

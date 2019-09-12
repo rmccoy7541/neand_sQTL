@@ -14,16 +14,10 @@ rule all:
     input:
         "sprime_calls.txt",
         "GTEx_Analysis_v8_sQTL/",
-        "GTEx_Analysis_v8_sQTL_phenotype_matrices/"
-#     input:
-#         "GTEx_Analysis_v8_sQTL/",
-#         "GTEx_Analysis_v8_sQTL_phenotype_matrices/",
-#         expand("kg_vcf/1kg_yri_chr{q}.vcf.gz", q=range(1,23)),
-#         "kg_vcf/1kg_yri_chrX.vcf.gz",
-#         expand("{kg_dir}/ALL.chr{q}.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz", kg_dir=config["kg_dir"], q=range(1,23)),
-#         expand("gtex_vcf/gtex_chr{v}.snps.recode.vcf.gz", v=range(1,23)),
-#         "gtex_vcf/gtex_chrX.snps.recode.vcf.gz.tbi"
-
+        "GTEx_Analysis_v8_sQTL_phenotype_matrices/",
+        # rules.index_merged.output,
+        # rules.cat_genetic_maps.output,
+        # expand("{sprime_dir}/output/results.chr{z}.score", sprime_dir=config["sprime_dir"], z=range(1,23))
 
 rule dl_files:
     params:
@@ -49,9 +43,11 @@ rule decomp:
 rule over_chain:
     output:
         "metadata/hg38ToHg19.over.chain"
+    params:
+        url="https://hgdownload.soe.ucsc.edu/goldenPath/hg38/liftOver/hg38ToHg19.over.chain.gz"
     shell:
-        "wget https://hgdownload.soe.ucsc.edu/goldenPath/hg38/liftOver/hg38ToHg19.over.chain.gz metadata/;"
-        "unzip {output}"
+        "wget {params.url} metadata/;"
+        "gunzip {output}.gz"
 
 rule sprime_R:
     input:
@@ -62,7 +58,3 @@ rule sprime_R:
         "sprime_calls.txt"
     script:
         "src/sprime/sprime_neand.R"
-
-
-
-
