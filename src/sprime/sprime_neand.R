@@ -11,6 +11,7 @@ library(rtracklayer)
 args = commandArgs(trailingOnly = TRUE)
 # snakemake@input[[1]] is results.score file (the output of SPrime), 
 # snakemake@input[[2]] is directory containing merged archaic VCFs ("/scratch/users/rmccoy22@jhu.edu/archaic_splicing/spliceai/")
+# snakemake@input[[3]] is "/work-zfs/rmccoy22/resources/reference/liftover/hg38ToHg19.over.chain"
 sprime <- fread(snakemake@input[[1]])
 
 # liftover the coordinates to hg19 to retrieve archaic alleles from their corresponding VCFs
