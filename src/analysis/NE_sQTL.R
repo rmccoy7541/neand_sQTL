@@ -5,7 +5,7 @@ library(qqman)
 library(qvalue)
 
 
-# cmdArgs[1] is wd, [2] is NE nominals, [3] is permutations, [4] SPRIME calls
+# snakemake@input[["perm"]] is GTEx perm pass result, "sprime" is our sprime generated result
 
 #########
 gene_list <- genes(TxDb.Hsapiens.UCSC.hg19.knownGene) %>%
@@ -18,7 +18,7 @@ gtp <- fread(snakemake@input[["perm"]]) %>%
   setorder(., pval_nominal)
 
 # Not TAGSNPS but SPRIME
-neand <- fread("/scratch/groups/rmccoy22/aseyedi2/sQTLv8/sprime/output/sprime_calls.txt")[vindija_match == "match" | altai_match == "match"] %>%
+neand <- fread(snakemake@input[["sprime"]])[vindija_match == "match" | altai_match == "match"] %>%
   mutate(., var_id_1 = paste(CHROM, POS, REF, ALT, "b38", sep = "_")) %>%
   as.data.table()
 
