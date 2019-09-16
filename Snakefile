@@ -64,8 +64,8 @@ rule all:
     input:
         "sprime_calls.txt",
         "GTEx_Analysis_v8_sQTL/",
-        "GTEx_Analysis_v8_sQTL_phenotype_matrices/"
-        # expand("{tissue}_permutation_table_NE.txt", tissue=TISSUES)
+        "GTEx_Analysis_v8_sQTL_phenotype_matrices/",
+        expand("{tissue}_permutation_table_NE.txt", tissue=TISSUES)
         # rules.index_merged.output,
         # rules.cat_genetic_maps.output,
         # expand("{sprime_dir}/output/results.chr{z}.score", sprime_dir=config["sprime_dir"], z=range(1,23))
@@ -111,13 +111,13 @@ rule sprime_R:
     script:
         "src/sprime/sprime_neand.R"
 
-# rule neand_sQTL:
-#     input:
-#         chk=".decomp.chkpnt",
-#         perm=expand("GTEx_Analysis_v8_sQTL/{tissue}.v8.sqtl_signifpairs.txt.gz", tissue=TISSUES),
-#         sprime="sprime_calls.txt"
-#     output:
-#         "{tissue}_permutation_table_NE.txt"
-#     script:
-#         "src/analysis/NE_sQTL.R"
+rule neand_sQTL:
+    input:
+        chk=".decomp.chkpnt",
+        perm=expand("GTEx_Analysis_v8_sQTL/{tissue}.v8.sqtl_signifpairs.txt.gz", tissue=TISSUES),
+        sprime="sprime_calls.txt"
+    output:
+        "{tissue}_permutation_table_NE.txt"
+    script:
+        "src/analysis/NE_sQTL.R"
 
