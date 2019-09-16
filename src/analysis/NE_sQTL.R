@@ -14,7 +14,7 @@ gene_list <- genes(TxDb.Hsapiens.UCSC.hg19.knownGene) %>%
 gene_list[, subjectHits := .I]
 
 # Perm Pass QTLTOOLS
-gtp <- fread("Thyroid.v8.sqtl_signifpairs.txt.gz") %>%
+gtp <- fread(snakemake@input[["perm"]]) %>%
   setorder(., pval_nominal)
 
 # Not TAGSNPS but SPRIME
@@ -48,5 +48,7 @@ gtp <- gtp[gene_list, on = "subjectHits", nomatch = 0]
 setorder(gtp, pval_nominal)
 table <- gtp[is_neand == TRUE]
 
-write.table(table, paste0("thyroid_test_permutation_table_NE.txt"), row.names=F, quote=F, sep="\t")
+tis_name <- strsplit(snakemake@input[["perm"]], split = ".v")[[1]][1]
+
+write.table(table, paste0(tis_name, "_permutation_table_NE.txt"), row.names=F, quote=F, sep="\t")
 
