@@ -1,17 +1,17 @@
 library(data.table)
 library(tidyverse)
-library(Homo.sapiens)
 library(qqman)
 library(qvalue)
 library(org.Hs.eg.db)
 library(annotate)
+library(rtracklayer)
+# snakemake@input[["perm"]] is GTEx perm pass result, "sprime" is our sprime generated result, "gtf" is gencode.v31.annotation.gtf
 
-# snakemake@input[["perm"]] is GTEx perm pass result, "sprime" is our sprime generated result
 
 
 #########
-gene_list <- genes(TxDb.Hsapiens.UCSC.hg19.knownGene) %>%
-  as.data.table()
+gtf <- rtracklayer::import("gencode.v31.annotation.gtf")
+gene_list <- makeGRangesFromDataFrame(gtf, keep.extra.columns = F)
 
 gene_list[, subjectHits := .I]
 
@@ -38,14 +38,17 @@ names(coords_gr) <- c("chr", "start", "end")
 
 coords_gr <- makeGRangesFromDataFrame(coords_gr, keep.extra.columns = F)
 
-olaps <- findOverlaps(coords_gr, genes(TxDb.Hsapiens.UCSC.hg19.knownGene)) %>%
+olaps <- findOverlaps(coords_gr, gene_list) %>%
   as.data.table()
 
-gtp[, queryHits := .I]
+gtf <- rtracklayer::import("gencode.v31.annotation.gtf")
+gene_list <- makeGRangesFromDataFrame(gtf, keep.extra.columns = F)
 
-gtp <- gtp[olaps, on = "queryHits", nomatch = 0]
-
-gtp <- gtp[gene_list, on = "subjectHits", nomatch = 0]
+# gtp[, queryHits := .I]
+# 
+# gtp <- gtp[olaps, on = "queryHits", nomatch = 0]
+# 
+# gtp <- gtp[gene_list, on = "subjectHits", nomatch = 0]
 
 setorder(gtp, pval_nominal)
 table <- gtp[is_neand == TRUE]
