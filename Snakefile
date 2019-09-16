@@ -65,6 +65,7 @@ rule all:
         "sprime_calls.txt",
         "GTEx_Analysis_v8_sQTL/",
         "GTEx_Analysis_v8_sQTL_phenotype_matrices/",
+        expand("{tissue}_permutation_table_NE.txt", tissue=TISSUES)
         # rules.index_merged.output,
         # rules.cat_genetic_maps.output,
         # expand("{sprime_dir}/output/results.chr{z}.score", sprime_dir=config["sprime_dir"], z=range(1,23))
@@ -118,5 +119,5 @@ rule neand_sQTL:
     output:
         "{tissue}_permutation_table_NE.txt"
     script:
-        "src/analysis/QQ"
+        "src/analysis/NE_sQTL.R"
 

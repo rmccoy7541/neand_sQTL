@@ -3,9 +3,11 @@ library(tidyverse)
 library(Homo.sapiens)
 library(qqman)
 library(qvalue)
-
+library(org.Hs.eg.db)
+library(annotate)
 
 # snakemake@input[["perm"]] is GTEx perm pass result, "sprime" is our sprime generated result
+
 
 #########
 gene_list <- genes(TxDb.Hsapiens.UCSC.hg19.knownGene) %>%
@@ -47,6 +49,8 @@ gtp <- gtp[gene_list, on = "subjectHits", nomatch = 0]
 
 setorder(gtp, pval_nominal)
 table <- gtp[is_neand == TRUE]
+
+table[, gene_symbol := getSYMBOL(table$gene_id, data='org.Hs.eg')]
 
 tis_name <- strsplit(snakemake@input[["perm"]], split = ".v")[[1]][1]
 
