@@ -52,7 +52,7 @@ gtp <- gtp[gene_list, on = "subjectHits", nomatch = 0]
 setorder(gtp, pval_nominal)
 table <- gtp[is_neand == TRUE]
 
-tis_name <- strsplit(commVars[1], split = ".v")[[1]][1]
+tis_name <- strsplit("Whole_Blood.v8.sqtl_signifpairs.txt", split = "[.]")[[1]][1]
 
 write.table(table, paste0(tis_name, "_permutation_table_NE.txt"), row.names=F, quote=F, sep="\t")
 
