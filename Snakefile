@@ -107,15 +107,24 @@ rule sprime_R:
         arch_vcf=config["arch_vcf"],
         over_chain=rules.over_chain.output
     output:
-        "sprime_calls.txt"
+        "metadata/sprime_calls.txt"
     script:
         "src/sprime/sprime_neand.R"
+
+rule dl_gtf:
+    output:
+        "gencode.v31.annotation.gtf"
+    params:
+        url="ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_31/gencode.v31.annotation.gtf.gz"
+    shell:
+        "wget {params.url}"
 
 rule neand_sQTL:
     input:
         chk=".decomp.chkpnt",
         perm=expand("GTEx_Analysis_v8_sQTL/{tissue}.v8.sqtl_signifpairs.txt.gz", tissue=TISSUES),
-        sprime="sprime_calls.txt"
+        sprime="metadata/sprime_calls.txt",
+        gtf="gencode.v31.annotation.gtf"
     output:
         "{tissue}_permutation_table_NE.txt"
     script:

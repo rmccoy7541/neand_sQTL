@@ -89,7 +89,7 @@ results <- do.call(rbind,
                               mc.cores = getOption("mc.cores", 48L)))
 
 fwrite(results, 
-       file = "sprime_calls.txt", 
+       file = "metadata/sprime_calls.txt", 
        quote = FALSE, 
        sep = "\t", 
        col.names = TRUE, 
