@@ -55,3 +55,7 @@ analysis/WHLBLD_BRNCHA_TESTIS_permpassFDRNeand.txt
 analysis/PermPassResults/\.RData
 
 analysis/PermPassResults/\.Rhistory
+
+src/analysis/gencode.v31.annotation.gtf
+
+src/analysis/Whole_Blood.v8.sqtl_signifpairs.txt
