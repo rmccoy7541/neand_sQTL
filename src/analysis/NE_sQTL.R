@@ -7,20 +7,20 @@ library(annotate)
 library(rtracklayer)
 # snakemake@input[["perm"]] is GTEx perm pass result, "sprime" is our sprime generated result, "gtf" is gencode.v31.annotation.gtf
 
-
-
 #########
-gtf <- rtracklayer::import("gencode.v31.annotation.gtf")
-gene_list <- makeGRangesFromDataFrame(gtf, keep.extra.columns = F)
+gene_list <- rtracklayer::import("gencode.v31.annotation.gtf") %>%
+  makeGRangesFromDataFrame(., keep.extra.columns = F)
 
 gene_list[, subjectHits := .I]
 
 # Perm Pass QTLTOOLS
-gtp <- fread(snakemake@input[["perm"]]) %>%
+# gtp <- fread(snakemake@input[["perm"]]) %>%
+#   setorder(., pval_nominal)
+gtp <- fread("Whole_Blood.v8.sqtl_signifpairs.txt") %>%
   setorder(., pval_nominal)
 
 # Not TAGSNPS but SPRIME
-neand <- fread(snakemake@input[["sprime"]])[vindija_match == "match" | altai_match == "match"] %>%
+neand <- fread("../../metadata/sprime_calls.txt")[vindija_match == "match" | altai_match == "match"] %>%
   mutate(., var_id_1 = paste(CHROM, POS, REF, ALT, "b38", sep = "_")) %>%
   as.data.table()
 
@@ -41,14 +41,11 @@ coords_gr <- makeGRangesFromDataFrame(coords_gr, keep.extra.columns = F)
 olaps <- findOverlaps(coords_gr, gene_list) %>%
   as.data.table()
 
-gtf <- rtracklayer::import("gencode.v31.annotation.gtf")
-gene_list <- makeGRangesFromDataFrame(gtf, keep.extra.columns = F)
+gtp[, queryHits := .I]
 
-# gtp[, queryHits := .I]
-# 
-# gtp <- gtp[olaps, on = "queryHits", nomatch = 0]
-# 
-# gtp <- gtp[gene_list, on = "subjectHits", nomatch = 0]
+gtp <- gtp[olaps, on = "queryHits", nomatch = 0]
+
+gtp <- gtp[as.data.frame(gene_list), on = "subjectHits", nomatch = 0]
 
 setorder(gtp, pval_nominal)
 table <- gtp[is_neand == TRUE]
