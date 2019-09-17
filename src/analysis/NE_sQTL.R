@@ -6,7 +6,7 @@ library(org.Hs.eg.db)
 library(annotate)
 library(rtracklayer)
 # commVars[1] is GTEx perm pass result, "gtf" is gencode.v31.annotation.gtf, "sprime" is sprime_calls.txt
-
+# commVars = commandArgs(trailingOnly=TRUE)
 #########
 gene_list <- rtracklayer::import(snakemake@input["gtf"]) %>%
   makeGRangesFromDataFrame(., keep.extra.columns = T) %>%
@@ -19,11 +19,17 @@ gene_list[, subjectHits := .I]
 # Perm Pass QTLTOOLS
 gtp <- fread(snakemake@input["perm"]) %>%
   setorder(., pval_nominal)
+# gtp <- fread(commVars[1]) %>%
+    # setorder(., pval_nominal)
+
 
 # Not TAGSNPS but SPRIME
 neand <- fread(snakemake@input["sprime"])[vindija_match == "match" | altai_match == "match"] %>%
   mutate(., var_id_1 = paste(CHROM, POS, REF, ALT, "b38", sep = "_")) %>%
   as.data.table()
+# neand <- fread("~/work/aseyedi2/neand_sQTL/metadata/sprime_calls.txt")[vindija_match == "match" | altai_match == "match"] %>%
+#     mutate(., var_id_1 = paste(CHROM, POS, REF, ALT, "b38", sep = "_")) %>%
+#     as.data.table()
 
 neand_list <- c(neand$var_id_1, neand$var_id_2)
 
@@ -50,9 +56,9 @@ gtp <- gtp[olaps, on = "queryHits", nomatch = 0]
 gtp <- gtp[gene_list, on = "subjectHits", nomatch = 0]
 
 setorder(gtp, pval_nominal)
-table <- gtp[is_neand == TRUE]
+table <- gtp[is_neand == TRUE & pval_nominal == min_pval_nominal]
 
-tis_name <- strsplit("Whole_Blood.v8.sqtl_signifpairs.txt", split = "[.]")[[1]][1]
+tis_name <- strsplit(commVars[1], split = "[.]")[[1]][1]
 
 write.table(table, paste0(tis_name, "_permutation_table_NE.txt"), row.names=F, quote=F, sep="\t")
 
