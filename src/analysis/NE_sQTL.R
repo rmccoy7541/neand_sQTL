@@ -5,8 +5,8 @@ library(qvalue)
 library(org.Hs.eg.db)
 library(annotate)
 library(rtracklayer)
-# commVars[1] is GTEx perm pass result, "gtf" is gencode.v31.annotation.gtf, "sprime" is sprime_calls.txt
-# commVars = commandArgs(trailingOnly=TRUE)
+
+# "perm" is GTEx perm pass result, "gtf" is gencode.v31.annotation.gtf, "sprime" is sprime_calls.txt
 #########
 gene_list <- rtracklayer::import(snakemake@input["gtf"]) %>%
   makeGRangesFromDataFrame(., keep.extra.columns = T) %>%
@@ -19,17 +19,11 @@ gene_list[, subjectHits := .I]
 # Perm Pass QTLTOOLS
 gtp <- fread(snakemake@input["perm"]) %>%
   setorder(., pval_nominal)
-# gtp <- fread(commVars[1]) %>%
-    # setorder(., pval_nominal)
-
 
 # Not TAGSNPS but SPRIME
 neand <- fread(snakemake@input["sprime"])[vindija_match == "match" | altai_match == "match"] %>%
   mutate(., var_id_1 = paste(CHROM, POS, REF, ALT, "b38", sep = "_")) %>%
   as.data.table()
-# neand <- fread("~/work/aseyedi2/neand_sQTL/metadata/sprime_calls.txt")[vindija_match == "match" | altai_match == "match"] %>%
-#     mutate(., var_id_1 = paste(CHROM, POS, REF, ALT, "b38", sep = "_")) %>%
-#     as.data.table()
 
 neand_list <- c(neand$var_id_1, neand$var_id_2)
 

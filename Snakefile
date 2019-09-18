@@ -10,55 +10,55 @@ configfile: "config.yaml"
 
 include: "sprime_run_Snakemake"
 
-TISSUES = ["Adipose_Subcutaneous",
-"Adipose_Visceral_Omentum",
-"Adrenal_Gland",
-"Artery_Aorta",
-"Artery_Coronary",
-"Artery_Tibial",
-"Brain_Amygdala",
-"Brain_Anterior_cingulate_cortex_BA24",
-"Brain_Caudate_basal_ganglia",
-"Brain_Cerebellar_Hemisphere",
-"Brain_Cerebellum",
-"Brain_Cortex",
-"Brain_Frontal_Cortex_BA9",
-"Brain_Hippocampus",
-"Brain_Hypothalamus",
-"Brain_Nucleus_accumbens_basal_ganglia",
-"Brain_Putamen_basal_ganglia",
-"Brain_Spinal_cord_cervical_c-1",
-"Brain_Substantia_nigra",
-"Breast_Mammary_Tissue",
-"Cells_Cultured_fibroblasts",
-"Cells_EBV-transformed_lymphocytes",
-"Colon_Sigmoid",
-"Colon_Transverse",
-"Esophagus_Gastroesophageal_Junction",
-"Esophagus_Mucosa",
-"Esophagus_Muscularis",
-"Heart_Atrial_Appendage",
-"Heart_Left_Ventricle",
-"Kidney_Cortex",
-"Liver",
-"Lung",
-"Minor_Salivary_Gland",
-"Muscle_Skeletal",
-"Nerve_Tibial",
-"Ovary",
-"Pancreas",
-"Pituitary",
-"Prostate",
-"Skin_Not_Sun_Exposed_Suprapubic",
-"Skin_Sun_Exposed_Lower_leg",
-"Small_Intestine_Terminal_Ileum",
-"Spleen",
-"Stomach",
-"Testis",
-"Thyroid",
-"Uterus",
-"Vagina",
-"Whole_Blood"]
+TISSUES = ["Adipose_Subcutaneous", # 763
+"Adipose_Visceral_Omentum", # 564
+"Adrenal_Gland", # 275
+"Artery_Aorta", # 450
+"Artery_Coronary", # 253
+"Artery_Tibial", # 770
+"Brain_Amygdala", # 177
+"Brain_Anterior_cingulate_cortex_BA24", # 213
+"Brain_Caudate_basal_ganglia", # 291
+"Brain_Cerebellar_Hemisphere", # 263
+"Brain_Cerebellum", # 298
+"Brain_Cortex", # 325
+"Brain_Frontal_Cortex_BA9", # 425
+"Brain_Hippocampus", # 243
+"Brain_Hypothalamus", # 236
+"Brain_Nucleus_accumbens_basal_ganglia", # 277
+"Brain_Putamen_basal_ganglia", # 232
+"Brain_Spinal_cord_cervical_c-1", # 182
+"Brain_Substantia_nigra", # 164
+"Breast_Mammary_Tissue", # 480
+"Cells_Cultured_fibroblasts", # 527
+"Cells_EBV-transformed_lymphocytes", # 192
+"Colon_Sigmoid", # 389
+"Colon_Transverse", # 432
+"Esophagus_Gastroesophageal_Junction", # 401
+"Esophagus_Mucosa", # 622
+"Esophagus_Muscularis", # 559
+"Heart_Atrial_Appendage", # 452
+"Heart_Left_Ventricle", # 689
+"Kidney_Cortex", # 100
+"Liver", # 251
+"Lung", # 867
+"Minor_Salivary_Gland", # 181
+"Muscle_Skeletal", # 1132
+"Nerve_Tibial", # 722
+"Ovary", # 195
+"Pancreas", # 360
+"Pituitary", # 301
+"Prostate", # 262
+"Skin_Not_Sun_Exposed_Suprapubic", # 638
+"Skin_Sun_Exposed_Lower_leg", # 849
+"Small_Intestine_Terminal_Ileum", # 193
+"Spleen", # 260
+"Stomach", # 381
+"Testis", # 406
+"Thyroid", # 812
+"Uterus", # 166
+"Vagina", # 173
+"Whole_Blood"] # 3288
 
 rule all:
     input:
@@ -113,9 +113,9 @@ rule sprime_R:
 
 rule dl_gtf:
     output:
-        "gencode.v31.annotation.gtf"
+        "gencode.v26.GRCh38.genes.gtf"
     params:
-        url="ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_31/gencode.v31.annotation.gtf.gz"
+        url="https://storage.googleapis.com/gtex_analysis_v8/reference/gencode.v26.GRCh38.genes.gtf"
     shell:
         "wget {params.url}"
 
