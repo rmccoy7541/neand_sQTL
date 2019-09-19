@@ -2,8 +2,9 @@ library(data.table)
 library(tidyverse)
 library(pbapply)
 library(ggrepel)
-
-setwd("/Users/aseyedia/Documents/GitHub/neand_sQTL/src/analysis/")
+library(annotate)
+library(org.Hs.eg.db)
+library(rtracklayer)
 
 count_sqtl <- function(tissue, summarize = FALSE) {
   gtp <- fread(paste0(tissue, "_permutation_table_NE.txt")) 
@@ -32,8 +33,8 @@ names(tissue_names) <- tissue_abbv
 sqtl_counts_by_tissue <- do.call(rbind, lapply(tissue_names, function(x) count_sqtl(x, summarize=TRUE)))
 sqtl_counts_by_tissue[, n_samples := c(763,564,275,450,253,770,177,213,291,263,298,325,425,243,236,277,232,182,164,480,527,192,389,432,401,622,559,452,689,100,251,867,181,1132,722,195,360,301,262,638,849,193,260,381,406,812,166,173,3288)]
 
+### number of sQTLs per tissue
 png(filename = "sQTLs_per_tissue.png")
-
 ggplot(data = sqtl_counts_by_tissue, aes(x = n_samples, y = n_sqtl, label = names(tissue_names), color = TISSUE)) +
   theme_bw() +
   geom_point() +
@@ -42,23 +43,13 @@ ggplot(data = sqtl_counts_by_tissue, aes(x = n_samples, y = n_sqtl, label = name
   theme(panel.grid = element_blank(), legend.position = "none") +
   xlab("Number of Genotyped Samples") +
   ylab("Number of sQTLs")
-
 dev.off()
+###
 
-tissue_gtp <-  do.call(rbind, lapply(tissue_names, function(x) count_sqtl(x, summarize = FALSE)))
+tissue_gtp <-  do.call(rbind, lapply(tissue_names, function(x) count_sqtl(x, summarize = FALSE))) %>%
+  setorder(., pval_nominal)
 
-qqplot_labeller <- function(variable, value){
-  return(names(tissue_names)[tissue_names == value])
-}
+topGenes <- dplyr::select(tissue_gtp, phenotype_id, variant_id, TISSUE_ID, pval_nominal, gene_name) %>%
+  unique(.)
 
-ggplot(data = tissue_gtp, aes(x = expectedP, y = logP, color = TISSUE_ID)) +
-  theme_bw() +
-  theme(panel.grid = element_blank(), legend.position = "none") +
-  geom_point() +
-  geom_abline(slope = 1, intercept = 0) +
-  xlab(expression(Expected -log[10](italic("p")))) +
-  ylab(expression(Observed -log[10](italic("p")))) +
-  facet_wrap(~ TISSUE_ID, labeller = qqplot_labeller)
-
-topGenes <- dplyr::select(head(sqtl_counts_by_tissue, 292), intron_cluster, variant_id, TISSUE_ID, pval_nominal, qval, symbol)
-write.csv(topGenes, file = "TopGenes_PermPass.csv", eol = "\r\n", row.names = F)
+write.csv(topGenes, file = "TopGenes_PermPass_All.csv", eol = "\r\n", row.names = F)

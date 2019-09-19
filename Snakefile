@@ -62,13 +62,8 @@ TISSUES = ["Adipose_Subcutaneous", # 763
 
 rule all:
     input:
-        "sprime_calls.txt",
-        "GTEx_Analysis_v8_sQTL/",
-        "GTEx_Analysis_v8_sQTL_phenotype_matrices/",
-        expand("{tissue}_permutation_table_NE.txt", tissue=TISSUES)
-        # rules.index_merged.output,
-        # rules.cat_genetic_maps.output,
-        # expand("{sprime_dir}/output/results.chr{z}.score", sprime_dir=config["sprime_dir"], z=range(1,23))
+        "sQTLs_per_tissue.png",
+        "TopGenes_PermPass_All.csv"
 
 rule dl_files:
     params:
@@ -124,9 +119,19 @@ rule neand_sQTL:
         chk=".decomp.chkpnt",
         perm=expand("GTEx_Analysis_v8_sQTL/{tissue}.v8.sqtl_signifpairs.txt.gz", tissue=TISSUES),
         sprime="metadata/sprime_calls.txt",
-        gtf="gencode.v31.annotation.gtf"
+        gtf="gencode.v26.GRCh38.genes.gtf"
     output:
         "{tissue}_permutation_table_NE.txt"
     script:
         "src/analysis/NE_sQTL.R"
+
+rule count_sQTL:
+    input:
+        expand("{tissue}_permutation_table_NE.txt", tissue=TISSUES)
+    output:
+        "sQTLs_per_tissue.png",
+        "TopGenes_PermPass_All.csv"
+    script:
+        "src/analysis/count_sqtl.R"
+
 
