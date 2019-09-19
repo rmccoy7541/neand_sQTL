@@ -3,6 +3,8 @@ library(tidyverse)
 library(pbapply)
 library(ggrepel)
 
+setwd("/Users/aseyedia/Documents/GitHub/neand_sQTL/src/analysis/")
+
 count_sqtl <- function(tissue, summarize = FALSE) {
   gtp <- fread(paste0(tissue, "_permutation_table_NE.txt")) 
 
@@ -18,7 +20,7 @@ count_sqtl <- function(tissue, summarize = FALSE) {
     tissue <- NULL
     }
   else {
-    return(data.table(gtp, TISSUE_ID = tissue), )
+    return(data.table(gtp, TISSUE_ID = tissue))
   }
 }
 
@@ -45,6 +47,10 @@ dev.off()
 
 tissue_gtp <-  do.call(rbind, lapply(tissue_names, function(x) count_sqtl(x, summarize = FALSE)))
 
+qqplot_labeller <- function(variable, value){
+  return(names(tissue_names)[tissue_names == value])
+}
+
 ggplot(data = tissue_gtp, aes(x = expectedP, y = logP, color = TISSUE_ID)) +
   theme_bw() +
   theme(panel.grid = element_blank(), legend.position = "none") +
@@ -52,7 +58,7 @@ ggplot(data = tissue_gtp, aes(x = expectedP, y = logP, color = TISSUE_ID)) +
   geom_abline(slope = 1, intercept = 0) +
   xlab(expression(Expected -log[10](italic("p")))) +
   ylab(expression(Observed -log[10](italic("p")))) +
-  facet_wrap(~ names(TISSUE_ID))
+  facet_wrap(~ TISSUE_ID, labeller = qqplot_labeller)
 
 topGenes <- dplyr::select(head(sqtl_counts_by_tissue, 292), intron_cluster, variant_id, TISSUE_ID, pval_nominal, qval, symbol)
 write.csv(topGenes, file = "TopGenes_PermPass.csv", eol = "\r\n", row.names = F)
