@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e883254f-267f-47be-8882-f07d424396f2" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/Snakefile" beforeDir="false" afterPath="$PROJECT_DIR$/Snakefile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/analysis/.RData" beforeDir="false" afterPath="$PROJECT_DIR$/src/analysis/.RData" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/analysis/.Rhistory" beforeDir="false" afterPath="$PROJECT_DIR$/src/analysis/.Rhistory" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/analysis/NE_sQTL.R" beforeDir="false" afterPath="$PROJECT_DIR$/src/analysis/NE_sQTL.R" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/analysis/count_sqtl.R" beforeDir="false" afterPath="$PROJECT_DIR$/src/analysis/count_sqtl.R" afterDir="false" />
-    </list>
+    <list default="true" id="e883254f-267f-47be-8882-f07d424396f2" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,8 +13,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Snakefile">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="657">
-              <caret line="66" selection-start-line="66" selection-end-line="66" />
+            <state relative-caret-position="-679">
+              <caret line="26" column="27" lean-forward="true" selection-start-line="26" selection-start-column="27" selection-end-line="26" selection-end-column="27" />
             </state>
           </provider>
         </entry>
@@ -193,8 +187,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Snakefile">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="657">
-          <caret line="66" selection-start-line="66" selection-end-line="66" />
+        <state relative-caret-position="-679">
+          <caret line="26" column="27" lean-forward="true" selection-start-line="26" selection-start-column="27" selection-end-line="26" selection-end-column="27" />
         </state>
       </provider>
     </entry>
