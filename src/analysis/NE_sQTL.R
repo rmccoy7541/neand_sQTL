@@ -54,7 +54,7 @@ gtp <- gtp[gene_list, on = "subjectHits", nomatch = 0]
 setorder(gtp, pval_nominal)
 table <- gtp[is_neand == TRUE & pval_nominal == min_pval_nominal]
 
-tis_name <- strsplit(commVars[1], split = "[.]")[[1]][1]
+tis_name <- strsplit(snakemake@input["perm"], split = "[.]")[[1]][1]
 
 write.table(table, paste0(tis_name, "_permutation_table_NE.txt"), row.names=F, quote=F, sep="\t")
 

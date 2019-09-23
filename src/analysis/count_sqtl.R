@@ -49,7 +49,7 @@ dev.off()
 tissue_gtp <-  do.call(rbind, lapply(tissue_names, function(x) count_sqtl(x, summarize = FALSE))) %>%
   setorder(., pval_nominal)
 
-topGenes <- dplyr::select(tissue_gtp, phenotype_id, variant_id, TISSUE_ID, pval_nominal, gene_name) %>%
+topGenes <- dplyr::select(tissue_gtp, phenotype_id, variant_id, TISSUE_ID, pval_nominal, pval_beta, gene_name) %>%
   unique(.)
 
 write.csv(topGenes, file = "TopGenes_PermPass_All.csv", eol = "\r\n", row.names = F)
