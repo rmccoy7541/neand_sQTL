@@ -41,9 +41,11 @@ java -Xmx12g -jar ~/work/progs/sprime.jar \
 
 
 # java -Xmx12g -jar ~/work/progs/sprime.jar \
-#   gt=/scratch/groups/rmccoy22/aseyedi2/sQTLv8/sprime/merged_filtered_all_autosomes.vcf.gz \
+#   gt=/scratch/groups/rmccoy22/aseyedi2/sQTLv8/sprime_test/merged_filtered_all_autosomes.vcf.gz \
 #   outgroup=/scratch/groups/rmccoy22/aseyedi2/sQTLv8/sprime/yri.txt \
 #   map=/scratch/groups/rmccoy22/aseyedi2/sQTLv8/sprime/genetic_map/plink.all_autosomes.GRCh38.map \
-#   out=/scratch/groups/rmccoy22/aseyedi2/sQTLv8/sprime_test/results.test.ADAMSTL3.minscore \
-#   chrom=chr15:83537709-84537709 \
-#   minscore=50000
+#   out=/scratch/groups/rmccoy22/aseyedi2/sQTLv8/sprime_test/results.test.ADAMSTL3.WholeChrome15 \
+#   chrom=chr15 \
+#   minscore=1 \
+#   maxfreq=0.01
+
