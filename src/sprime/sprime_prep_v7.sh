@@ -76,4 +76,4 @@ bcftools filter \
   -o filtered_vcf/merged_filtered_chr${i}.vcf.gz \
   merged/merged_chr${i}.vcf.gz
 
-  touch sprime_v7_prep_complete
+touch sprime_v7_prep_complete
