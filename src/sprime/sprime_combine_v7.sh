@@ -50,3 +50,5 @@ bcftools concat \
 
 # index
 tabix -p vcf merged_filtered_all_autosomes.vcf.gz
+
+touch sprime_v7_combine_complete
