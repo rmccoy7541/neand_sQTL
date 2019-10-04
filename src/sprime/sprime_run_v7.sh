@@ -5,16 +5,11 @@
 #SBATCH --nodes=1
 # number of tasks (processes) per node
 #SBATCH --ntasks-per-node=4
-#SBATCH --array=1-22%22
+#SBATCH --array=1-22%
 
 ### 02-sprime-run.sh ###
 
-if [ ${SLURM_ARRAY_TASK_ID} -eq 23 ]
-then
-    i="X"
-else
-    i=${SLURM_ARRAY_TASK_ID}
-fi
+i=${SLURM_ARRAY_TASK_ID}
 
 ml bcftools
 ml vcftools
@@ -36,5 +31,5 @@ java -Xmx12g -jar ~/work/progs/sprime.jar \
   gt=merged_filtered_all_autosomes.vcf.gz \
   chrom=chr${i} \
   outgroup=yri.txt \
-  map=genetic_map/plink.all_autosomes.GRCh38.map \
+  map=genetic_map/plink.all_autosomes.GRCh37.map \
   out=output/results.chr${i}

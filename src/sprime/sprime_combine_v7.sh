@@ -4,7 +4,7 @@
 #SBATCH --partition=shared
 #SBATCH --nodes=1
 # number of tasks (processes) per node
-#SBATCH --ntasks-per-node=4
+#SBATCH --ntasks-per-node=12
 
 ### 01-sprime-combine.sh ###
 
@@ -23,15 +23,15 @@ gtex_vcf=
 cd ${wrkdir}
 
 mkdir -p genetic_map
-wget http://bochet.gcc.biostat.washington.edu/beagle/genetic_maps/plink.GRCh38.map.zip
-unzip plink.GRCh38.map.zip
-mv plink.chr*.GRCh38.map genetic_map/
-rm plink.GRCh38.map.zip
+wget http://bochet.gcc.biostat.washington.edu/beagle/genetic_maps/plink.GRCh37.map.zip
+unzip plink.GRCh37.map.zip
+mv plink.chr*.GRCh37.map genetic_map/
+rm plink.GRCh37.map.zip
 
 # concatenate genetic maps
 for i in {1..22}
 do 
-  cat genetic_map/plink.chr${i}.GRCh38.map | awk '{print "chr"$0}' >> genetic_map/plink.all_autosomes.GRCh38.map
+  cat genetic_map/plink.chr${i}.GRCh37.map | awk '{print "chr"$0}' >> genetic_map/plink.all_autosomes.GRCh37.map
 done
 
 # get a list of merged, filtered VCFs to concatenate
