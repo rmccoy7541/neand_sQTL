@@ -5,7 +5,7 @@
 #SBATCH --nodes=1
 # number of tasks (processes) per node
 #SBATCH --ntasks-per-node=4
-#SBATCH --array=1-22%
+#SBATCH --array=1-22
 
 ### 02-sprime-run.sh ###
 
