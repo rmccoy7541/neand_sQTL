@@ -29,7 +29,7 @@ cd ${wrkdir}
 mkdir -p gtex_vcf
 
 # split the GTEx VCF by chromosome
-tabix -h ${gtex_vcf} chr${i} > gtex_vcf/gtex_chr${i}.vcf
+tabix -h ${gtex_vcf} ${i} > gtex_vcf/gtex_chr${i}.vcf
 
 mkdir -p kg_vcf
 
@@ -75,5 +75,3 @@ bcftools filter \
   -O z \
   -o filtered_vcf/merged_filtered_chr${i}.vcf.gz \
   merged/merged_chr${i}.vcf.gz
-
-touch sprime_v7_prep_complete
