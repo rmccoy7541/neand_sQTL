@@ -21,7 +21,7 @@ wrkdir=/scratch/groups/rmccoy22/aseyedi2/sQTLv8/sprime_test
 # 1kg project direcotry (1kg-hs37d5/)
 kg_dir=/work-zfs/rmccoy22/resources/1kg-hs37d5/
 # original gtex vcf (prefilter) GTEx_Analysis_2016-01-15_v7_WholeGenomeSeq_635Ind_PASS_AB02_GQ20_HETX_MISS15_PLINKQC.vcf.gz
-gtex_vcf=
+gtex_vcf=/scratch/groups/rmccoy22/aseyedi2/sQTLv8/ncbi/dbGaP-20712/files/phg000830.v1.GTEx_WGS.genotype-calls-vcf.c1/GTEx_Analysis_2016-01-15_v7_WholeGenomeSeq_635Ind_PASS_AB02_GQ20_HETX_MISS15_PLINKQC.vcf.gz
 
 cd ${wrkdir}
 
