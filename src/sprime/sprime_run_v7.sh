@@ -34,4 +34,4 @@ java -Xmx12g -jar ~/work/progs/sprime.jar \
   map=genetic_map/plink.all_autosomes.GRCh37.map \
   out=output/results.chr${i}
 
- touch sprime_v7_run_complete
+touch sprime_v7_run_complete
