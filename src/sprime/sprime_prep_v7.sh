@@ -70,7 +70,7 @@ bcftools merge \
 mkdir -p filtered_vcf
 # exclude SNPs with missing genotypes and exclude SNPs with AC=0 (no ALT genotypes)
 bcftools filter \
-  --include 'AN=1890 && AC > 0' \
+  --include 'AN = 1486 && AC > 0' \
   --threads 4 \
   -O z \
   -o filtered_vcf/merged_filtered_chr${i}.vcf.gz \
