@@ -134,4 +134,8 @@ rule count_sQTL:
     script:
         "src/analysis/count_sqtl.R"
 
-
+rule manhattan:
+    input:
+        expand("{tissue}_permutation_table_NE.txt", tissue=TISSUES),
+        "metadata/sprime_calls.txt"
+    output:
