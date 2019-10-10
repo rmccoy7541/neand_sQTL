@@ -8,7 +8,7 @@ library(rtracklayer)
 
 
 
-# "perm" is GTEx perm pass result, "gtf" is gencode.v31.annotation.gtf, "sprime" is sprime_calls.txt
+# "perm" is GTEx perm pass result, "gtf" is gencode.v26.GRCh38.genes.gtf, "sprime" is sprime_calls.txt
 #########
 gene_list <- rtracklayer::import(snakemake@input["gtf"]) %>%
   makeGRangesFromDataFrame(., keep.extra.columns = T) %>%
