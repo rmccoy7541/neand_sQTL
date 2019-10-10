@@ -11,17 +11,10 @@ library(ggrepel)
 library(RColorBrewer)
 
 count_sqtl <- function(tissue, summarize = FALSE, select_neand = TRUE) {
-  gtp <- fread(paste0(tissue, "_permutations.txt")) %>%
-    setnames(., c("intron_cluster", "chrom", "pheno_start", "pheno_end", 
-                  "strand", "total_cis", "distance", "variant_id", "variant_chrom", 
-                  "var_start", "var_end", "df", "dummy", "param_1", "param_2",
-                  "p", "beta", "emp_p", "adj_p")) %>%
-    setorder(., adj_p)
+  gtp <- fread(paste0(snakemake@input[[1]]))
   
-  gtp[, qval := qvalue(gtp$adj_p)$qvalues]
-  
-  neand <- fread("sprime_calls.txt.gz")[vindija_match == "match" | altai_match == "match"] %>%
-    mutate(., var_id = paste(CHROM, POS, REF, ALT, "b37", sep = "_")) %>%
+  neand <- fread(snakemake@input[[2]])[vindija_match == "match" | altai_match == "match"] %>%
+    mutate(., var_id_1 = paste(CHROM, POS, REF, ALT, "b38", sep = "_")) %>%
     as.data.table()
   
   gtp[, is_neand := variant_id %in% neand$var_id]
@@ -46,14 +39,14 @@ count_sqtl <- function(tissue, summarize = FALSE, select_neand = TRUE) {
   }
   
 }
-
+
 tissue_vector <- c("ADPSBQ","ADPVSC","ADRNLG","ARTACRN","ARTAORT","ARTTBL","BREAST","BRNACC","BRNAMY","BRNCDT","BRNCHA","BRNCHB","BRNCTXA","BRNCTXB","BRNHPP","BRNHPT","BRNNCC","BRNPTM","BRNSNG","BRNSPC","CLNSGM","CLNTRN","ESPGEJ","ESPMCS","ESPMSL","FIBRLBLS","HRTAA","HRTLV","LCL","LIVER","LUNG","MSCLSK","NERVET","OVARY","PNCREAS","PRSTTE","PTTARY","SKINNS","SKINS","SLVRYG","SNTTRM","SPLEEN","STMACH","TESTIS","THYROID","UTERUS","VAGINA","WHLBLD")
-
-sqtl_counts_by_tissue <- do.call(rbind, lapply(tissue_vector, function(x) count_sqtl(x, summarize = TRUE, select_neand = TRUE)))
-sqtl_counts_by_tissue[, n_samples := c(385,313,175,152,267,388,251,109,88,144,154,125,136,118,111,108,130,111,80,83,203,246,213,358,335,300,264,272,117,153,383,491,361,122,220,132,157,335,414,85,122,146,237,225,399,101,106,369)]
-
-tissue_table <- data.table(TISSUE_ID = tissue_vector, SAMPLE_SIZE = c(385,313,175,152,267,388,251,109,88,144,154,125,136,118,111,108,130,111,80,83,203,246,213,358,335,300,264,272,117,153,383,491,361,122,220,132,157,335,414,85,122,146,237,225,399,101,106,369))
-
+
+sqtl_counts_by_tissue <- do.call(rbind, lapply(tissue_names, function(x) count_sqtl(x, summarize=TRUE)))
+sqtl_counts_by_tissue[, n_samples := c(763,564,275,450,253,770,177,213,291,263,298,325,425,243,236,277,232,182,164,480,527,192,389,432,401,622,559,452,689,100,251,867,181,1132,722,195,360,301,262,638,849,193,260,381,406,812,166,173,3288)]
+
+tissue_table <- data.table(TISSUE_ID = tissue_vector, SAMPLE_SIZE = c(763,564,275,450,253,770,177,213,291,263,298,325,425,243,236,277,232,182,164,480,527,192,389,432,401,622,559,452,689,100,251,867,181,1132,722,195,360,301,262,638,849,193,260,381,406,812,166,173,3288))
+
 sqtl_count_plot <- ggplot(data = sqtl_counts_by_tissue, aes(x = n_samples, y = n_sqtl, label = TISSUE, color = TISSUE)) +
   theme_bw() +
   geom_smooth(method = "lm", color = "darkgray", se = FALSE, lty = "dotted", fullrange = TRUE) +
@@ -68,7 +61,7 @@ sqtl_count_plot <- ggplot(data = sqtl_counts_by_tissue, aes(x = n_samples, y = n
 
 tissue_gtp <- do.call(rbind, lapply(tissue_vector, function(x) count_sqtl(x)))
 tissue_gtp <- merge(tissue_gtp, tissue_table, "TISSUE_ID")
-
+
 gene_list <- genes(TxDb.Hsapiens.UCSC.hg19.knownGene) %>%
   as.data.table()
 gene_list[, subjectHits := .I]
@@ -76,21 +69,21 @@ symbols <- org.Hs.egSYMBOL %>%
   as.data.table()
 gene_list <- gene_list[symbols, on = "gene_id", nomatch = 0]
 gene_list <- gene_list[, c("subjectHits", "symbol")]
-
+
 coords_gr <- tissue_gtp[, c("chrom", "pheno_start", "pheno_end")] %>%
   mutate(., chrom = paste0("chr", chrom)) %>%
   makeGRangesFromDataFrame
-
+
 olaps <- findOverlaps(coords_gr, genes(TxDb.Hsapiens.UCSC.hg19.knownGene)) %>%
   as.data.table()
-
+
 tissue_gtp[, queryHits := .I]
-
+
 tissue_gtp_annotated <- merge(tissue_gtp, olaps, "queryHits", all.x = TRUE)
-
+
 tissue_gtp_annotated <- merge(tissue_gtp_annotated, gene_list, "subjectHits", all.x = TRUE) %>%
   setorder(., adj_p)
-
+
 to_file <- tissue_gtp_annotated[is_neand == TRUE][, -c("subjectHits", "queryHits")] %>%
   group_by(., tmp = paste(intron_cluster, chrom, pheno_start, pheno_end, strand, total_cis, distance, variant_id, TISSUE_ID)) %>%
   summarise(., phenotype_id = unique(intron_cluster), chrom = unique(chrom), pheno_start = unique(pheno_start), pheno_end = unique(pheno_end), 
@@ -99,19 +92,19 @@ to_file <- tissue_gtp_annotated[is_neand == TRUE][, -c("subjectHits", "queryHits
             p = unique(p), beta = unique(beta), emp_p = unique(emp_p), adj_p = unique(adj_p), qval = unique(qval), symbol = list(symbol)) %>%
   as.data.table() %>%
   setorder(., adj_p)
-
+
 dplyr::select(head(tissue_gtp_annotated[qval < 0.1 & is_neand == TRUE], 100), intron_cluster, variant_id, TISSUE_ID, adj_p, qval, symbol)
-
+
 tissue_gtp_annotated$variant_chrom <- factor(tissue_gtp_annotated$variant_chrom, levels = 1:22)
-
+
 results_to_plot <- tissue_gtp_annotated[!is.na(chrom) & is_neand == TRUE]
 setorder(results_to_plot, adj_p)
 results_to_plot[, symbol_dedup := ""]
 results_to_plot[!duplicated(symbol), symbol_dedup := symbol]
-
+
 genes_to_highlight <- unique(results_to_plot[adj_p < 5e-8]$symbol)
 genes_to_highlight <- genes_to_highlight[genes_to_highlight != ""]
-
+
 don <- results_to_plot %>% 
   setorder(chrom, var_start) %>%
   
@@ -161,4 +154,4 @@ plot_grid(plot_grid(ascertainment_plot, NULL, sqtl_count_plot, rel_widths = c(1.
           plot_grid(NULL, manhattan_plot, rel_widths = c(0.0175, 1)), 
           nrow = 3, align = "h", labels = c("", "", "C"), rel_heights = c(1, 0.05, 1), axis = "tb")
 
-quartz.save("~/Desktop/sQTL/fig1.pdf", type = "pdf", height = 8, width = 8)
+quartz.save("~/data/aseyedi2/manhattan/fig1.pdf", type = "pdf", height = 8, width = 8)

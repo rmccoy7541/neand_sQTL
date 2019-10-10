@@ -7,7 +7,7 @@ library(org.Hs.eg.db)
 library(rtracklayer)
 
 count_sqtl <- function(tissue, summarize = FALSE) {
-  gtp <- fread(paste0(tissue, "_permutation_table_NE.txt")) 
+  gtp <- fread(paste0(snakemake@input[[1]])) 
 
   gtp[, logP := -log10(pval_nominal)]
   setorder(gtp, logP)
