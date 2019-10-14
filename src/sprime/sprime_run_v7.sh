@@ -29,9 +29,8 @@ mkdir -p output
 
 java -Xmx12g -jar ~/work/progs/sprime.jar \
   gt=merged_filtered_all_autosomes.vcf.gz \
-  chrom=${i} \
+  chrom=chr${i} \
   outgroup=yri.txt \
   map=genetic_map/plink.all_autosomes.GRCh37.map \
   out=output/results.chr${i}
-
-touch sprime_v7_run_complete
+  
