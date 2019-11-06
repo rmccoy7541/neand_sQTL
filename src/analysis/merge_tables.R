@@ -3,7 +3,7 @@ library(dplyr)
 
 introns <- read.table("../intron_counts/GTEx_v8_junctions_nohead.gct.gz",stringsAsFactors=FALSE,header=TRUE)
 sqtl <- read.table("../sqtl/sqtl_test.txt",stringsAsFactors=FALSE,header=TRUE)
-vcf <- read.table("../vcf/vcf_for_merge.txt",stringsAsFactors=FALSE)
+vcf <- read.table("../vcf/vcf_for_merge.txt",stringsAsFactors=FALSE, row.names = F, quotes = NULL)
 
 # change intron cluster names to match names in sQTL file
 introns2 <- as.data.frame(sapply(introns, gsub, pattern="_", replacement=":"))
@@ -14,6 +14,10 @@ sqtl2 <- separate(sqtl, phenotype_id, c("cluster_pos","cluster_id"), sep=":clu_"
 # join introns and sqtl file by intron cluster ID
 # if there are multiple variants in the sqtl file that correspond to one intron cluster,
 # duplicate the line from the introns file
+
+# TODO: save as vector, not list
+introns2$Name <- sapply(introns2$Name, as.character)
+
 combined <- inner_join(sqtl2, introns2, by=c("cluster_pos"="Name"))
 
 write.table(combined, file="combined.txt", sep="\t", quote=FALSE)
