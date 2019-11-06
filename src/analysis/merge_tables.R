@@ -2,8 +2,8 @@ library(tidyr)
 library(dplyr)
 
 introns <- read.table("../intron_counts/GTEx_v8_junctions_nohead.gct.gz",stringsAsFactors=FALSE,header=TRUE)
-sqtl <- read.table("../sqtl/sqtl_test.txt",stringsAsFactors=FALSE,header=TRUE)
-vcf <- read.table("../vcf/vcf_for_merge.txt",stringsAsFactors=FALSE, row.names = F, quotes = NULL)
+sqtl <- read.table("~/work/aseyedi2/sQTLv8/data/GTEx_Analysis_v8_sQTL/Testis.v8.sqtl_signifpairs.txt.gz",stringsAsFactors=FALSE,header=TRUE)
+vcf <- read.table("../vcf/vcf_for_merge.txt",stringsAsFactors=FALSE, row.names = NULL)
 
 # change intron cluster names to match names in sQTL file
 introns2 <- as.data.frame(sapply(introns, gsub, pattern="_", replacement=":"))
@@ -19,6 +19,8 @@ sqtl2 <- separate(sqtl, phenotype_id, c("cluster_pos","cluster_id"), sep=":clu_"
 introns2$Name <- sapply(introns2$Name, as.character)
 
 combined <- inner_join(sqtl2, introns2, by=c("cluster_pos"="Name"))
+
+#combined <- merge(x=sqtl2,y=introns3,by.x="cluster_pos", by.y="Name")
 
 write.table(combined, file="combined.txt", sep="\t", quote=FALSE)
 
