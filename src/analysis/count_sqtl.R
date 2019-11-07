@@ -39,7 +39,7 @@ ggplot(data = sqtl_counts_by_tissue, aes(x = n_samples, y = n_sqtl, label = name
   theme_bw() +
   geom_point() +
   ggrepel::geom_text_repel(force = 1) + # hjust = 0, nudge_x = 4, nudge_y = 2
-  xlim(0, 600) +
+  xlim(0, 800) +
   theme(panel.grid = element_blank(), legend.position = "none") +
   xlab("Number of Genotyped Samples") +
   ylab("Number of sQTLs")
