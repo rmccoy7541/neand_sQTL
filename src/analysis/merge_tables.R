@@ -12,22 +12,11 @@ tissue_names <- paste0("~/work/aseyedi2/sQTLv8/data/GTEx_Analysis_v8_sQTL/", tis
 #read them all in
 sqtl_by_tissue <- do.call(rbind, lapply(tissue_names, function(x) sqtl <- fread(x)))
 
-# change intron cluster names to match names in sQTL file
-introns2 <- as.data.table(sapply(introns, gsub, pattern="_", replacement=":"))
+sqtl_sep <- separate(sqtl_by_tissue, phenotype_id, c("chrom","start","end","cluster_id","ENSEMBL_ID"), sep=":", remove=TRUE)
 
-# separate sQTL intron cluster ID field to match with IDs from introns file
-sqtl2 <- separate(sqtl, phenotype_id, c("cluster_pos","cluster_id"), sep=":clu_", remove=TRUE)
+sqtl_by_tissue <- NULL
 
-# join introns and sqtl file by intron cluster ID
-# if there are multiple variants in the sqtl file that correspond to one intron cluster,
-# duplicate the line from the introns file
-
-# TODO: save as vector, not list
-introns2$Name <- sapply(introns2$Name, as.character)
-
-combined <- inner_join(sqtl2, introns2, by=c("cluster_pos"="Name"))
-
-#combined <- merge(x=sqtl2,y=introns3,by.x="cluster_pos", by.y="Name")
+combined <- inner_join(sqtl_sep, introns, by=c("ENSEMBL_ID"="Description"))
 
 write.table(combined, file="combined.txt", sep="\t", quote=FALSE)
 
