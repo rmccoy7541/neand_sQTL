@@ -2,8 +2,29 @@
 
 These updates are read from most recent date at the top to initial entry at the bottom.
 
-REMEMBER
-- You need to make the pipeline generalizable, especially the part after separating the phenotype table by tissue.
+### 11/18/19
+
+Steph and I fixed `table_merge.R`. Below is the SLURM script I need to use to incorporate the job call into SM:
+```
+#!/bin/bash -l
+
+#SBATCH --job-name=tablemerge
+#SBATCH -N 1
+#SBATCH --time=02:00:00
+#SBATCH --partition=lrgmem
+#SBATCH --ntasks-per-node=48
+#SBATCH --mail-type=end
+#SBATCH --mail-user=syan11@jhu.edu
+
+cd /scratch/groups/rmccoy22/syan11/sQTL_results/gtex_v8/merge
+
+module load R/3.5.1
+module load gcc
+
+Rscript table_merge_SY.R
+```
+48 cores is way too much. Might need like a 10th of that or something.
+
 
 ### 11/06/19
 I need to generate a new sQTLs per tissue image because the one we made does not have all of the tissues. I'm also currently working on Steph's "unique to NL intron cluster" stuff and I still need to make a manhattan plot.
