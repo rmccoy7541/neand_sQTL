@@ -134,8 +134,32 @@ rule count_sQTL:
     script:
         "src/analysis/count_sqtl.R"
 
-rule manhattan:
-    input:
-        expand("{tissue}_permutation_table_NE.txt", tissue=TISSUES),
-        "metadata/sprime_calls.txt"
+# TODO
+# rule manhattan:
+#     input:
+#         expand("{tissue}_permutation_table_NE.txt", tissue=TISSUES),
+#         "metadata/sprime_calls.txt"
+#     output:
+
+rule dl_intronCounts:
     output:
+        "GTEx_Analysis_2017-06-05_v8_STARv2.5.3a_junctions.gct.gz"
+    params:
+        introns="https://storage.googleapis.com/gtex_analysis_v8/rna_seq_data/GTEx_Analysis_2017-06-05_v8_STARv2.5.3a_junctions.gct.gz"
+    shell:
+        "wget {params.introns}"
+
+rule splitIntronCounts:
+    input:
+        introns=dl_intronCounts.output,
+        tistab="metadata/tissue_key.csv"
+    output:
+        "{tissue}_intronCounts.txt"
+    script:
+        "src/analysis/preprocess_intronCounts.R"
+
+rule find_NL_introns:
+    input:
+        introns=expand("{tissue}_intronCounts.txt", tissue=TISSUES),
+        # TODO vcf= Find out how steph preprocessed the VCF
+        # 
