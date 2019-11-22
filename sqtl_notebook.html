@@ -12,7 +12,6 @@
 
 <meta name="author" content="Stephanie M. Yan" />
 
-<meta name="date" content="2019-10-31" />
 
 <title>Finding Neandertal Splice Isoforms</title>
 
@@ -1507,14 +1506,14 @@ div.tocify {
 
 <h1 class="title toc-ignore">Finding Neandertal Splice Isoforms</h1>
 <h4 class="author">Stephanie M. Yan</h4>
-<h4 class="date">10/31/2019</h4>
+<h4 class="date">Updated 11/22/2019</h4>
 
 </div>
 
 
 <p>This is an outline of the analysis I did/am doing to find Neandertal-specific splice isoforms in GTEx v8.</p>
-<div id="outline-of-preliminary-data-gathering" class="section level1">
-<h1>Outline of preliminary data gathering</h1>
+<div id="data" class="section level1">
+<h1>Data</h1>
 <p>We want to eventually have a file that looks like this:</p>
 <table>
 <thead>
@@ -1551,8 +1550,8 @@ div.tocify {
 </tbody>
 </table>
 <p>where the first item in the sample field indicates whether the sample has the archaic or modern human allele at that SNP, and the second item indicates how many counts of the intron cluster there are at that SNP.</p>
-<div id="files-that-we-currently-have" class="section level2">
-<h2>Files that we currently have:</h2>
+<div id="files-that-we-started-with" class="section level2">
+<h2>Files that we started with:</h2>
 <div id="intron-counts-file" class="section level3">
 <h3>1. Intron counts file</h3>
 <p>Gives the intron clusters and the number of times we see them in every sample.</p>
@@ -1743,35 +1742,110 @@ sqtl</code></pre>
 <p>We need to combine all of these files to get the file that we need for finding Neandertal-specific isoforms.</p>
 </div>
 </div>
-<div id="current-state-of-generating-the-final-file" class="section level2">
-<h2>Current state of generating the final file</h2>
-<p>Everything for this analysis is in the directory <code>~/work/syan11/sQTL_results/gtex_v8/</code>.</p>
-<p>I’m currently working on merging the three files, using the script <code>/merge/table_merge.R</code> (and <code>00_table_merge.sh</code>, which runs <code>table_merge.R</code> on MARCC). As you can see from looking in the <code>/merge/</code> directory, I attempted running the first couple steps of this script and it just generated empty files (lol). There could be something wrong with my files not matching up, or me grabbing the wrong columns or something, since I wrote most of the <code>table_merge.R</code> script before I shifted over to using the GTEx v8 data. Maybe you can look at it and see if you can tell what I’m doing/what I did wrong, or else I’ll look at it again next week.</p>
-<p>One note on the file merging: because there could be multiple SNPs affecting one intron cluster, or multiple intron clusters affected by one SNP, not all of the values in the SNP and intron cluster columns will be unique. The merge I’m using should take that into account, and duplicate lines in situations where they exist multiple times in one file but only once in the other file.</p>
-<div id="intron-counts" class="section level3">
-<h3>Intron counts</h3>
-<p>Filepath: <code>/scratch/groups/rmccoy22/syan11/sQTL_results/gtex_v8/intron_counts/GTEx_v8_junctions_nohead.gct.gz</code></p>
-<p>This was downloaded from <a href="https://storage.googleapis.com/gtex_analysis_v8/rna_seq_data/GTEx_Analysis_2017-06-05_v8_STARv2.5.3a_junctions.gct.gz" class="uri">https://storage.googleapis.com/gtex_analysis_v8/rna_seq_data/GTEx_Analysis_2017-06-05_v8_STARv2.5.3a_junctions.gct.gz</a>. I feel like there should be multiple files (i.e. different files for different tissues), but it looks like there’s only one that’s labeled “exon-exon junction read counts.” We should definitely talk to Rajiv about this later.</p>
 </div>
-<div id="gtex-vcf-1" class="section level3">
-<h3>GTEx VCF</h3>
-<p>Filepath: <code>/scratch/groups/rmccoy22/syan11/sQTL_results/gtex_v8/vcf/GTEx_v8_ArchaicGTAnn_clean.vcf.gz</code></p>
-<p>I modified the GTEx VCF so that each sample column only contains one field, <code>ARCHAIC_GT</code>, that indicates whether the sample has the archaic or modern human allele at that site. The identity of the archaic vs. modern allele at each SNP came from Rajiv’s SPrime file.</p>
-<pre><code>0 - homozygous modern human allele
+<div id="data-processing" class="section level1">
+<h1>Data processing</h1>
+<div id="intron-counts-file-1" class="section level2">
+<h2>1. Intron counts file</h2>
+<p>Downloaded from <a href="https://storage.googleapis.com/gtex_analysis_v8/rna_seq_data/GTEx_Analysis_2017-06-05_v8_STARv2.5.3a_junctions.gct.gz" class="uri">https://storage.googleapis.com/gtex_analysis_v8/rna_seq_data/GTEx_Analysis_2017-06-05_v8_STARv2.5.3a_junctions.gct.gz</a> on Aug. 26 2019.</p>
+<p>This contains read counts for each exon-exon junction called in GTEx v8 samples. Each column refers to a specific tissue in a specific sample.</p>
+<p>We modified this file to remove the first two lines, because they prevented R from reading it as a table, and also separated the samples by tissue.</p>
+<p>The two lines that I removed:</p>
+<pre><code>#1.2
+357746  17382</code></pre>
+<p>Script to remove them:</p>
+<pre class="bash"><code>zcat GTEx_Analysis_2017-06-05_v8_STARv2.5.3a_junctions.gct.gz | grep -v &quot;#1.2&quot; | grep -v '357746'$'\t''17382' &gt; GTEx_v8_junctions_nohead.gct
+bgzip GTEx_v8_junctions_nohead.gct</code></pre>
+<p>Filepath: <code>/scratch/groups/rmccoy22/syan11/sQTL_results/gtex_v8/intron_counts/GTEx_v8_junctions_nohead.gct.gz</code></p>
+</div>
+<div id="gtex-vcf-1" class="section level2">
+<h2>2. GTEx VCF</h2>
+<p>Downloaded from ?? on ??.</p>
+<p>I modified this file so that each sample column only contains one field, <code>ARCHAIC_GT</code>, that indicates whether the sample has the archaic or modern human allele at that site. The identity of the archaic vs. modern allele for each variant came from Rajiv’s SPrime calls file: <code>/scratch/groups/rmccoy22/aseyedi2/sQTLv8/sprime/sprime_calls.txt</code></p>
+<pre><code>0 - homozygous for modern human allele
 1 - heterozygous for modern human/archaic allele
 2 - homozygous for archaic allele
 3 - unknown GT (i.e. sample was not genotyped in the VCF)</code></pre>
-<p>Original GTEx VCF: <code>/scratch/groups/rmccoy22/aseyedi2/sQTLv8/data/vcf/GTEx_Analysis_2017-06-05_v8_WholeGenomeSeq_838Indiv_Analysis_Freeze.vcf.gz</code> SPrime calls: <code>/scratch/groups/rmccoy22/aseyedi2/sQTLv8/sprime/sprime_calls.txt</code></p>
+<p>Data processing steps:</p>
+<ol style="list-style-type: decimal">
+<li>Add a line to the header of the GTEx VCF.
+<ul>
+<li>This is because the VCF <code>INFO</code> column ends on a commma <code>,</code>, and GATK interprets that as an extra blank field. It refuses to run because that blank field is unannotated.</li>
+</ul></li>
+<li><p>Subset the VCF to only include variants that were called as introgressed by SPrime.</p></li>
+<li><p>Annotate the <code>INFO</code> field for each variant to indicate which allele is archaic and which is modern human.</p></li>
+<li>Loop through all the variants. Annotate each sample to indicate whether it has the archaic or modern human allele for that variant.
+<ul>
+<li>I wrote a python script for this that uses <code>pysam</code></li>
+<li>filepath to script: <code>/scratch/groups/rmccoy22/syan11/sQTL_results/gtex_v8/vcf/annotate_gts.py</code></li>
+</ul></li>
+<li><p>Simplify VCF into a table of archaic/human variant calls.</p></li>
+</ol>
+<pre class="bash"><code># 1. Change header of GTEx VCF
+
+# get header from GTEx VCF
+bcftools view -h /scratch/groups/rmccoy22/aseyedi2/sQTLv8/data/vcf/GTEx_Analysis_2017-06-05_v8_WholeGenomeSeq_838Indiv_Analysis_Freeze.vcf.gz &gt; new_gtex_header.hdr
+# I manually added this extra line to new_gtex_header.hdr:
+##INFO=&lt;ID=,Number=1,Type=String,Description=&quot;Empty INFO field for GATK&quot;&gt;
+
+# change GTEx header
+bcftools reheader -h new_gtex_header.hdr -o GTEx_v8_reheader.vcf.gz /scratch/groups/rmccoy22/aseyedi2/sQTLv8/data/vcf/GTEx_Analysis_2017-06-05_v8_WholeGenomeSeq_838Indiv_Analysis_Freeze.vcf.gz
+tabix -p vcf GTEx_v8_reheader.vcf.gz
+
+
+# 2. Subset VCF to contain only variants that were called as introgressed by sprime
+
+# get list of introgressed variants from sprime file
+cat /scratch/groups/rmccoy22/aseyedi2/sQTLv8/sprime/sprime_calls.txt | grep -v &quot;CHROM&quot; | cut -f 4 &gt; sprime_variants.list
+# select the subset of variants in the VCF that are introgressed
+/work-zfs/rmccoy22/progs/gatk-4.1.2.0/gatk SelectVariants -V GTEx_v8_reheader.vcf.gz -O GTEx_v8_SelectSPrimeVariants.vcf -ids sprime_variants.list
+bgzip GTEx_v8_SelectSPrimeVariants.vcf
+tabix -p vcf GTEx_v8_SelectSPrimeVariants.vcf.gz
+
+
+# 3. Annotate variants to indicate which allele (alt vs. ref) is the archaic allele
+
+# create an annotation file from the sprime output
+# in the sprime output, 0 = ref allele, 1,2,3, etc. = alt allele
+# bcftools annotate requires an annotation file that has columns CHROM, POS, and at least one annotation column
+cut -f 2,3,4,8 /scratch/groups/rmccoy22/aseyedi2/sQTLv8/sprime/sprime_calls.txt &gt; sprime_calls_minimal.txt
+bgzip sprime_calls_minimal.txt
+tabix -s 1 -b 2 -e 2 -S 1 sprime_calls_minimal.txt.gz
+
+# annotate VCF with a new INFO field, ARCHAIC_ALLELE, that indicates which allele is archaic
+# sprime.hdr is a file specifying the INFO annotation to add to the VCF header. The file contains:
+##INFO=&lt;ID=ARCHAIC_ALLELE,Number=1,Type=Integer,Description=&quot;Indicates which alt/ref allele is the putative archaic allele&quot;&gt;
+bcftools annotate -O z -o GTEx_v8_SPrimeAnn.vcf.gz -a sprime_calls_minimal.txt.gz -c CHROM,POS,-,INFO/ARCHAIC_ALLELE -h sprime.hdr GTEx_v8_SelectSPrimeVariants.vcf.gz
+
+
+# 4. Annotate sample fields to indicate whether the sample carries the archaic or modern allele for that variant
+
+# I wrote a python script that uses pysam to do this
+./annotate_gts.py
+# annotate_gts.py outputs a file called GTEx_v8_ArchaicGTAnn.vcf
+# remove these weird lines that showed up after I ran the python script
+grep -v '7:0'$'\t''0/0:45,0:45:99:0,153,1869:0'$'\t''0/0:43,0:43:99:0,153,1869:0'$'\t''0/0:34,0:34:99:0,132,1295:0' GTEx_v8_ArchaicGTAnn.vcf &gt; GTEx_v8_ArchaicGTAnn_filt.vcf
+
+
+# 5. Clean up VCF to use for the file merge step
+
+# remove all VCF sample fields except for ARCHAIC_GT
+bcftools annotate -O z -o GTEx_v8_ArchaicGTAnn_clean.vcf.gz -x '^FORMAT/ARCHAIC_GT' GTEx_v8_ArchaicGTAnn_filt.vcf
+# remove VCF header and all columns except variant ID and sample info
+zcat GTEx_v8_ArchaicGTAnn_clean.vcf.gz | grep -v &quot;##&quot; | cut -f 3,10- &gt; vcf_for_merge.txt
+bgzip vcf_for_merge.txt</code></pre>
+<p>Filepath to final VCF: <code>/scratch/groups/rmccoy22/syan11/sQTL_results/gtex_v8/vcf/vcf_for_merge.txt.gz</code></p>
 </div>
-<div id="sqtl-file" class="section level3">
-<h3>sQTL file</h3>
-<p>Filepath: <code>/scratch/groups/rmccoy22/syan11/sQTL_results/gtex_v8/sqtl/sqtl_test.txt</code></p>
-<p>This is one of the sQTL files that were downloaded from <a href="https://storage.googleapis.com/gtex_analysis_v8/single_tissue_qtl_data/GTEx_Analysis_v8_sQTL.tar" class="uri">https://storage.googleapis.com/gtex_analysis_v8/single_tissue_qtl_data/GTEx_Analysis_v8_sQTL.tar</a>.</p>
+<div id="sqtl-calls-file-1" class="section level2">
+<h2>3. sQTL calls file</h2>
+<p>Downloaded from <a href="https://storage.googleapis.com/gtex_analysis_v8/single_tissue_qtl_data/GTEx_Analysis_v8_sQTL.tar" class="uri">https://storage.googleapis.com/gtex_analysis_v8/single_tissue_qtl_data/GTEx_Analysis_v8_sQTL.tar</a> around Aug. 26 2019.</p>
+<p>This contains separate sQTL call files for each tissue in GTEx v8.</p>
+<p>No data processing was done on these files, as far as I know.</p>
+<p>Filepath: <code>/scratch/groups/rmccoy22/aseyedi2/sQTLv8/data/GTEx_Analysis_v8_sQTL/</code></p>
 </div>
 </div>
-</div>
-<div id="outline-of-analysis" class="section level1">
-<h1>Outline of analysis</h1>
+<div id="analysis-to-find-neanderthal-specific-splice-isoforms" class="section level1">
+<h1>Analysis to find Neanderthal-specific splice isoforms</h1>
 <p>In our final file:</p>
 <table>
 <thead>
@@ -1807,7 +1881,7 @@ sqtl</code></pre>
 </tr>
 </tbody>
 </table>
-<p>we want to identify rows where all samples with the modern human allele have no counts of the intron cluster, but samples with the archaic allele have some counts. I imagine this filtering would be easiest to do in R.</p>
+<p>we want to identify rows where all samples with the modern human allele have no counts of the intron cluster, but samples with the archaic allele have some counts.</p>
 <ul>
 <li>We could maybe do this by calculating for each row: how many samples have the MH allele, the average intron counts of the MH samples, how many samples have the archaic allele, the average intron counts of the archaic samples</li>
 <li>One other thing to consider is how to treat heterozygous sites (where someone has one archaic and one modern human allele). We might want to just count those separately (i.e. keep a tally of how many samples are heterozygous for MH/archaic allele, and their intron counts) and figure it out at the end</li>
