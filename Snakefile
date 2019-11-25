@@ -149,9 +149,18 @@ rule dl_intronCounts:
     shell:
         "wget {params.introns}"
 
+rule process_introns:
+    input:
+        dl_intronCounts.output
+    output:
+        "GTEx_v8_junctions_nohead.gct.gz"
+    shell:
+        "zcat {input} | grep -v \"#1.2\" | grep -v '357746'$'\t''17382 > GTEx_v8_junctions_nohead.gct;"
+        "bgzip GTEx_v8_junctions_nohead.gct"
+
 rule splitIntronCounts:
     input:
-        introns=dl_intronCounts.output,
+        introns=process_introns.output,
         tistab="metadata/tissue_key.csv"
     output:
         "{tissue}_intronCounts.txt"
