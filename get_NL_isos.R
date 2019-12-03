@@ -1,17 +1,20 @@
 library(tidyr)
 library(data.table)
 
-dt <- fread("Combined2_Ovary.txt")
-dt1 <- dt[,17:197]
-dt2 <- dt$Name
-dt2 <- cbind(dt2, dt[,198:ncol(dt)])
+dt <- fread("combined2_Ovary.txt")
 
-dt1 <- as.data.table(dt1 %>% pivot_longer(-Name, names_to = "tissue_id", values_to = "counts"))
+list_dt <- split.default(dt, nchar(names(dt)) > 10)
 
-dt2 <- as.data.table(dt2 %>% pivot_longer(-Name, names_to = "individual", values_to = "is_NL"))
+xcrips <- cbind(list_dt[[1]][,"variant_id"], list_dt[[1]][,"Name"], list_dt[[2]][,5:ncol(list_dt[[2]])])
 
-dt1$individual <- gsub("^([^.]*.[^.]*)..*$", "\\1", dt1$tissue_id)
+nl_iso <- cbind(list_dt[[1]][,"variant_id"], list_dt[[1]][,"Name"], list_dt[[1]][,13:ncol(list_dt[[1]])])
 
-final <- as.data.table(dplyr::full_join(dt1, dt2, by = c("Name", "individual")))
+#add variant id
+xcrips <- as.data.table(xcrips %>% pivot_longer(-c(Name, variant_id), names_to = "tissue_id", values_to = "counts"))
 
-final <- final[is_NL == 1] 
+#add variant id
+nl_iso <- as.data.table(nl_iso %>% pivot_longer(-c(Name, variant_id), names_to = "individual", values_to = "is_NL"))
+
+xcrips$individual <- gsub("^([^.]*.[^.]*)..*$", "\\1", xcrips$tissue_id)
+
+final <- as.data.table(dplyr::full_join(xcrips, nl_iso, by = c("Name", "individual")))
