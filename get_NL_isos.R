@@ -21,9 +21,10 @@ xcrips$individual <- gsub("^([^.]*.[^.]*)..*$", "\\1", xcrips$tissue_id)
 
 final <- as.data.table(dplyr::full_join(xcrips, nl_iso, by = c("Name", "individual", "variant_id")))
 
-final <- na.omit(final[is_NL == 1])
+#final <- na.omit(final[is_NL == 1])
 
 write.table(final,
             file = "ovary_NL_isos.txt",
             sep = "\t",
+            row.names = F,
             quote = FALSE)
