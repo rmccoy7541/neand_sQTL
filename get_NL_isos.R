@@ -3,6 +3,8 @@ library(data.table)
 
 dt <- fread("combined2_Ovary.txt")
 
+colnames(dt)[17] <- "transcript_id"
+
 list_dt <- split.default(dt, nchar(names(dt)) > 10)
 
 xcrips <- cbind(list_dt[[1]][,"variant_id"], list_dt[[1]][,"Name"], list_dt[[2]][,5:ncol(list_dt[[2]])])
@@ -17,4 +19,11 @@ nl_iso <- as.data.table(nl_iso %>% pivot_longer(-c(Name, variant_id), names_to =
 
 xcrips$individual <- gsub("^([^.]*.[^.]*)..*$", "\\1", xcrips$tissue_id)
 
-final <- as.data.table(dplyr::full_join(xcrips, nl_iso, by = c("Name", "individual")))
+final <- as.data.table(dplyr::full_join(xcrips, nl_iso, by = c("Name", "individual", "variant_id")))
+
+final <- na.omit(final[is_NL == 1])
+
+write.table(final,
+            file = "ovary_NL_isos.txt",
+            sep = "\t",
+            quote = FALSE)
