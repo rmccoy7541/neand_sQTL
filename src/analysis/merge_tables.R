@@ -12,9 +12,11 @@ args = commandArgs(trailingOnly=TRUE)
 introns <- fread(args[1],stringsAsFactors=FALSE,header=TRUE)
 # introns <- fread("../splitIC/Ovary_intronCounts.txt",stringsAsFactors=FALSE,header=TRUE)
 
+
 # read in sQTL file for one specific tissue
 sqtl <- fread(args[2], stringsAsFactors=FALSE, header=TRUE)
 # sqtl <- fread("/scratch/groups/rmccoy22/aseyedi2/sQTLv8/data/GTEx_Analysis_v8_sQTL/Ovary.v8.sqtl_signifpairs.txt.gz", stringsAsFactors=FALSE, header=TRUE)
+
 
 # separate intron cluster field to get ENSEMBL ID
 sqtl_sep <- separate(sqtl, phenotype_id, c("chrom","start","end","cluster_id","ENSEMBL_ID"), sep=":", remove=TRUE)
@@ -56,7 +58,7 @@ xcrips$individual <- gsub("^([^.]*.[^.]*)..*$", "\\1", xcrips$tissue_id)
 
 final <- as.data.table(dplyr::full_join(xcrips, nl_iso, by = c("transcript_id", "individual", "variant_id")))
 
-#final <- na.omit(final[is_NL == 1])
+final <- na.omit(final)
 
 write.table(final,
             file = paste0(tissue_name, "_NL_isos.txt"),
