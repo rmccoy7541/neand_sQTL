@@ -26,8 +26,8 @@ vcf <- fread("../vcf/vcf_for_merge.txt.gz", stringsAsFactors=FALSE, header=TRUE)
 # SQTL_FILE=/scratch/groups/rmccoy22/aseyedi2/sQTLv8/data/GTEx_Analysis_v8_sQTL/Ovary.v8.sqtl_signifpairs.txt.gz
 # TISSUE=`sed "36q;d" tissues.txt`
 
-# tissue_name <- args[3]
-tissue_name <- "Ovary"
+tissue_name <- args[3]
+# tissue_name <- "Ovary"
 
 dt <- inner_join(inner_join(sqtl_sep, introns, by=c("ENSEMBL_ID"="Description")), vcf, by=c("variant_id"="ID"))
 
