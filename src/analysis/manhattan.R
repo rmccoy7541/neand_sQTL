@@ -1,8 +1,6 @@
 library(data.table)
 library(tidyverse)
-library(qvalue)
 library(pbapply)
-library(Homo.sapiens)
 library(pals)
 library(qqman)
 library(cowplot)
@@ -12,12 +10,12 @@ library(RColorBrewer)
 library(rtracklayer)
 
 count_sqtl <- function(tissue, summarize = FALSE, select_neand = TRUE) {
-  # gtp <- fread(paste0(snakemake@input[[1]]))
-  # gtp <- fread("/scratch/groups/rmccoy22/aseyedi2/sQTLv8/data/GTEx_Analysis_v8_sQTL/Whole_Blood_permutation_table_NE.txt")
-  gtp <- fread(paste0(tissue, "_permutation_table_NE.txt")) 
+  # gtp <- fread(paste0("/scratch/groups/rmccoy22/aseyedi2/sQTLv8/data/GTEx_Analysis_v8_sQTL", tissue, "_permutation_table_NE.txt")) 
   
-  # neand <- fread(snakemake@input[[2]])[vindija_match == "match" | altai_match == "match"] %>%
-  neand <- fread("~/data/aseyedi2/neanderthal-sqtl/metadata/sprime_calls.txt")[vindija_match == "match" | altai_match == "match"] %>%
+  gtp <- fread(paste0("C:/Users/artas/Desktop/permpass/", tissue, "_permutation_table_NE.txt")) 
+  
+  # neand <- fread("/scratch/groups/rmccoy22/aseyedi2/sQTLv8/sprime/sprime_calls.txt")[vindija_match == "match" | altai_match == "match"] %>%
+  neand <- fread("C:/Users/artas/Desktop/sprime_calls.txt")[vindija_match == "match" | altai_match == "match"] %>%
     mutate(., var_id_1 = paste(CHROM, POS, REF, ALT, "b38", sep = "_")) %>%
     as.data.table()
   
@@ -56,17 +54,24 @@ tissue_abbv <- c("ADPSBQ", "ADPVC", "ADRNLG", "ARTAORT", "ARTCRN", "ARTTBL", "BR
 names(tissue_names) <- tissue_abbv
 
 sqtl_counts_by_tissue <- do.call(rbind, lapply(tissue_names, function(x) count_sqtl(x, summarize=TRUE)))
-sqtl_counts_by_tissue[, n_samples := c(763,564,275,450,253,770,177,213,291,263,298,325,425,243,236,277,232,182,164,480,527,192,389,432,401,622,559,452,689,100,251,867,181,1132,722,195,360,301,262,638,849,193,260,381,406,812,166,173,3288)]
+sqtl_counts_by_tissue[, n_samples := c(581,469,233,387,213,584,129,147,194,175,209,205,175,165,170,202,170,126,114,396,483,147,318,368,330,497,465,372,386,73,208,515,144,706,532,167,305,237,221,517,605,174,227,324,322,574,129,141,670)]
 
 tissue_table <- data.table(TISSUE_ID = tissue_names, SAMPLE_SIZE = c(763,564,275,450,253,770,177,213,291,263,298,325,425,243,236,277,232,182,164,480,527,192,389,432,401,622,559,452,689,100,251,867,181,1132,722,195,360,301,262,638,849,193,260,381,406,812,166,173,3288))
 
 tissue_gtp <- do.call(rbind, lapply(tissue_names, function(x) count_sqtl(x)))
 tissue_gtp <- merge(tissue_gtp, tissue_table, "TISSUE_ID")
 
-#gene_list <- rtracklayer::import(snakemake@input["gtf"]) %>%
-#/scratch/groups/rmccoy22/aseyedi2/sQTLv8/data/GTEx_Analysis_v8_sQTL
+# gene_list <- rtracklayer::import("C:/Users/artas/Desktop/gencode.v26.GRCh38.genes.gtf") %>%
+#   makeGRangesFromDataFrame(., keep.extra.columns = T) %>%
+#   as.data.table()
+# 
+# gene_list <- gene_list[type == "gene" & gene_type == "protein_coding"]
+# 
+# gene_list[, subjectHits := .I]
+# 
+# gene_list_gr <- makeGRangesFromDataFrame(gene_list, keep.extra.columns = T)
 
-dplyr::select(head(tissue_gtp[is_neand == TRUE], 100), phenotype_id, variant_id, TISSUE_ID, pval_nominal, gene_name)
+dplyr::select(tissue_gtp[is_neand == TRUE], phenotype_id, variant_id, TISSUE_ID, pval_nominal, gene_name)
 
 # tissue_gtp$variant_chrom <- factor(tissue_gtp$variant_chrom, levels = 1:22)
 
@@ -81,15 +86,12 @@ genes_to_highlight <- unique(results_to_plot[pval_nominal < 5e-8]$gene_name)
 genes_to_highlight <- genes_to_highlight[genes_to_highlight != ""]
 
 
-# TODO: Figure out the deal with var_start. There is a column named "start" but that's hg37. 
-
-
 don <- results_to_plot %>% 
-  setorder(chrom, var_start) %>%
+  setorder(chrom, start) %>%
   
   # Compute chromosome size
   group_by(chrom) %>% 
-  summarise(chr_len = max(var_start)) %>% 
+  summarise(chr_len = max(start)) %>% 
   
   # Calculate cumulative position of each chromosome
   mutate(tot = cumsum(as.numeric(chr_len)) - chr_len) %>%
@@ -99,18 +101,23 @@ don <- results_to_plot %>%
   left_join(results_to_plot, ., by = c("chrom" = "chrom")) %>%
   
   # Add a cumulative position of each SNP
-  arrange(chrom, var_start) %>%
-  mutate(BPcum = var_start + tot) %>%
+  arrange(chrom, start) %>%
+  mutate(BPcum = start + tot) %>%
   mutate(ital_symbol = paste0("italic(", symbol_dedup, ")"))
 
 axisdf <- don %>% group_by(chrom) %>% summarize(center=( max(BPcum) + min(BPcum) ) / 2 )
 
-manhattan_plot <- ggplot(don, aes(x = BPcum, y = -log10(adj_p), label = symbol_dedup)) +
+
+
+#Big problems here - try to make this work incrementally - but you're close
+
+
+manhattan_plot <- ggplot(don, aes(x = BPcum, y = -log10(pval_nominal), label = symbol_dedup)) +
   
   # Show all points
   geom_point(aes(color = as.factor(chrom)), alpha = 0.8, size = 0.5) +
   scale_color_manual(values = rep(c("black", "grey"), 22 )) +
-  geom_point(data = subset(don, symbol %in% genes_to_highlight), color = "red", size = 0.6) +
+  geom_point(data = subset(don, gene_name %in% genes_to_highlight), color = "red", size = 0.6) +
   
   # custom X axis:
   scale_x_continuous( label = axisdf$chrom, breaks = axisdf$center ) +
@@ -123,7 +130,7 @@ manhattan_plot <- ggplot(don, aes(x = BPcum, y = -log10(adj_p), label = symbol_d
     panel.border = element_blank(),
     panel.grid = element_blank()
   ) +
-  geom_text_repel(data = subset(filter(don, adj_p < 5e-8), symbol_dedup != ""), fontface = "italic", size = 3.5, hjust = -0.1, vjust = 0.1, point.padding = NA) +
+  geom_text_repel(data = don$gene_name, fontface = "italic", size = 3.5, hjust = -0.1, vjust = 0.1, point.padding = NA) +
   xlab("Chromosome") +
   ylab(expression(-log[10](italic(p)))) +
   geom_hline(yintercept = -log10(5e-8), lty = "dashed", color = "gray")

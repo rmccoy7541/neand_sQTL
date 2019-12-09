@@ -33,8 +33,6 @@ sqtl_counts_by_tissue <- do.call(rbind, lapply(tissue_names, function(x) count_s
 sqtl_counts_by_tissue[, n_samples := c(581,469,233,387,213,584,129,147,194,175,209,205,175,165,170,202,170,126,114,396,483,147,318,368,330,497,465,372,386,73,208,515,144,706,532,167,305,237,221,517,605,174,227,324,322,574,129,141,670)]
 
 
-
-
 ### number of sQTLs per tissue
 # png(filename = "sQTLs_per_tissue.png")
 ggplot(data = sqtl_counts_by_tissue, aes(x = n_samples, y = n_sqtl, label = names(tissue_names), color = TISSUE)) +
