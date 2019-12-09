@@ -59,6 +59,7 @@ xcrips$individual <- gsub("^([^.]*.[^.]*)..*$", "\\1", xcrips$tissue_id)
 final <- as.data.table(dplyr::full_join(xcrips, nl_iso, by = c("transcript_id", "individual", "variant_id")))
 
 final <- final[complete.cases(final[, tissue_id]), ]
+#
 
 write.table(final,
             file = paste0(tissue_name, "_NL_isos.txt"),
