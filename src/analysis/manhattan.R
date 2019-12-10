@@ -107,13 +107,9 @@ don <- results_to_plot %>%
 
 axisdf <- don %>% group_by(chrom) %>% summarize(center=( max(BPcum) + min(BPcum) ) / 2 )
 
-
-
 #Big problems here - try to make this work incrementally - but you're close
 
-
 manhattan_plot <- ggplot(don, aes(x = BPcum, y = -log10(pval_nominal), label = symbol_dedup)) +
-  
   # Show all points
   geom_point(aes(color = as.factor(chrom)), alpha = 0.8, size = 0.5) +
   scale_color_manual(values = rep(c("black", "grey"), 22 )) +
@@ -130,10 +126,33 @@ manhattan_plot <- ggplot(don, aes(x = BPcum, y = -log10(pval_nominal), label = s
     panel.border = element_blank(),
     panel.grid = element_blank()
   ) +
-  geom_text_repel(data = don$gene_name, fontface = "italic", size = 3.5, hjust = -0.1, vjust = 0.1, point.padding = NA) +
+  geom_text_repel(data = don, fontface = "italic", size = 3.5, hjust = -0.1, vjust = 0.1, point.padding = NA) +
   xlab("Chromosome") +
   ylab(expression(-log[10](italic(p)))) +
   geom_hline(yintercept = -log10(5e-8), lty = "dashed", color = "gray")
+
+# manhattan_plot <- ggplot(don, aes(x = BPcum, y = -log10(adj_p), label = symbol_dedup)) +
+#   
+#   # Show all points
+#   geom_point(aes(color = as.factor(chrom)), alpha = 0.8, size = 0.5) +
+#   scale_color_manual(values = rep(c("black", "grey"), 22 )) +
+#   geom_point(data = subset(don, symbol %in% genes_to_highlight), color = "red", size = 0.6) +
+#   
+#   # custom X axis:
+#   scale_x_continuous( label = axisdf$chrom, breaks = axisdf$center ) +
+#   scale_y_continuous(expand = c(0, 1)) +     # remove space between plot area and x axis
+#   
+#   # Custom the theme:
+#   theme_bw() +
+#   theme( 
+#     legend.position="none",
+#     panel.border = element_blank(),
+#     panel.grid = element_blank()
+#   ) +
+#   geom_text_repel(data = subset(filter(don, adj_p < 5e-8), symbol_dedup != ""), fontface = "italic", size = 3.5, hjust = -0.1, vjust = 0.1, point.padding = NA) +
+#   xlab("Chromosome") +
+#   ylab(expression(-log[10](italic(p)))) +
+#   geom_hline(yintercept = -log10(5e-8), lty = "dashed", color = "gray")
 
 plot_grid(plot_grid(ascertainment_plot, NULL, sqtl_count_plot, rel_widths = c(1.05, 0.1, 1), labels = c("A", "", "B"), nrow = 1), 
           NULL, 
