@@ -56,10 +56,12 @@ nl_iso <- as.data.table(nl_iso %>% pivot_longer(-c(transcript_id, variant_id), n
 
 xcrips$individual <- gsub("^([^.]*.[^.]*)..*$", "\\1", xcrips$tissue_id)
 
-final <- as.data.table(dplyr::full_join(xcrips, nl_iso, by = c("transcript_id", "individual", "variant_id")))
+# produces table with at least 1 NA in each column
+final <- as.data.table(dplyr::inner_join(xcrips, nl_iso, by = c("transcript_id", "individual", "variant_id")))
 
 final <- final[complete.cases(final[, tissue_id]), ]
 #
+final_tis[complete.cases(final_tis[, is_NL])]
 
 write.table(final,
             file = paste0(tissue_name, "_NL_isos.txt"),
