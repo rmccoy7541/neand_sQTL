@@ -10,30 +10,30 @@ library(RColorBrewer)
 library(rtracklayer)
 
 count_sqtl <- function(tissue, summarize = FALSE, select_neand = TRUE) {
-  # gtp <- fread(paste0("/scratch/groups/rmccoy22/aseyedi2/sQTLv8/data/GTEx_Analysis_v8_sQTL", tissue, "_permutation_table_NE.txt")) 
-  
-  gtp <- fread(paste0("C:/Users/artas/Desktop/permpass/", tissue, "_permutation_table_NE.txt")) 
-  
+  # gtp <- fread(paste0("/scratch/groups/rmccoy22/aseyedi2/sQTLv8/data/GTEx_Analysis_v8_sQTL", tissue, "_permutation_table_NE.txt"))
+
+  gtp <- fread(paste0("C:/Users/artas/Desktop/permpass/", tissue, "_permutation_table_NE.txt"))
+
   # neand <- fread("/scratch/groups/rmccoy22/aseyedi2/sQTLv8/sprime/sprime_calls.txt")[vindija_match == "match" | altai_match == "match"] %>%
   neand <- fread("C:/Users/artas/Desktop/sprime_calls.txt")[vindija_match == "match" | altai_match == "match"] %>%
     mutate(., var_id_1 = paste(CHROM, POS, REF, ALT, "b38", sep = "_")) %>%
     as.data.table()
-  
+
   gtp[, is_neand := variant_id %in% neand$var_id]
-  
+
   gtp_neand_t <- gtp[is_neand == TRUE]
   gtp_neand_f <- gtp[is_neand == FALSE]
-  
+
   gtp_neand_t[, logP := -log10(pval_nominal)]
   setorder(gtp_neand_t, logP)
   gtp_neand_t[, expectedP := rev(-log10(ppoints(n = length(gtp_neand_t$pval_nominal))))]
-  
+
   gtp_neand_f[, logP := -log10(pval_nominal)]
   setorder(gtp_neand_f, logP)
   gtp_neand_f[, expectedP := rev(-log10(ppoints(n = length(gtp_neand_f$pval_nominal))))]
-  
+
   gtp <- rbind(gtp_neand_t, gtp_neand_f)
-  
+
   if (summarize == TRUE) {
     return(data.table(TISSUE = tissue, n_sqtl = nrow(gtp[is_neand == select_neand]), n_total = nrow(gtp)))
   } else {
@@ -60,20 +60,6 @@ tissue_table <- data.table(TISSUE_ID = tissue_names, SAMPLE_SIZE = c(763,564,275
 
 tissue_gtp <- do.call(rbind, lapply(tissue_names, function(x) count_sqtl(x)))
 tissue_gtp <- merge(tissue_gtp, tissue_table, "TISSUE_ID")
-
-# gene_list <- rtracklayer::import("C:/Users/artas/Desktop/gencode.v26.GRCh38.genes.gtf") %>%
-#   makeGRangesFromDataFrame(., keep.extra.columns = T) %>%
-#   as.data.table()
-# 
-# gene_list <- gene_list[type == "gene" & gene_type == "protein_coding"]
-# 
-# gene_list[, subjectHits := .I]
-# 
-# gene_list_gr <- makeGRangesFromDataFrame(gene_list, keep.extra.columns = T)
-
-dplyr::select(tissue_gtp[is_neand == TRUE], phenotype_id, variant_id, TISSUE_ID, pval_nominal, gene_name)
-
-# tissue_gtp$variant_chrom <- factor(tissue_gtp$variant_chrom, levels = 1:22)
 
 results_to_plot <- tissue_gtp[is_neand == TRUE]
 setorder(results_to_plot, pval_nominal)

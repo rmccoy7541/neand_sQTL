@@ -56,9 +56,12 @@ nl_iso <- as.data.table(nl_iso %>% pivot_longer(-c(transcript_id, variant_id), n
 
 xcrips$individual <- gsub("^([^-]*-[^-]*)-.*$", "\\1", xcrips$tissue_id)
 
-# produces table with at least 1 NA in each column
-final <- as.data.table(dplyr::full_join(xcrips, nl_iso, by = c("transcript_id", "variant_id", "individual"))) %>%
-  na.omit()
+# Joins tables, gets rid of all NAs and consolidates counts by matching xcrips, vars and individuals, and counts number of rows consolidated per match
+final <- as.data.table(dplyr::full_join(xcrips, nl_iso, by = c("transcript_id", "variant_id", "individual"))) %>% 
+  na.omit() %>%
+  group_by(variant_id, transcript_id, is_NL) %>%
+  dplyr::summarise(counts=sum(counts), nrows=n()) %>%
+  as.data.table()
 
 write.table(final,
             file = paste0(tissue_name, "_NL_isos.txt"),
