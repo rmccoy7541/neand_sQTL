@@ -9,6 +9,7 @@
 configfile: "config.yaml"
 
 include: "sprime_run_Snakemake"
+include: "preprocessVCF"
 
 TISSUES = ["Adipose_Subcutaneous", # 763
 "Adipose_Visceral_Omentum", # 564
@@ -151,7 +152,7 @@ rule dl_intronCounts:
 
 rule process_introns:
     input:
-        dl_intronCounts.output
+        "GTEx_Analysis_2017-06-05_v8_STARv2.5.3a_junctions.gct.gz"
     output:
         "GTEx_v8_junctions_nohead.gct.gz"
     shell:
@@ -160,7 +161,7 @@ rule process_introns:
 
 rule splitIntronCounts:
     input:
-        introns=process_introns.output,
+        introns="GTEx_v8_junctions_nohead.gct.gz",
         tistab="metadata/tissue_key.csv"
     output:
         "{tissue}_intronCounts.txt"

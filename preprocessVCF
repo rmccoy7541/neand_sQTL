@@ -1,0 +1,41 @@
+configfile: "config.yaml"
+
+rule get_header:
+    input:
+         config["vcf"]
+    output:
+          "GTEx_v8_reheader.vcf.gz"
+    shadow: shallow
+    shell:
+         "bcftools view -h {input} > new_gtex_header.hdr;"
+         "bcftools reheader -h new_gtex_header.hdr -o {output} {input};"
+         "tabix -p {output}"
+
+rule subset_VCF:
+    input:
+        sprime="metadata/sprime_calls.txt",
+        reheader=rules.get_header.output
+    output:
+        "GTEx_v8_SelectSPrimeVariants.vcf"
+    shadow: shallow
+    shell:
+        "cat {input.sprime} | grep -v \"CHROM\" | cut -f 4 > sprime_variants.list;"
+        "gatk SelectVariants -V {input.reheader} -O GTEx_v8_SelectSPrimeVariants.vcf -ids sprime_variants.list;"
+        "bgzip GTEx_v8_SelectSPrimeVariants.vcf;"
+        "tabix -p vcf {output}"
+
+rule annotate_vars:
+    input:
+        sprime="metadata/sprime_calls.txt",
+        sprime_vars=rules.subset_VCF.output
+    output:
+        "GTEx_v8_SPrimeAnn.vcf.gz"
+    shadow:
+        shallow
+    shell:
+         "cut -f 2,3,4,8 {input.sprime} > sprime_calls_minimal.txt;"
+         "bgzip sprime_calls_minimal.txt;"
+         "tabix -s 1 -b 2 -e 2 -S 1 sprime_calls_minimal.txt.gz;"
+         "bcftools annotate -O z -o {output} -a sprime_calls_minimal.txt.gz -c CHROM,POS,-,INFO/ARCHAIC_ALLELE -h sprime.hdr {rules.subset_VCF.output}"
+
+
