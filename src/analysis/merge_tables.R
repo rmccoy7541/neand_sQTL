@@ -6,15 +6,15 @@ library(data.table)
 
 # command line input specifies which intron counts and sQTL file to read
 # and also the tissue name
-args = commandArgs(trailingOnly=TRUE)
+# args = commandArgs(trailingOnly=TRUE)
 
 # read in intron counts file for one specific tissue
-introns <- fread(args[1],stringsAsFactors=FALSE,header=TRUE)
+introns <- fread(snakemake@input["introns"],stringsAsFactors=FALSE,header=TRUE)
 # introns <- fread("../splitIC/Muscle_Skeletal_intronCounts.txt",stringsAsFactors=FALSE,header=TRUE)
 
 
 # read in sQTL file for one specific tissue
-sqtl <- fread(args[2], stringsAsFactors=FALSE, header=TRUE)
+sqtl <- fread(snakemake@input["perm"], stringsAsFactors=FALSE, header=TRUE)
 # sqtl <- fread("/scratch/groups/rmccoy22/aseyedi2/sQTLv8/data/GTEx_Analysis_v8_sQTL/Muscle_Skeletal.v8.sqtl_signifpairs.txt.gz", stringsAsFactors=FALSE, header=TRUE)
 
 
@@ -22,13 +22,13 @@ sqtl <- fread(args[2], stringsAsFactors=FALSE, header=TRUE)
 sqtl_sep <- separate(sqtl, phenotype_id, c("chrom","start","end","cluster_id","ENSEMBL_ID"), sep=":", remove=TRUE)
 
 # read in VCF file
-vcf <- fread("../vcf/vcf_for_merge.txt.gz", stringsAsFactors=FALSE, header=TRUE)
+vcf <- fread(snakemake@input["vcf_merge"], stringsAsFactors=FALSE, header=TRUE)
 
 # INTRONS_FILE=../splitIC/Ovary_intronCounts.txt 
 # SQTL_FILE=/scratch/groups/rmccoy22/aseyedi2/sQTLv8/data/GTEx_Analysis_v8_sQTL/Ovary.v8.sqtl_signifpairs.txt.gz
 # TISSUE=`sed "36q;d" tissues.txt`
 
-tissue_name <- args[3]
+tissue_name <- snakemake@input["tisname"]
 # tissue_name <- "Muscle_Skeletal"
 
 dt <- inner_join(inner_join(sqtl_sep, introns, by=c("ENSEMBL_ID"="Description")), vcf, by=c("variant_id"="ID"))

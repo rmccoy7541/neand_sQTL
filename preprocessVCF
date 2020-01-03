@@ -38,4 +38,36 @@ rule annotate_vars:
          "tabix -s 1 -b 2 -e 2 -S 1 sprime_calls_minimal.txt.gz;"
          "bcftools annotate -O z -o {output} -a sprime_calls_minimal.txt.gz -c CHROM,POS,-,INFO/ARCHAIC_ALLELE -h sprime.hdr {rules.subset_VCF.output}"
 
+rule annotate_gts:
+    ## TODO: Fill Later
+    input:
+        "blank"
+    output:
+        "GTEx_v8_ArchaicGTAnn.vcf"
+    script:
+        "annotate_gts.py"
 
+rule fix_ann_gts:
+    input:
+        rules.annotate_gts.output
+    output:
+        "GTEx_v8_ArchaicGTAnn_filt.vcf"
+    shell:
+        "grep -v '7:0'$'\t''0/0:45,0:45:99:0,153,1869:0'$'\t''0/0:43,0:43:99:0,153,1869:0'$'\t''0/0:34,0:34:99:0,132,1295:0' {input} > {output}"
+
+rule remove_fields:
+    input:
+        rules.fix_ann_gts.output
+    output:
+        "GTEx_v8_ArchaicGTAnn_clean.vcf.gz"
+    shell:
+        "bcftools annotate -O z -o {output} -x '^FORMAT/ARCHAIC_GT' {input}"
+
+rule output_vcf:
+    input:
+         rules.remove_fields.output
+    output:
+         "vcf_for_merge.txt.gz"
+    shell:
+         "zcat {input} | grep -v \"##\" | cut -f 3,10- > vcf_for_merge.txt;"
+         "bgzip vcf_for_merge.txt"
