@@ -1,0 +1,13 @@
+---
+title: "Ne_sQTLv2 Notebook"
+output: html_notebook
+---
+`#r format(Sys.time(), '%d %B, %Y')`
+
+### 01/15/2020
+
+Our present goal, as of the aforementioned date, is to find both splicing transcripts that are far more abundantly expressed in individuals who are at least heterozygous for the Neandertal allele where they have some (modest) transcript counts for the modern human allele (quantitative), and splicing transcripts that are altogether novel and uniquely expressed in individuals that are at least heterozygous for the Neandertal allele where they have 0 (zero) counts for the modern human allele. The findings from these two analyses will be presented in two different sections in the manuscript. 
+
+What we have so far is a merged table with columns representing `variant_id`, `transcript_id`, genotype (so `0`, `1`, or `2` for homozygous modern human, heterozygous, and homozygous archaic, respectively), and `counts`. We pursued an avenue where we consolidated rows with identical `variant_id`/`transcript_id` pairs, filtered the tables, then made them horizontal, then we went back and did the same thing without filtering, found the difference in average counts per sample between the `HH` and `NN` transcripts, and looked for transcripts where there are fewer than 100 counts for the homozygous modern human genotype and greater than 250 counts for the homozygous archaic genotype.
+
+Now, we are retooling our analysis. We're reconstructing our `merge_table` table to also include `sample_id`, so that we can filter instances where a homozygous modern human genotype results in the expression of 0 counts of a transcript **except** in one or two individuals who might have been misannotated, although, I'm not quite sure why we're doing that because we are going to discard those `variant_id`/`transcript_id` pairs anyway. 
