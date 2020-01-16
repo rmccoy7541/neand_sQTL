@@ -14,7 +14,7 @@ dt <- fread(snakemake@input["filt"]) %>%
 tissue_name <- gsub("^([^_]*_[^_]*)_.*$", "\\1", snakemake@input["filt"])
 
 write.table(dt,
-            file = paste0(tissue_name, "_filteredTable_horizontal.txt"),
+            file = paste0(tissue_name, "_horizontal.txt"),
             sep = "\t",
             row.names = F,
             quote = FALSE)
