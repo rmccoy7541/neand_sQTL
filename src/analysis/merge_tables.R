@@ -17,16 +17,12 @@ introns <- fread(snakemake@input["introns"],stringsAsFactors=FALSE,header=TRUE)
 sqtl <- fread(snakemake@input["perm"], stringsAsFactors=FALSE, header=TRUE)
 # sqtl <- fread("/scratch/groups/rmccoy22/aseyedi2/sQTLv8/data/GTEx_Analysis_v8_sQTL/Muscle_Skeletal.v8.sqtl_signifpairs.txt.gz", stringsAsFactors=FALSE, header=TRUE)
 
-
 # separate intron cluster field to get ENSEMBL ID
 sqtl_sep <- separate(sqtl, phenotype_id, c("chrom","start","end","cluster_id","ENSEMBL_ID"), sep=":", remove=TRUE)
 
 # read in VCF file
 vcf <- fread(snakemake@input["vcf_merge"], stringsAsFactors=FALSE, header=TRUE)
-
-# INTRONS_FILE=../splitIC/Ovary_intronCounts.txt 
-# SQTL_FILE=/scratch/groups/rmccoy22/aseyedi2/sQTLv8/data/GTEx_Analysis_v8_sQTL/Ovary.v8.sqtl_signifpairs.txt.gz
-# TISSUE=`sed "36q;d" tissues.txt`
+# vcf <- fread("../vcf/vcf_for_merge.txt.gz", stringsAsFactors=FALSE, header=TRUE)
 
 tissue_name <- snakemake@input["tisname"]
 # tissue_name <- "Muscle_Skeletal"

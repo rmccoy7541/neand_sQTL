@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
@@ -1699,6 +1698,7 @@ summary {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -1749,16 +1749,20 @@ summary {
 
 
 <!-- rnb-text-begin -->
-<p><code>#r format(Sys.time(), '%d %B, %Y')</code></p>
+<p><code>#r format(Sys.time(), &#39;%d %B, %Y&#39;)</code></p>
 <div id="section" class="section level3">
 <h3>01/15/2020</h3>
 <p>Our present goal, as of the aforementioned date, is to find both splicing transcripts that are far more abundantly expressed in individuals who are at least heterozygous for the Neandertal allele where they have some (modest) transcript counts for the modern human allele (quantitative), and splicing transcripts that are altogether novel and uniquely expressed in individuals that are at least heterozygous for the Neandertal allele where they have 0 (zero) counts for the modern human allele. The findings from these two analyses will be presented in two different sections in the manuscript.</p>
 <p>What we have so far is a merged table with columns representing <code>variant_id</code>, <code>transcript_id</code>, genotype (so <code>0</code>, <code>1</code>, or <code>2</code> for homozygous modern human, heterozygous, and homozygous archaic, respectively), and <code>counts</code>. We pursued an avenue where we consolidated rows with identical <code>variant_id</code>/<code>transcript_id</code> pairs, filtered the tables, then made them horizontal, then we went back and did the same thing without filtering, found the difference in average counts per sample between the <code>HH</code> and <code>NN</code> transcripts, and looked for transcripts where there are fewer than 100 counts for the homozygous modern human genotype and greater than 250 counts for the homozygous archaic genotype.</p>
-<p>Now, we are retooling our analysis. We’re reconstructing our <code>merge_table</code> table to also include <code>sample_id</code>, so that we can filter instances where a homozygous modern human genotype results in the expression of 0 counts of a transcript <strong>except</strong> in one or two individuals who might have been misannotated, although, I’m not quite sure why we’re doing that because we are going to discard those <code>variant_id</code>/<code>transcript_id</code> pairs anyway.</p>
+<p>Now, we are retooling our analysis. We’re reconstructing our <code>merge_table</code> table to also include <code>sample_id</code>, so that we can filter instances where a homozygous modern human genotype results in the expression of 0 counts of a transcript <strong>except</strong> in one or two individuals who might have been misannotated, although, I’m not quite sure why we’re doing that because we are going to discard those <code>variant_id</code>/<code>transcript_id</code> pairs anyway. But what we ultimately want is to</p>
+<ol style="list-style-type: decimal">
+<li>Isolate instances where there is a novel NL transcript resulting from an sQTL (so no human expression but even some heterozygous NL expression)</li>
+<li>Isolate instances where there is a marked increase in gene expression in the NL genotypes</li>
+</ol>
 <!-- rnb-text-end -->
 </div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiTmVfc1FUTHYyIE5vdGVib29rIgpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sKLS0tCmAjciBmb3JtYXQoU3lzLnRpbWUoKSwgJyVkICVCLCAlWScpYAoKIyMjIDAxLzE1LzIwMjAKCk91ciBwcmVzZW50IGdvYWwsIGFzIG9mIHRoZSBhZm9yZW1lbnRpb25lZCBkYXRlLCBpcyB0byBmaW5kIGJvdGggc3BsaWNpbmcgdHJhbnNjcmlwdHMgdGhhdCBhcmUgZmFyIG1vcmUgYWJ1bmRhbnRseSBleHByZXNzZWQgaW4gaW5kaXZpZHVhbHMgd2hvIGFyZSBhdCBsZWFzdCBoZXRlcm96eWdvdXMgZm9yIHRoZSBOZWFuZGVydGFsIGFsbGVsZSB3aGVyZSB0aGV5IGhhdmUgc29tZSAobW9kZXN0KSB0cmFuc2NyaXB0IGNvdW50cyBmb3IgdGhlIG1vZGVybiBodW1hbiBhbGxlbGUgKHF1YW50aXRhdGl2ZSksIGFuZCBzcGxpY2luZyB0cmFuc2NyaXB0cyB0aGF0IGFyZSBhbHRvZ2V0aGVyIG5vdmVsIGFuZCB1bmlxdWVseSBleHByZXNzZWQgaW4gaW5kaXZpZHVhbHMgdGhhdCBhcmUgYXQgbGVhc3QgaGV0ZXJvenlnb3VzIGZvciB0aGUgTmVhbmRlcnRhbCBhbGxlbGUgd2hlcmUgdGhleSBoYXZlIDAgKHplcm8pIGNvdW50cyBmb3IgdGhlIG1vZGVybiBodW1hbiBhbGxlbGUuIFRoZSBmaW5kaW5ncyBmcm9tIHRoZXNlIHR3byBhbmFseXNlcyB3aWxsIGJlIHByZXNlbnRlZCBpbiB0d28gZGlmZmVyZW50IHNlY3Rpb25zIGluIHRoZSBtYW51c2NyaXB0LiAKCldoYXQgd2UgaGF2ZSBzbyBmYXIgaXMgYSBtZXJnZWQgdGFibGUgd2l0aCBjb2x1bW5zIHJlcHJlc2VudGluZyBgdmFyaWFudF9pZGAsIGB0cmFuc2NyaXB0X2lkYCwgZ2Vub3R5cGUgKHNvIGAwYCwgYDFgLCBvciBgMmAgZm9yIGhvbW96eWdvdXMgbW9kZXJuIGh1bWFuLCBoZXRlcm96eWdvdXMsIGFuZCBob21venlnb3VzIGFyY2hhaWMsIHJlc3BlY3RpdmVseSksIGFuZCBgY291bnRzYC4gV2UgcHVyc3VlZCBhbiBhdmVudWUgd2hlcmUgd2UgY29uc29saWRhdGVkIHJvd3Mgd2l0aCBpZGVudGljYWwgYHZhcmlhbnRfaWRgL2B0cmFuc2NyaXB0X2lkYCBwYWlycywgZmlsdGVyZWQgdGhlIHRhYmxlcywgdGhlbiBtYWRlIHRoZW0gaG9yaXpvbnRhbCwgdGhlbiB3ZSB3ZW50IGJhY2sgYW5kIGRpZCB0aGUgc2FtZSB0aGluZyB3aXRob3V0IGZpbHRlcmluZywgZm91bmQgdGhlIGRpZmZlcmVuY2UgaW4gYXZlcmFnZSBjb3VudHMgcGVyIHNhbXBsZSBiZXR3ZWVuIHRoZSBgSEhgIGFuZCBgTk5gIHRyYW5zY3JpcHRzLCBhbmQgbG9va2VkIGZvciB0cmFuc2NyaXB0cyB3aGVyZSB0aGVyZSBhcmUgZmV3ZXIgdGhhbiAxMDAgY291bnRzIGZvciB0aGUgaG9tb3p5Z291cyBtb2Rlcm4gaHVtYW4gZ2Vub3R5cGUgYW5kIGdyZWF0ZXIgdGhhbiAyNTAgY291bnRzIGZvciB0aGUgaG9tb3p5Z291cyBhcmNoYWljIGdlbm90eXBlLgoKTm93LCB3ZSBhcmUgcmV0b29saW5nIG91ciBhbmFseXNpcy4gV2UncmUgcmVjb25zdHJ1Y3Rpbmcgb3VyIGBtZXJnZV90YWJsZWAgdGFibGUgdG8gYWxzbyBpbmNsdWRlIGBzYW1wbGVfaWRgLCBzbyB0aGF0IHdlIGNhbiBmaWx0ZXIgaW5zdGFuY2VzIHdoZXJlIGEgaG9tb3p5Z291cyBtb2Rlcm4gaHVtYW4gZ2Vub3R5cGUgcmVzdWx0cyBpbiB0aGUgZXhwcmVzc2lvbiBvZiAwIGNvdW50cyBvZiBhIHRyYW5zY3JpcHQgKipleGNlcHQqKiBpbiBvbmUgb3IgdHdvIGluZGl2aWR1YWxzIHdobyBtaWdodCBoYXZlIGJlZW4gbWlzYW5ub3RhdGVkLCBhbHRob3VnaCwgSSdtIG5vdCBxdWl0ZSBzdXJlIHdoeSB3ZSdyZSBkb2luZyB0aGF0IGJlY2F1c2Ugd2UgYXJlIGdvaW5nIHRvIGRpc2NhcmQgdGhvc2UgYHZhcmlhbnRfaWRgL2B0cmFuc2NyaXB0X2lkYCBwYWlycyBhbnl3YXkuIAo=</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIk5lX3NRVEx2MiBOb3RlYm9vayINCm91dHB1dDogaHRtbF9ub3RlYm9vaw0KLS0tDQpgI3IgZm9ybWF0KFN5cy50aW1lKCksICclZCAlQiwgJVknKWANCg0KIyMjIDAxLzE1LzIwMjANCg0KT3VyIHByZXNlbnQgZ29hbCwgYXMgb2YgdGhlIGFmb3JlbWVudGlvbmVkIGRhdGUsIGlzIHRvIGZpbmQgYm90aCBzcGxpY2luZyB0cmFuc2NyaXB0cyB0aGF0IGFyZSBmYXIgbW9yZSBhYnVuZGFudGx5IGV4cHJlc3NlZCBpbiBpbmRpdmlkdWFscyB3aG8gYXJlIGF0IGxlYXN0IGhldGVyb3p5Z291cyBmb3IgdGhlIE5lYW5kZXJ0YWwgYWxsZWxlIHdoZXJlIHRoZXkgaGF2ZSBzb21lIChtb2Rlc3QpIHRyYW5zY3JpcHQgY291bnRzIGZvciB0aGUgbW9kZXJuIGh1bWFuIGFsbGVsZSAocXVhbnRpdGF0aXZlKSwgYW5kIHNwbGljaW5nIHRyYW5zY3JpcHRzIHRoYXQgYXJlIGFsdG9nZXRoZXIgbm92ZWwgYW5kIHVuaXF1ZWx5IGV4cHJlc3NlZCBpbiBpbmRpdmlkdWFscyB0aGF0IGFyZSBhdCBsZWFzdCBoZXRlcm96eWdvdXMgZm9yIHRoZSBOZWFuZGVydGFsIGFsbGVsZSB3aGVyZSB0aGV5IGhhdmUgMCAoemVybykgY291bnRzIGZvciB0aGUgbW9kZXJuIGh1bWFuIGFsbGVsZS4gVGhlIGZpbmRpbmdzIGZyb20gdGhlc2UgdHdvIGFuYWx5c2VzIHdpbGwgYmUgcHJlc2VudGVkIGluIHR3byBkaWZmZXJlbnQgc2VjdGlvbnMgaW4gdGhlIG1hbnVzY3JpcHQuIA0KDQpXaGF0IHdlIGhhdmUgc28gZmFyIGlzIGEgbWVyZ2VkIHRhYmxlIHdpdGggY29sdW1ucyByZXByZXNlbnRpbmcgYHZhcmlhbnRfaWRgLCBgdHJhbnNjcmlwdF9pZGAsIGdlbm90eXBlIChzbyBgMGAsIGAxYCwgb3IgYDJgIGZvciBob21venlnb3VzIG1vZGVybiBodW1hbiwgaGV0ZXJvenlnb3VzLCBhbmQgaG9tb3p5Z291cyBhcmNoYWljLCByZXNwZWN0aXZlbHkpLCBhbmQgYGNvdW50c2AuIFdlIHB1cnN1ZWQgYW4gYXZlbnVlIHdoZXJlIHdlIGNvbnNvbGlkYXRlZCByb3dzIHdpdGggaWRlbnRpY2FsIGB2YXJpYW50X2lkYC9gdHJhbnNjcmlwdF9pZGAgcGFpcnMsIGZpbHRlcmVkIHRoZSB0YWJsZXMsIHRoZW4gbWFkZSB0aGVtIGhvcml6b250YWwsIHRoZW4gd2Ugd2VudCBiYWNrIGFuZCBkaWQgdGhlIHNhbWUgdGhpbmcgd2l0aG91dCBmaWx0ZXJpbmcsIGZvdW5kIHRoZSBkaWZmZXJlbmNlIGluIGF2ZXJhZ2UgY291bnRzIHBlciBzYW1wbGUgYmV0d2VlbiB0aGUgYEhIYCBhbmQgYE5OYCB0cmFuc2NyaXB0cywgYW5kIGxvb2tlZCBmb3IgdHJhbnNjcmlwdHMgd2hlcmUgdGhlcmUgYXJlIGZld2VyIHRoYW4gMTAwIGNvdW50cyBmb3IgdGhlIGhvbW96eWdvdXMgbW9kZXJuIGh1bWFuIGdlbm90eXBlIGFuZCBncmVhdGVyIHRoYW4gMjUwIGNvdW50cyBmb3IgdGhlIGhvbW96eWdvdXMgYXJjaGFpYyBnZW5vdHlwZS4NCg0KTm93LCB3ZSBhcmUgcmV0b29saW5nIG91ciBhbmFseXNpcy4gV2UncmUgcmVjb25zdHJ1Y3Rpbmcgb3VyIGBtZXJnZV90YWJsZWAgdGFibGUgdG8gYWxzbyBpbmNsdWRlIGBzYW1wbGVfaWRgLCBzbyB0aGF0IHdlIGNhbiBmaWx0ZXIgaW5zdGFuY2VzIHdoZXJlIGEgaG9tb3p5Z291cyBtb2Rlcm4gaHVtYW4gZ2Vub3R5cGUgcmVzdWx0cyBpbiB0aGUgZXhwcmVzc2lvbiBvZiAwIGNvdW50cyBvZiBhIHRyYW5zY3JpcHQgKipleGNlcHQqKiBpbiBvbmUgb3IgdHdvIGluZGl2aWR1YWxzIHdobyBtaWdodCBoYXZlIGJlZW4gbWlzYW5ub3RhdGVkLCBhbHRob3VnaCwgSSdtIG5vdCBxdWl0ZSBzdXJlIHdoeSB3ZSdyZSBkb2luZyB0aGF0IGJlY2F1c2Ugd2UgYXJlIGdvaW5nIHRvIGRpc2NhcmQgdGhvc2UgYHZhcmlhbnRfaWRgL2B0cmFuc2NyaXB0X2lkYCBwYWlycyBhbnl3YXkuIEJ1dCB3aGF0IHdlIHVsdGltYXRlbHkgd2FudCBpcyB0bw0KDQogIDEuIElzb2xhdGUgaW5zdGFuY2VzIHdoZXJlIHRoZXJlIGlzIGEgbm92ZWwgTkwgdHJhbnNjcmlwdCByZXN1bHRpbmcgZnJvbSBhbiBzUVRMIChzbyBubyBodW1hbiBleHByZXNzaW9uIGJ1dCBldmVuIHNvbWUgaGV0ZXJvenlnb3VzIE5MIGV4cHJlc3Npb24pDQogIDIuIElzb2xhdGUgaW5zdGFuY2VzIHdoZXJlIHRoZXJlIGlzIGEgbWFya2VkIGluY3JlYXNlIGluIGdlbmUgZXhwcmVzc2lvbiBpbiB0aGUgTkwgZ2Vub3R5cGVzDQo=</div>
 
 
 
