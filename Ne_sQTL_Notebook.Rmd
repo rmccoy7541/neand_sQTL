@@ -14,3 +14,16 @@ Now, we are retooling our analysis. We're reconstructing our `merge_table` table
 
   1. Isolate instances where there is a novel NL transcript resulting from an sQTL (so no human expression but even some heterozygous NL expression)
   2. Isolate instances where there is a marked increase in gene expression in the NL genotypes
+
+### 01/21/2020
+
+From Steph:
+```
+I’m still trying to think of the best way to filter for interesting things in this data. I guess in the ideal situation we’d have:
+- All HH samples are 0
+- If a few HH samples are nonzero, their expression is very low
+- All heterozygous human samples have nonzero expression
+- All NLNL samples also have nonzero expression
+but probably it’ll be easiest to just filter by the first criteria to begin with
+```
+I was able to regenerate the tables to include the individual ID (e.g. `GTEX-XXXX`) for each tissue. 

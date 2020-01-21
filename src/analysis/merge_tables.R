@@ -57,7 +57,7 @@ xcrips$individual <- gsub("^([^-]*-[^-]*)-.*$", "\\1", xcrips$tissue_id)
 # Joins tables, gets rid of all NAs and consolidates counts by matching xcrips, vars and individuals, and counts number of rows consolidated per match
 final <- as.data.table(dplyr::full_join(xcrips, nl_iso, by = c("transcript_id", "variant_id", "individual"))) %>% 
   na.omit() %>%
-  group_by(variant_id, transcript_id, is_NL) %>%
+  group_by(variant_id, transcript_id, is_NL, individual) %>%
   dplyr::summarise(counts=sum(counts), nrows=n()) %>%
   as.data.table()
 
