@@ -18,3 +18,9 @@ write.table(dt,
             sep = "\t",
             row.names = F,
             quote = FALSE)
+
+dt2 <- dt %>% mutate(counts = counts %>% as.character(),
+  nrows = nrows %>% as.character()) %>%
+  unite("result",counts,nrows,sep = ";") %>%
+  pivot_wider(names_from = is_NL,values_from = counts) %>%
+  as.data.table()

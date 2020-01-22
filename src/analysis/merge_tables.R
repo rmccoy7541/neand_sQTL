@@ -1,30 +1,31 @@
 ### USAGE ###
 # Rscript table_merge_SY.R <intron counts file> <sQTL file> <tissue_id>
-library(tidyr)
-library(dplyr)
+library(tidyverse)
 library(data.table)
 
 # command line input specifies which intron counts and sQTL file to read
 # and also the tissue name
-# args = commandArgs(trailingOnly=TRUE)
+args = commandArgs(trailingOnly=TRUE)
 
 # read in intron counts file for one specific tissue
 # introns <- fread(snakemake@input["introns"],stringsAsFactors=FALSE,header=TRUE)
-introns <- fread("Muscle_Skeletal_intronCounts.txt",stringsAsFactors=FALSE,header=TRUE)
+# introns <- fread("Muscle_Skeletal_intronCounts.txt",stringsAsFactors=FALSE,header=TRUE)
 # introns <- fread("../splitIC/Muscle_Skeletal_intronCounts.txt",stringsAsFactors=FALSE,header=TRUE)
+introns <- fread(args[1],stringsAsFactors=FALSE,header=TRUE)
 
 
 # read in sQTL file for one specific tissue
 # sqtl <- fread(snakemake@input["perm"], stringsAsFactors=FALSE, header=TRUE)
 # sqtl <- fread("/scratch/groups/rmccoy22/aseyedi2/sQTLv8/data/GTEx_Analysis_v8_sQTL/Muscle_Skeletal.v8.sqtl_signifpairs.txt.gz", stringsAsFactors=FALSE, header=TRUE)
-sqtl <- fread("Muscle_Skeletal.v8.sqtl_signifpairs.txt.gz", stringsAsFactors=FALSE, header=TRUE)
+# sqtl <- fread("Muscle_Skeletal.v8.sqtl_signifpairs.txt.gz", stringsAsFactors=FALSE, header=TRUE)
+sqtl <- fread(args[2], stringsAsFactors=FALSE, header=TRUE)
 
 # separate intron cluster field to get ENSEMBL ID
 sqtl_sep <- separate(sqtl, phenotype_id, c("chrom","start","end","cluster_id","ENSEMBL_ID"), sep=":", remove=TRUE)
 
 # read in VCF file
 # vcf <- fread(snakemake@input["vcf_merge"], stringsAsFactors=FALSE, header=TRUE)
-vcf <- fread("vcf_for_merge.txt.gz", stringsAsFactors=FALSE, header=TRUE)
+vcf <- fread("../vcf/vcf_for_merge.txt.gz", stringsAsFactors=FALSE, header=TRUE)
 
 # tissue_name <- snakemake@input["tisname"]
 tissue_name <- "Muscle_Skeletal"
@@ -57,7 +58,7 @@ xcrips$individual <- gsub("^([^-]*-[^-]*)-.*$", "\\1", xcrips$tissue_id)
 # Joins tables, gets rid of all NAs and consolidates counts by matching xcrips, vars and individuals, and counts number of rows consolidated per match
 final <- as.data.table(dplyr::full_join(xcrips, nl_iso, by = c("transcript_id", "variant_id", "individual"))) %>% 
   na.omit() %>%
-  group_by(variant_id, transcript_id, is_NL, individual) %>%
+  group_by(variant_id, transcript_id, is_NL) %>%
   dplyr::summarise(counts=sum(counts), nrows=n()) %>%
   as.data.table()
 
