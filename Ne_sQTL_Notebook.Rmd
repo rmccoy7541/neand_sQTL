@@ -27,3 +27,9 @@ I’m still trying to think of the best way to filter for interesting things in 
 but probably it’ll be easiest to just filter by the first criteria to begin with
 ```
 I was able to regenerate the tables to include the individual ID (e.g. `GTEX-XXXX`) for each tissue. 
+
+### 01/29/2020
+
+I've spent hours agonizing over how to get the GTEX ID for each row to show up in `merge_tables.R` before realizing that it's not important right now. I'm going back to the horizontalized tables (pre-difference, I hope any of this makes sense when you read it) and I'm filtering for cases where all HH = 0 for any particular `variant_id` and `transcript_id` pair. Man I'm hungry right now.
+
+Here's the path for the directory that is important and I should focus on: `/work-zfs/rmccoy22/aseyedi2/tempData/merge/old_attempt/final_iso/horizontal`
