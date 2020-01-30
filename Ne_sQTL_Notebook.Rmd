@@ -33,3 +33,7 @@ I was able to regenerate the tables to include the individual ID (e.g. `GTEX-XXX
 I've spent hours agonizing over how to get the GTEX ID for each row to show up in `merge_tables.R` before realizing that it's not important right now. I'm going back to the horizontalized tables (pre-difference, I hope any of this makes sense when you read it) and I'm filtering for cases where all HH = 0 for any particular `variant_id` and `transcript_id` pair. Man I'm hungry right now.
 
 Here's the path for the directory that is important and I should focus on: `/work-zfs/rmccoy22/aseyedi2/tempData/merge/old_attempt/final_iso/horizontal`
+
+### 01/30/2020
+
+Finally found those doggone Neandertal-specific isoforms. They're in `NoHHIsoforms.txt`. The code is in `test.R`. The names are bad, I know, but I just had to put down something because I have to go to the lab. We found over 16k sQTLs with 0 human transcripts and more than 0 Neandertal transcripts. This should be interesting. 
