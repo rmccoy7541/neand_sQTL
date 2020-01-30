@@ -15,7 +15,7 @@ for (file in file_list){
     temp_dataset$tissue <- gsub("^([^_]*_[^_]*)_.*$", "\\1", file)
     # browser()
     if(nrow(temp_dataset) == 0 ){
-      break;
+      next();
     }
     dataset<-rbind(dataset, temp_dataset)
     
