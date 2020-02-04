@@ -37,3 +37,33 @@ Here's the path for the directory that is important and I should focus on: `/wor
 ### 01/30/2020
 
 Finally found those doggone Neandertal-specific isoforms. They're in `NoHHIsoforms.txt`. The code is in `test.R`. The names are bad, I know, but I just had to put down something because I have to go to the lab. We found over 16k sQTLs with 0 human transcripts and more than 0 Neandertal transcripts. This should be interesting. 
+
+### 02/04/2020
+
+Rajiv has asked me to use a software tool developed by Dr. Joshua Akey that does not require an outgroup population, unlike SPrime, as far as I can tell. In order to prep the GTEx VCF, I need to remove indels and multiallelic SNPs, which I will do using `vcftools`:
+
+```
+vcftools 
+  --vcf {input} \
+  --max-alleles 2 \
+  --remove-indels \
+  --recode \
+  --out {output}
+```
+
+This is for the admixed MH VCF. I need to find the archaic VCF, but in order to do that, I have to find out more about it as an input into IBDMix.
+
+In order to download the Neandertal VCF, I have to do the following:
+```
+for i in {1..22}; do
+  wget "http://cdna.eva.mpg.de/neandertal/altai/AltaiNeandertal/VCF/AltaiNea.hg19_1000g.${i}.mod.vcf.gz"
+done
+
+for i in {1..22}; do
+  gunzip AltaiNea.hg19_1000g.${i}.mod.vcf.gz
+done
+
+# Find out a way to "zcat AltaiNea.hg19_1000g.${i}.mod.vcf.gz >> MergedAltaiNL.mod.vcf" without colliding the headers
+```
+
+Steph and I are also meeting with Rajiv later to discuss the results of the NL-specific sQTLs that we found. Apparently the results do not open an interesting line of inquiry according to Steph. We will see.
