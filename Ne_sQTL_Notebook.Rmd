@@ -114,3 +114,20 @@ Exception in thread "main" java.lang.IllegalArgumentException: Output format typ
 ```
 
 I submitted a post on the GATK website after trying this with both GATK and Picard so we will see what they say. No idea what this error means.
+
+#### update
+Okay, I just found out it is because the `--REJECT` flag needs to be in `vcf` format
+
+But now I'm getting a different problem:
+
+```
+java.lang.IllegalStateException: Key LowQual found in VariantContext field FILTER at 1:10014 but this key isn't defined in the VCFHeader.  We require all VCFs to have complete VCF headers by default.
+```
+
+The variant is messed up. I'm going to have to do something about it. Not sure what. I have a suspicion this has something to do with the fact that I concatenated the Neandertal VCFs. I'm going to try to run this on one chromosome individually.
+
+```
+java -jar ~/work/progs/gatk-4.0.12.0/gatk-package-4.0.12.0-local.jar LiftoverVcf -I vcfChrom/AltaiNea.hg19_1000g.17.mod.vcf -O AltaiNea.hg38_1000g.Chrom1.vcf -C hg19ToHg38.over.chain -R hg38.fa --REJECT rejectedRecords.vcf
+```
+
+Okay, nothing I do works, I have no idea why. I have to recreate the VCF. I'll talk to Rajiv about this next Monday.
