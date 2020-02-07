@@ -55,6 +55,8 @@ This is for the admixed MH VCF. I need to find the archaic VCF, but in order to 
 
 In order to download the Neandertal VCF, I have to do the following:
 ```
+ml vcftools 
+
 for i in {1..22}; do
   wget "http://cdna.eva.mpg.de/neandertal/altai/AltaiNeandertal/VCF/AltaiNea.hg19_1000g.${i}.mod.vcf.gz"
 done
@@ -63,7 +65,33 @@ for i in {1..22}; do
   gunzip AltaiNea.hg19_1000g.${i}.mod.vcf.gz
 done
 
+vcf-concat -f concatList.txt > AltaiNea.hg19_100g.concat.vcf
+
+# now liftover the vcf
+wget http://hgdownload.cse.ucsc.edu/goldenpath/hg19/liftOver/hg19ToHg38.over.chain.gz
+
+java -jar ~/work/progs/gatk-4.0.12.0/gatk-package-4.0.12.0-local.jar LiftoverVcf -I AltaiNea.hg19_100g.concat.vcf
+# I need to find the reference .dict file.. i did this once before but I don't remember it or anything.
+
 # Find out a way to "zcat AltaiNea.hg19_1000g.${i}.mod.vcf.gz >> MergedAltaiNL.mod.vcf" without colliding the headers
 ```
 
 Steph and I are also meeting with Rajiv later to discuss the results of the NL-specific sQTLs that we found. Apparently the results do not open an interesting line of inquiry according to Steph. We will see.
+
+### 02/06/2020
+Okay, I am working on the Josh Akey IBDMix pipeline, but now I have to liftover the archaic genomes which I now have over to `hg38`, and I'm realizing that in our pipeline we have an over_chain rule which downloads hg38 -> hg19 chain file:
+
+```
+rule over_chain:
+    output:
+        "metadata/hg38ToHg19.over.chain"
+    params:
+        url="https://hgdownload.soe.ucsc.edu/goldenPath/hg38/liftOver/hg38ToHg19.over.chain.gz"
+    shell:
+        "wget {params.url} metadata/;"
+        "gunzip {output}.gz"
+```
+
+Not sure why that is and I can't remember why I included this rule. That's a bit of a bad sign. EDIT: okay now I am realizing that the reason I converted hg38 to hg19 is because I was converting the GTEx VCF to an earlier version to compare the SPrime results to hg19. I am pretty sure.
+
+But now, as you can see in the previous entry (`02/04/2020`), I am working on a way to prepare the archaic genome for use with GTEx. This way makes the most sense. I'm going to use `gatk` again to produce a new hg38 Neandertal VCF. 
