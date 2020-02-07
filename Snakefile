@@ -179,19 +179,4 @@ rule find_NL_introns:
     script:
         "src/analysis/merge_tables.R"
 
-rule filter_isos:
-    input:
-         isos=expand("{tissue}_NL_isos.txt", tissue=TISSUES),
-         tisname=expand("{tissue}", tissue=TISSUES)
-    output:
-        "{tissue}_filtered_iso.txt"
-    script:
-        "src/analysis/filter_isos.R"
 
-rule isNL_horizontal:
-    input:
-         filt=expand("{tissue}_filtered_iso.txt", tissue=TISSUES)
-    output:
-        "{tissue}_filteredTable_horizontal.txt"
-    script:
-        "src/analysis/isNL_horizontal.R"

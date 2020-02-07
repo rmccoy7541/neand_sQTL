@@ -70,7 +70,8 @@ vcf-concat -f concatList.txt > AltaiNea.hg19_100g.concat.vcf
 # now liftover the vcf
 wget http://hgdownload.cse.ucsc.edu/goldenpath/hg19/liftOver/hg19ToHg38.over.chain.gz
 
-java -jar ~/work/progs/gatk-4.0.12.0/gatk-package-4.0.12.0-local.jar LiftoverVcf -I AltaiNea.hg19_100g.concat.vcf
+java -jar ~/work/progs/gatk-4.0.12.0/gatk-package-4.0.12.0-local.jar LiftoverVcf -I AltaiNea.hg19_1000g.concat.vcf -O AltaiNea.hg38_1000g.concat.vcf -C hg19ToHg38.over.chain.gz -R hg38.fa.gz --REJECT rejectedRecords.txt
+
 # I need to find the reference .dict file.. i did this once before but I don't remember it or anything.
 
 # Find out a way to "zcat AltaiNea.hg19_1000g.${i}.mod.vcf.gz >> MergedAltaiNL.mod.vcf" without colliding the headers
@@ -94,4 +95,22 @@ rule over_chain:
 
 Not sure why that is and I can't remember why I included this rule. That's a bit of a bad sign. EDIT: okay now I am realizing that the reason I converted hg38 to hg19 is because I was converting the GTEx VCF to an earlier version to compare the SPrime results to hg19. I am pretty sure.
 
-But now, as you can see in the previous entry (`02/04/2020`), I am working on a way to prepare the archaic genome for use with GTEx. This way makes the most sense. I'm going to use `gatk` again to produce a new hg38 Neandertal VCF. 
+But now, as you can see in the previous entry (`02/04/2020`), I am working on a way to prepare the archaic genome for use with GTEx. This way makes the most sense. I'm going to use `gatk` again to produce a new hg38 Neandertal VCF.
+
+### 02/07/2020
+
+Okay I made some progress but I've hit another snag:
+
+```
+java -jar ~/work/progs/gatk-4.0.12.0/gatk-package-4.0.12.0-local.jar LiftoverVcf -I AltaiNea.hg19_1000g.concat.vcf -O AltaiNea.hg38_1000g.concat.vcf -C hg19ToHg38.over.chain -R hg38.fa --REJECT rejectedRecords.txt
+
+Exception in thread "main" java.lang.IllegalArgumentException: Output format type is not set, or could not be inferred from the output path. If a path was used, does it have a valid VCF extension (.vcf, .vcf.gz, .bcf)?
+        at htsjdk.variant.variantcontext.writer.VariantContextWriterBuilder.build(VariantContextWriterBuilder.java:462)
+        at htsjdk.variant.variantcontext.writer.VariantContextWriterBuilder.build(VariantContextWriterBuilder.java:415)
+        at picard.vcf.LiftoverVcf.doWork(LiftoverVcf.java:355)
+        at picard.cmdline.CommandLineProgram.instanceMain(CommandLineProgram.java:305)
+        at picard.cmdline.PicardCommandLine.instanceMain(PicardCommandLine.java:103)
+        at picard.cmdline.PicardCommandLine.main(PicardCommandLine.java:113)
+```
+
+I submitted a post on the GATK website after trying this with both GATK and Picard so we will see what they say. No idea what this error means.
