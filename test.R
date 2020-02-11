@@ -3,6 +3,7 @@ library(tidyverse)
 
 file_list <- list.files(pattern = "*al.txt")
 
+# *horizontal
 for (file in file_list){
   # if the merged dataset doesn't exist, create it
   if (!exists("dataset")){

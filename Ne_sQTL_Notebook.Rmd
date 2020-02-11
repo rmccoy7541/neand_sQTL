@@ -208,3 +208,17 @@ java.lang.IllegalStateException: Key . found in VariantContext field INFO at 1:1
         at org.broadinstitute.hellbender.Main.main(Main.java:289)
 ```
 So now it's saying in the "INFO" field there is a dot but the dot isn't defined and that's a problem. I don't agree. I don't think it's necessarily a problem.
+
+### 02/11/2020
+
+Just figured out w Rajiv that we need to use the tag `--ALLOW_MISSING_FIELDS_IN_HEADER`. It was in the documentation. I should have looked at the documentation before posting about it, but oh well.
+```
+java -jar ~/work/progs/gatk-4.0.12.0/gatk-package-4.0.12.0-local.jar LiftoverVcf -I AltaiNea.hg19_1000g.concat.LowQualRemoved.vcf -O AltaiNea.hg38_1000g.concat.LowQualRemoved.vcf -C hg19ToHg38.over.chain -R hg38.fa --REJECT rejectedRecords.vcf --ALLOW_MISSING_FIELDS_IN_HEADER
+```
+
+Also, for finding the NL-specific isoforms with Steph, we are going back to square 1 again. This time, our goal is going to be to sum all of the samples where, for each transcript/variant pair's genotype, count = 0, and all of the samples where count is > 0. If this doesn't make sense, touch base again with Steph. It's something like that. But we're basically trying to find instances where +HH = 1 or 2 and -HH = 500 (so the number of individuals who have this transcript/variant pair and have the homozygous modern human genotype is less than 5 and the number of individuals who have this transcript/variant pair and something else is a bunch). I'm just going to work on this tomorrow when I'm a bit more fresh.
+
+Okay, so I think I to alter the "merge_tables.R" file, that's how I am going to get what I want. Actually I already have something like that, but I'm not sure how I got it. I do not remember. It was only a couple of weeks ago. Alright. I think I will figure it outwhen I can. So the files I need to mess with are in `/scratch/groups/rmccoy22/aseyedi2/NL_sQTL_iso/merge/tables_with_sample_id`
+
+btw `test.R` takes in a bunch of different files into one data table.
+
