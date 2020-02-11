@@ -70,11 +70,10 @@ vcf-concat -f concatList.txt > AltaiNea.hg19_100g.concat.vcf
 # now liftover the vcf
 wget http://hgdownload.cse.ucsc.edu/goldenpath/hg19/liftOver/hg19ToHg38.over.chain.gz
 
+vcftools --vcf AltaiNea.hg19_1000g.concat.vcf --remove-filtered "LowQual" --out AltaiNea.hg19_1000g.concat.LowQualRemoved
+
 java -jar ~/work/progs/gatk-4.0.12.0/gatk-package-4.0.12.0-local.jar LiftoverVcf -I AltaiNea.hg19_1000g.concat.vcf -O AltaiNea.hg38_1000g.concat.vcf -C hg19ToHg38.over.chain.gz -R hg38.fa.gz --REJECT rejectedRecords.txt
 
-# I need to find the reference .dict file.. i did this once before but I don't remember it or anything.
-
-# Find out a way to "zcat AltaiNea.hg19_1000g.${i}.mod.vcf.gz >> MergedAltaiNL.mod.vcf" without colliding the headers
 ```
 
 Steph and I are also meeting with Rajiv later to discuss the results of the NL-specific sQTLs that we found. Apparently the results do not open an interesting line of inquiry according to Steph. We will see.
@@ -131,3 +130,81 @@ java -jar ~/work/progs/gatk-4.0.12.0/gatk-package-4.0.12.0-local.jar LiftoverVcf
 ```
 
 Okay, nothing I do works, I have no idea why. I have to recreate the VCF. I'll talk to Rajiv about this next Monday.
+
+### 02/10/2020
+
+It's amazing what some time off can do. So the `FILTER` column have either `LowQual` values or `.` values. I want to remove all rows that have `LowQual` values.
+
+I can use the following unix command: `sed -i '/LowQual/d' ./infile` but I'm going to try to use VCFtools, which is not working for some reason:
+
+```
+[aseyedi2@jhu.edu@rmccoy22-dev archaicGenomes]$ vcftools --vcf AltaiNea.hg19_1000g.concat.vcf --removed-filtered-all --out AltaiNea.hg19_1000g.concat.LowQualRemoved
+
+
+Error: Unknown option: --removed-filtered-all0
+```
+
+lol I just realized as I pasted this that I spelled it `removed` and not `remove`:
+
+`vcftools --vcf AltaiNea.hg19_1000g.concat.vcf --remove-filtered "LowQual" --out AltaiNea.hg19_1000g.concat.LowQualRemoved`
+
+This is where it should be by now:
+
+```
+ml vcftools 
+
+for i in {1..22}; do
+  wget "http://cdna.eva.mpg.de/neandertal/altai/AltaiNeandertal/VCF/AltaiNea.hg19_1000g.${i}.mod.vcf.gz"
+done
+
+for i in {1..22}; do
+  gunzip AltaiNea.hg19_1000g.${i}.mod.vcf.gz
+done
+
+vcf-concat -f concatList.txt > AltaiNea.hg19_100g.concat.vcf
+
+# now liftover the vcf
+wget http://hgdownload.cse.ucsc.edu/goldenpath/hg19/liftOver/hg19ToHg38.over.chain.gz
+
+#vcftools --vcf AltaiNea.hg19_1000g.concat.vcf --remove-filtered "LowQual" --out AltaiNea.hg19_1000g.concat.LowQualRemoved
+
+sed '/LowQual/d' ./AltaiNea.hg38_1000g.concat.vcf > AltaiNea.hg19_1000g.concat.LowQualRemoved.vcf
+
+java -jar ~/work/progs/gatk-4.0.12.0/gatk-package-4.0.12.0-local.jar LiftoverVcf -I AltaiNea.hg19_1000g.concat.LowQualRemoved.vcf -O AltaiNea.hg38_1000g.concat.LowQualRemoved.vcf -C hg19ToHg38.over.chain -R hg38.fa --REJECT rejectedRecords.vcf
+```
+
+So I'm using `vcftools` to filter out non-PASS values now.
+
+Okay, that didn't work for no good reason. The error message says:
+```
+After filtering, kept 1 out of 1 Individuals
+After filtering, kept -1612752079 out of a possible -1611057532 Sites
+File does not contain any sites
+Run Time = 5418.00 seconds
+```
+This makes no sense and is insane to me. There are two types of values in the filter, one is `LowQual` but the other is `.`, which I understand to be "unknown." I think my problem has something to do with this. I'm going to try to fix it but I might just use Unix if I can't do it with VCFtools just to save time.
+
+Here is the Unix command I would use: `sed '/LowQual/d' ./AltaiNea.hg38_1000g.concat.vcf > AltaiNea.hg19_1000g.concat.LowQualRemoved.vcf`
+
+Okay. I'm still getting trouble. This time it's this:
+```
+[Mon Feb 10 14:36:03 EST 2020] Executing as aseyedi2@jhu.edu@rmccoy22-dev on Linux 3.10.0-862.14.4.el7.x86_64 amd64; OpenJDK 64-Bit Server VM 1.8.0_181-b13; Deflater: Intel; Inflater: Intel; Provider GCS is available; Picard version: Version:4.0.12.0
+INFO    2020-02-10 14:36:03     LiftoverVcf     Loading up the target reference genome.
+INFO    2020-02-10 14:36:16     LiftoverVcf     Lifting variants over and sorting (not yet writing the output file.)
+
+[Mon Feb 10 14:59:31 EST 2020] picard.vcf.LiftoverVcf done. Elapsed time: 23.50 minutes.
+Runtime.totalMemory()=7414480896
+To get help, see http://broadinstitute.github.io/picard/index.html#GettingHelp
+java.lang.IllegalStateException: Key . found in VariantContext field INFO at 1:121387974 but this key isn't defined in the VCFHeader.  We require all VCFs to have complete VCF headers by default.
+        at htsjdk.variant.vcf.VCFEncoder.fieldIsMissingFromHeaderError(VCFEncoder.java:202)
+        at htsjdk.variant.vcf.VCFEncoder.write(VCFEncoder.java:141)
+        at htsjdk.variant.variantcontext.writer.VCFWriter.add(VCFWriter.java:248)
+        at picard.vcf.LiftoverVcf.rejectVariant(LiftoverVcf.java:456)
+        at picard.vcf.LiftoverVcf.doWork(LiftoverVcf.java:357)
+        at picard.cmdline.CommandLineProgram.instanceMain(CommandLineProgram.java:295)
+        at org.broadinstitute.hellbender.cmdline.PicardCommandLineProgramExecutor.instanceMain(PicardCommandLineProgramExecutor.java:25)
+        at org.broadinstitute.hellbender.Main.runCommandLineProgram(Main.java:160)
+        at org.broadinstitute.hellbender.Main.mainEntry(Main.java:203)
+        at org.broadinstitute.hellbender.Main.main(Main.java:289)
+```
+So now it's saying in the "INFO" field there is a dot but the dot isn't defined and that's a problem. I don't agree. I don't think it's necessarily a problem.
