@@ -222,3 +222,26 @@ Okay, so I think I to alter the "merge_tables.R" file, that's how I am going to 
 
 btw `test.R` takes in a bunch of different files into one data table.
 
+### 02/12/2020
+
+GATK LiftoverVcf worked but also didn't work. Here is a sample of the output:
+
+```
+INFO    2020-02-11 11:50:04     LiftoverVcf     Loading up the target reference genome.
+INFO    2020-02-11 11:50:19     LiftoverVcf     Lifting variants over and sorting (not yet writing the output file.)
+INFO    2020-02-11 20:19:55     LiftoverVcf     Processed 2682215217 variants.
+INFO    2020-02-11 20:19:55     LiftoverVcf     2682215217 variants failed to liftover.
+INFO    2020-02-11 20:19:55     LiftoverVcf     0 variants lifted over but had mismatching reference alleles after lift over.
+INFO    2020-02-11 20:19:55     LiftoverVcf     100.0000% of variants were not successfully lifted over and written to the output.
+INFO    2020-02-11 20:19:55     LiftoverVcf     liftover success by source contig:
+```
+
+Rajiv is saying I should try using GRCh37 over chain instead. The URL is below:
+
+`https://raw.githubusercontent.com/broadinstitute/gatk/master/scripts/funcotator/data_sources/gnomAD/b37ToHg38.over.chain`
+
+So we are trying it again, but this time we are using the command:
+```
+java -jar ~/work/progs/gatk-4.0.12.0/gatk-package-4.0.12.0-local.jar LiftoverVcf -I AltaiNea.hg19_1000g.concat.LowQualRemoved.vcf -O AltaiNea.hg38_1000g.concat.LowQualRemoved.vcf -C b37ToHg38.over.chain -R hg38.fa --REJECT rejectedRecords.vcf --ALLOW_MISSING_FIELDS_IN_HEADER
+```
+
