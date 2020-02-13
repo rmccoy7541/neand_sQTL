@@ -245,3 +245,13 @@ So we are trying it again, but this time we are using the command:
 java -jar ~/work/progs/gatk-4.0.12.0/gatk-package-4.0.12.0-local.jar LiftoverVcf -I AltaiNea.hg19_1000g.concat.LowQualRemoved.vcf -O AltaiNea.hg38_1000g.concat.LowQualRemoved.vcf -C b37ToHg38.over.chain -R hg38.fa --REJECT rejectedRecords.vcf --ALLOW_MISSING_FIELDS_IN_HEADER
 ```
 
+### 02/13/2020
+
+It's still not working and now I am getting an indecipherable error message, something having to do with "not enough storage space," but that (a) seems unlikely because we have infinite storage space on `~/work`, but also (b) I can't be sure of that because the rest of the error message got cut off. So I'm going to run the command again but this time write the stdout to file, which I should have done in the first place.
+
+Just to be safe, I am moving the original unedited concatenated Neandertal VCF to `~/data` to free up some space (500Gb). Hope that works.
+
+```
+java -jar ~/work/progs/gatk-4.0.12.0/gatk-package-4.0.12.0-local.jar LiftoverVcf -I AltaiNea.hg19_1000g.concat.LowQualRemoved.vcf -O AltaiNea.hg38_1000g.concat.LowQualRemoved.vcf -C b37ToHg38.over.chain -R hg38.fa --REJECT rejectedRecords.vcf --ALLOW_MISSING_FIELDS_IN_HEADER &> liftOver.log
+```
+
