@@ -270,3 +270,10 @@ java -jar ~/work/progs/gatk-4.0.12.0/gatk-package-4.0.12.0-local.jar LiftoverVcf
   --TMP_DIR /scratch/groups/rmccoy22/aseyedi2/NL_sQTL_iso/IBDmix/archaicGenomes/tempdir \
   &> liftOver_wTempDir.log
 ```
+
+### 02/17/2020
+
+After 1,543.56 minutes or ~25 hours, liftover worked. We now have a Neandertal genome in hg38 at the following path: 
+`/scratch/groups/rmccoy22/aseyedi2/NL_sQTL_iso/IBDmix/archaicGenomes/AltaiNea.hg38_1000g.concat.LowQualRemoved.vcf`
+
+Now it's time to actually use IBDMix. I also have to work on the thing I told Steph I'd work on. I have the feeling it would be easier to do so on my home workstation, which is what I am planning to do. I am currently working from home but I think I am going to head over to the lab for a bit.
