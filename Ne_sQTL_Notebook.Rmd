@@ -287,3 +287,15 @@ bcftools view -m 2 -M 2 -v snps --threads 23 -O v -o GTExWGSGenotypeMatrixBialle
 If this looks familiar, it's because I used it for the v7 iteration of our pipeline. I next have to index this puppy, who is not really a puppy at all but rather a 500 pound gigantic dog, like the kind that my friend's Greek mob-boss-esque produce-shipping-company owner dad had on his property to viciously murder and maim any intruders. 
 
 I just texted and asked him what breed that dog is and he said American Atika.
+
+### 02/18/2020
+
+`bcftools` finished preparing the VCF. I called IBDMix's `generate_gt` using the following command:
+
+```
+generate_gt -a AltaiNea.hg38_1000g.concat.LowQualRemoved.vcf -m GTExWGSGenotypeMatrixBiallelicOnly_v8.vcf -o IBDMix_GT.txt
+```
+
+The result was an `8.8k` file with only header information, nothing else. To be honest, I'm not sure exactly what is supposed to be in the file or what this file is supposed to look like, since all the documentation said was "text file," but there is no way it's supposed to be completely barren. I'm going to consult Rajiv on this.
+
+`/scratch/groups/rmccoy22/aseyedi2/NL_sQTL_iso/IBDmix/archaicGenomes`
