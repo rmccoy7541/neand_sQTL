@@ -30,4 +30,7 @@ bcftools view -m 2 -M 2 -v snps --threads 23 -O v -o GTExWGSGenotypeMatrixBialle
 
 # From IBDMix
 # Try taking the first MB of chromosome 1 and see if that works with generate_gt
+# maybe strip it down to essential parts of VCF - maybe remove metadata
+# make a bed file of the first MB and do bedtools intersect on both those files to just extract that bit
+# Consider doing it on individual chromosomes separately
 generate_gt -a AltaiNea.hg38_1000g.concat.LowQualRemoved.vcf -m GTExWGSGenotypeMatrixBiallelicOnly_v8.vcf -o IBDMix_GT.txt
