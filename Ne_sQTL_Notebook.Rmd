@@ -352,3 +352,29 @@ plink --vcf GTExWGSGenotypeMatrixBiallelicOnly_v8.vcf --recode vcf --out gtex_pl
 plink --vcf AltaiNea.hg38_1000g.concat.LowQualRemoved.vcf --recode vcf --out altai_plink_recode
 ```
 I will check back in a bit to see what happened.
+
+#### update
+
+Bizarre, I got the following error:
+```
+[aseyedi2@jhu.edu@rmccoy22-dev02 archaicGenomes]$ plink --vcf AltaiNea.hg38_1000g.concat.LowQualRemoved.vcf --recode vcf --out altai_plink_recode
+PLINK v1.90b6.4 64-bit (7 Aug 2018)
+Options in effect:
+  --out altai_plink_recode
+  --recode vcf
+  --vcf AltaiNea.hg38_1000g.concat.LowQualRemoved.vcf
+
+Hostname: rmccoy22-dev02
+Working directory: /scratch/groups/rmccoy22/aseyedi2/NL_sQTL_iso/IBDmix/archaicGenomes
+Start time: Thu Feb 20 11:29:03 2020
+
+Random number seed: 1582216143
+772249 MB RAM detected; reserving 386124 MB for main workspace.
+
+Error: Invalid chromosome code 'chr14_GL000009v2_random' on line 800457902 of
+.vcf file.
+(Use --allow-extra-chr to force it to be accepted.)
+
+End time: Thu Feb 20 11:34:33 2020
+```
+I don't know what to do about it so I'm going to add that extra flag, `--allow-extra-chr`, and see if that fixes it. If not, I'll just delete that line or something.
