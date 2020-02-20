@@ -299,3 +299,56 @@ generate_gt -a AltaiNea.hg38_1000g.concat.LowQualRemoved.vcf -m GTExWGSGenotypeM
 The result was an `8.8k` file with only header information, nothing else. To be honest, I'm not sure exactly what is supposed to be in the file or what this file is supposed to look like, since all the documentation said was "text file," but there is no way it's supposed to be completely barren. I'm going to consult Rajiv on this.
 
 `/scratch/groups/rmccoy22/aseyedi2/NL_sQTL_iso/IBDmix/archaicGenomes`
+
+### 02/20/2020
+
+02202020. What a date. So Rajiv was able to figure out what the problem is. 
+
+```
+
+Rajiv McCoy  9:16 AM
+Re: IBDmix…
+
+
+
+
+
+9:16
+“minimizing” the VCF with plink seemed to work
+9:16
+plink --vcf gtex_test.vcf --recode vcf --out gtex_test_plink
+9:16
+plink --vcf altai_test.vcf --recode vcf --out altai_test_plink
+9:17
+IBDmix/generate_gt -a altai_test_plink.vcf -m gtex_test_plink.vcf -o gt_test.out
+9:17
+[rmccoy22@jhu.edu@rmccoy22-dev scratch]$ head gt_test.out | cut -f1-10
+chrom   pos     ref     alt     AltaiNea_AltaiNea       GTEX-1117F_GTEX-1117F   GTEX-111CU_GTEX-111CU   GTEX-111FC_GTEX-111FC   GTEX-111VG_GTEX-111VG   GTEX-111YS_GTEX-111YS
+1       10231   C       A       1       0       0       0       0       0
+1       10234   C       T       1       0       0       0       0       0
+1       10235   T       A       1       0       0       0       0       0
+1       10248   A       T       1       0       0       0       0       0
+1       10255   A       T       1       0       0       0       0       0
+1       10273   T       C       1       0       0       0       0       0
+1       10327   T       C       1       0       0       0       0       0
+1       10351   C       T       1       0       0       0       0       0
+1       10352   T       A       1       0       0       0       0       0
+9:18
+the original VCFs apparently contained some extraneous metadata that generate_gt couldn’t handle
+9:22
+easiest way to run things is to just edit their Snakemake config file, though
+```
+
+So there you have it. I'm gonna take a better look at their Snakemake config file and see what I need. If I already did many of the steps manually, then I'll just use PLink to recode the vcf. 
+
+Never mind, the SM file is completely opaque to me and I just feel like we did some of those steps anyway. I'm just going to forge ahead with PLink and see if that changes anything.
+
+Also I should consider doing this over again but without concatting the different files. It actually makes it take longer because you can't parallelize and doesn't necessarily make more sense. I just like to think of VCFs as containing all of the chromosomes in one neat little file.
+
+Okay, I submitted the following two lines to `rmccoy22-dev` and `rmccoy22-dev02`:
+```
+plink --vcf GTExWGSGenotypeMatrixBiallelicOnly_v8.vcf --recode vcf --out gtex_plink_recode
+
+plink --vcf AltaiNea.hg38_1000g.concat.LowQualRemoved.vcf --recode vcf --out altai_plink_recode
+```
+I will check back in a bit to see what happened.
