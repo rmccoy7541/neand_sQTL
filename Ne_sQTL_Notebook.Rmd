@@ -378,3 +378,24 @@ Error: Invalid chromosome code 'chr14_GL000009v2_random' on line 800457902 of
 End time: Thu Feb 20 11:34:33 2020
 ```
 I don't know what to do about it so I'm going to add that extra flag, `--allow-extra-chr`, and see if that fixes it. If not, I'll just delete that line or something.
+
+Now I am getting this error:
+
+```
+PLINK v1.90b6.4 64-bit (7 Aug 2018)            www.cog-genomics.org/plink/1.9/
+(C) 2005-2018 Shaun Purcell, Christopher Chang   GNU General Public License v3
+Logging to altai_plink_recode.log.
+Options in effect:
+  --allow-extra-chr
+  --out altai_plink_recode
+  --recode vcf
+  --vcf AltaiNea.hg38_1000g.concat.LowQualRemoved.vcf
+
+772249 MB RAM detected; reserving 386124 MB for main workspace.
+--vcf: altai_plink_recode-temporary.bed + altai_plink_recode-temporary.bim +
+altai_plink_recode-temporary.fam written.
+Error: PLINK does not support more than 2^31 - 3 variants.  We recommend other
+software, such as PLINK/SEQ, for very deep studies of small numbers of genomes.
+```
+
+I guess I have to process the files split up.

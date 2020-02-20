@@ -9,22 +9,26 @@ for i in {1..22}; do
 done
 
 #don't need to concat
-vcf-concat -f concatList.txt > AltaiNea.hg19_1000g.concat.vcf
+#vcf-concat -f concatList.txt > AltaiNea.hg19_1000g.concat.vcf
 
 # now liftover the vcf
 wget http://hgdownload.cse.ucsc.edu/goldenpath/hg19/liftOver/hg19ToHg38.over.chain.gz
 
-sed '/LowQual/d' ./AltaiNea.hg38_1000g.concat.vcf > AltaiNea.hg19_1000g.concat.LowQualRemoved.vcf
+for i in {1..22}; do
+  sed '/LowQual/d' ./AltaiNea.hg19_1000g.${i}.mod.vcf.gz > AltaiNea.hg19_1000g.${i}.LowQualRemoved.vcf
+done
 
-java -jar ~/work/progs/gatk-4.0.12.0/gatk-package-4.0.12.0-local.jar LiftoverVcf \
-  -I AltaiNea.hg19_1000g.concat.LowQualRemoved.vcf \
-  -O AltaiNea.hg38_1000g.concat.LowQualRemoved.vcf \
-  -C b37ToHg38.over.chain \
-  -R hg38.fa \
-  --REJECT rejectedRecords.vcf \
-  --ALLOW_MISSING_FIELDS_IN_HEADER \
-  --TMP_DIR /scratch/groups/rmccoy22/aseyedi2/NL_sQTL_iso/IBDmix/archaicGenomes/tempdir \
-  &> liftOver_wTempDir.log
+for i in {1..22}; do
+  java -jar ~/work/progs/gatk-4.0.12.0/gatk-package-4.0.12.0-local.jar LiftoverVcf \
+    -I AltaiNea.hg19_1000g.${i}.LowQualRemoved.vcf \
+    -O AltaiNea.hg38_1000g.${i}.LowQualRemoved.vcf \
+    -C b37ToHg38.over.chain \
+    -R hg38.fa \
+    --REJECT rejectedRecords_chr${i}.vcf \
+    --ALLOW_MISSING_FIELDS_IN_HEADER \
+    --TMP_DIR /scratch/groups/rmccoy22/aseyedi2/NL_sQTL_iso/IBDmix/archaicGenomes/tempdir \
+    &> liftOver_wTempDir_chr${i}.log
+done
 
 bcftools view -m 2 -M 2 -v snps --threads 23 -O v -o GTExWGSGenotypeMatrixBiallelicOnly_v8.vcf.gz /scratch/groups/rmccoy22/aseyedi2/sQTLv8/data/vcf/GTEx_Analysis_2017-06-05_v8_WholeGenomeSeq_838Indiv_Analysis_Freeze.vcf.gz
 
@@ -33,4 +37,12 @@ bcftools view -m 2 -M 2 -v snps --threads 23 -O v -o GTExWGSGenotypeMatrixBialle
 # maybe strip it down to essential parts of VCF - maybe remove metadata
 # make a bed file of the first MB and do bedtools intersect on both those files to just extract that bit
 # Consider doing it on individual chromosomes separately
-generate_gt -a AltaiNea.hg38_1000g.concat.LowQualRemoved.vcf -m GTExWGSGenotypeMatrixBiallelicOnly_v8.vcf -o IBDMix_GT.txt
+plink --vcf GTExWGSGenotypeMatrixBiallelicOnly_v8.vcf --recode vcf --out gtex_plink_recode
+
+for i in {1..22}; do
+  plink --vcf AltaiNea.hg38_1000g.${i}.LowQualRemoved.vcf --recode vcf --out altai_plink_recode_chr${i}
+done
+
+for i in {1..22}; do
+  generate_gt -a AltaiNea.hg38_1000g.${i}.LowQualRemoved.vcf -m GTExWGSGenotypeMatrixBiallelicOnly_v8.vcf -o IBDMix_GT.txt
+done
