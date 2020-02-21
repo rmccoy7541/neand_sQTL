@@ -15,7 +15,7 @@ done
 wget http://hgdownload.cse.ucsc.edu/goldenpath/hg19/liftOver/hg19ToHg38.over.chain.gz
 
 for i in {1..22}; do
-  sed '/LowQual/d' ./AltaiNea.hg19_1000g.${i}.mod.vcf.gz > AltaiNea.hg19_1000g.${i}.LowQualRemoved.vcf
+  sed '/LowQual/d' ./AltaiNea.hg19_1000g.${i}.mod.vcf > AltaiNea.hg19_1000g.${i}.LowQualRemoved.vcf
 done
 
 for i in {1..22}; do
