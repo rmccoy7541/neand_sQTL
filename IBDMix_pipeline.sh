@@ -22,8 +22,8 @@ for i in {1..22}; do
   java -jar ~/work/progs/gatk-4.0.12.0/gatk-package-4.0.12.0-local.jar LiftoverVcf \
     -I AltaiNea.hg19_1000g.${i}.LowQualRemoved.vcf \
     -O AltaiNea.hg38_1000g.${i}.LowQualRemoved.vcf \
-    -C b37ToHg38.over.chain \
-    -R hg38.fa \
+    -C ../b37ToHg38.over.chain \
+    -R ../hg38.fa \
     --REJECT rejectedRecords_chr${i}.vcf \
     --ALLOW_MISSING_FIELDS_IN_HEADER \
     --TMP_DIR /scratch/groups/rmccoy22/aseyedi2/NL_sQTL_iso/IBDmix/archaicGenomes/tempdir \
