@@ -417,3 +417,7 @@ for i in {1..22}; do
     &> liftOver_wTempDir_chr${i}.log
 done
 ```
+
+### 02/26/2020
+
+Parallelzing it was a bad idea, so I am just doing it in the dev node, like before. I have one more chromosome left. (That sounds like I have a medical disorder).
