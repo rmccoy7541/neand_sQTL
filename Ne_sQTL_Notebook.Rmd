@@ -421,3 +421,5 @@ done
 ### 02/26/2020
 
 Parallelzing it was a bad idea, so I am just doing it in the dev node, like before. I have one more chromosome left. (That sounds like I have a medical disorder).
+
+I'm going to have to figure out how to make it so that for each transcript sQTL pair, there is the sum of all combos where HH == 0, and HH > 0, HN == 0, etc.
