@@ -1,4 +1,5 @@
 ml bcftools
+ml plink
 
 for i in {1..22}; do
   wget "http://cdna.eva.mpg.de/neandertal/altai/AltaiNeandertal/VCF/AltaiNea.hg19_1000g.${i}.mod.vcf.gz"

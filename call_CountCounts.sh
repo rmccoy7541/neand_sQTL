@@ -1,8 +1,9 @@
 #!/bin/bash
 #SBATCH --job-name=CountCounts
-#SBATCH --time=2:0:0
+#SBATCH --time=4:0:0
 #SBATCH --partition=shared
 #SBATCH --nodes=1
+#SBATCH --ntasks-per-node=12
 # number of tasks (processes) per node
 #SBATCH --array=1-49
 #######################################

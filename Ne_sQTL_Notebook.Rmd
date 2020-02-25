@@ -423,3 +423,9 @@ done
 Parallelzing it was a bad idea, so I am just doing it in the dev node, like before. I have one more chromosome left. (That sounds like I have a medical disorder).
 
 I'm going to have to figure out how to make it so that for each transcript sQTL pair, there is the sum of all combos where HH == 0, and HH > 0, HN == 0, etc.
+
+#### update
+
+my genius mind accidentally `rm`'d everything in the archaic genome directory so I have to start over again. I need to use `rm -I` everytime from now on.
+
+On the bright side, re: the isos, I made got a script from stack overflow called `countCounts.R` which I've included in the project directory, which is an absolute s-show that I need to organize.
