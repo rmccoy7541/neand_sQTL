@@ -429,3 +429,7 @@ I'm going to have to figure out how to make it so that for each transcript sQTL 
 my genius mind accidentally `rm`'d everything in the archaic genome directory so I have to start over again. I need to use `rm -I` everytime from now on.
 
 On the bright side, re: the isos, I made got a script from stack overflow called `countCounts.R` which I've included in the project directory, which is an absolute s-show that I need to organize.
+
+### 02/27/2020
+
+I had to resubmit both the IBDMix stuff as well as the countCounts script. Fortunately the countCounts script is already done. It has `NA`s instead of 0s.

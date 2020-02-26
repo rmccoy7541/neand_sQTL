@@ -1,5 +1,6 @@
 ml bcftools
 ml plink
+ml java
 
 for i in {1..22}; do
   wget "http://cdna.eva.mpg.de/neandertal/altai/AltaiNeandertal/VCF/AltaiNea.hg19_1000g.${i}.mod.vcf.gz"

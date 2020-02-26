@@ -27,7 +27,7 @@ dt <- dt %>%
 
 
 write.table(dt,
-            file = paste0(tissuename, "_countCounts.txt"),
+            file = paste0(tissue_name, "_countCounts.txt"),
             sep = "\t",
             row.names = F,
             quote = FALSE)
