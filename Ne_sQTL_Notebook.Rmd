@@ -444,5 +444,16 @@ I talked to Steph and this is what she said.
 
 >hmmmm, weird. IDK how much work this will be, but maybe you could look for a transcript that appears in your larger dataset but not in the 43 that we initially found, and manually check to see if it actually has 0 counts for all the HH samples? as like a sanity check
 
-So I went ahead and looked for the following transcript: <insert transcript here> 
+So I went ahead and looked for the following transcript: chr2_3769142_3769310
 
+This transcript doesn't have 0 counts for all of the HH samples. For example:
+```
+# var_id, trans_id, genotype, sample, counts, disregard
+Testis_NL_isos.txt:chr2_3768715_A_G_b38 chr2_3769142_3769310    0       GTEX-1QP2A      1       1
+```
+
+That was the only line I found with more than 0 counts. So I don't know what's going on and this sanity check has failed (`-30 sanity points`). Not sure what to do now. I can go back and make sure everything I've done so far is good. So I guess here I should have someone review the code that I've used so far to get the list variant transcript pairs with the counts according to genotype. The problem is those scripts are stored locally on my home computer, which is where I came from. So I'm going to have to go back.
+
+As far as the IBDMix stuff goes, I'm backing up all of the files I've generated so I don't lose a few days to having to regenerate files again. 
+
+Alright. It's already 2:30pm. I just feel like the days skip straight to 2 now. I feel like I'm going to go to bed and wake up in my 50's one day. Damn. 
