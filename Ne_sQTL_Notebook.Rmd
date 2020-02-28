@@ -430,6 +430,19 @@ my genius mind accidentally `rm`'d everything in the archaic genome directory so
 
 On the bright side, re: the isos, I made got a script from stack overflow called `countCounts.R` which I've included in the project directory, which is an absolute s-show that I need to organize.
 
-### 02/27/2020
+### 02/26/2020
 
 I had to resubmit both the IBDMix stuff as well as the countCounts script. Fortunately the countCounts script is already done. It has `NA`s instead of 0s.
+
+### 02/27/2020
+
+The IBDMix is still going on. I talked to Steph and basically we have to figure out what's going on with the transcripts. Why aren't the NL-specific transcripts showing up. 
+
+### 02/28/2020
+
+I talked to Steph and this is what she said.
+
+>hmmmm, weird. IDK how much work this will be, but maybe you could look for a transcript that appears in your larger dataset but not in the 43 that we initially found, and manually check to see if it actually has 0 counts for all the HH samples? as like a sanity check
+
+So I went ahead and looked for the following transcript: <insert transcript here> 
+
