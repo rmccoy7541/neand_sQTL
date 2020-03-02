@@ -42,7 +42,7 @@ bcftools view -m 2 -M 2 -v snps --threads 23 -O v -o GTExWGSGenotypeMatrixBialle
 plink --vcf GTExWGSGenotypeMatrixBiallelicOnly_v8.vcf --recode vcf --out gtex_plink_recode
 
 for i in {1..22}; do
-  plink --vcf AltaiNea.hg38_1000g.${i}.LowQualRemoved.vcf --recode vcf --out altai_plink_recode_chr${i}
+  plink --vcf AltaiNea.hg38_1000g.${i}.LowQualRemoved.vcf --recode vcf --out altai_plink_recode_chr${i} --allow-extra-chr
 done
 
 for i in {1..22}; do
