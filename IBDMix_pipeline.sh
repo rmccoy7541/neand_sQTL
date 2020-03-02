@@ -46,5 +46,5 @@ for i in {1..22}; do
 done
 
 for i in {1..22}; do
-  generate_gt -a AltaiNea.hg38_1000g.${i}.LowQualRemoved.vcf -m GTExWGSGenotypeMatrixBiallelicOnly_v8.vcf -o IBDMix_GT.txt
+  ../../generate_gt -a altai_plink_recode_chr${i}.vcf  -m ../gtex_plink_recode.vcf -o ../IBDMixOut/IBDMix_GT_chr${i}.vcf
 done
