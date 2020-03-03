@@ -48,3 +48,9 @@ done
 for i in {1..22}; do
   ../../generate_gt -a altai_plink_recode_chr${i}.vcf  -m ../gtex_plink_recode.vcf -o ../IBDMixOut/IBDMix_GT_chr${i}.vcf
 done
+
+cd ../IBDMixOut
+
+for i in {1..22}; do
+  ../../ibdmix -g IBDMix_GT_chr${i}.vcf  -o IBDMix_fin_chr${i}.vcf
+done
