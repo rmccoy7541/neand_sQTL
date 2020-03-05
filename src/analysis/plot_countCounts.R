@@ -43,14 +43,14 @@ for(i in 0:10) {
 # otherdt <- sum(dataset[HH0 > 0 & `HH>0` == 0 & NN0 == 0 & `HN>0` >0 & `NN>0` > 0 & NN0 == 0][, .(n=.N), by=.(transcript_id)][order(n),]$n)
 otherdt
 
-sum(dataset[HH0 > 0 & `HH>0` == 0][, .(n=.N), by=.(transcript_id)][order(n),]$n)
-
-g <- ggplot(dataset, aes(transcript_id, HH0))
-
-# Scatterplot
-g + geom_point() + 
-  geom_smooth(method="lm", se=F) +
-  labs(subtitle="# of uniq transcripts for each transcript x sQTL pair with ascending HH counts", 
-       y="xcript_id", 
-       x="HH0", 
-       title="Scatterplot with overlapping points")
+# sum(dataset[HH0 > 0 & `HH>0` == 0][, .(n=.N), by=.(transcript_id)][order(n),]$n)
+# 
+# g <- ggplot(dataset, aes(transcript_id, HH0))
+# 
+# # Scatterplot
+# g + geom_point() + 
+#   geom_smooth(method="lm", se=F) +
+#   labs(subtitle="# of uniq transcripts for each transcript x sQTL pair with ascending HH counts", 
+#        y="xcript_id", 
+#        x="HH0", 
+#        title="Scatterplot with overlapping points")

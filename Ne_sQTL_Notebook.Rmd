@@ -457,3 +457,24 @@ That was the only line I found with more than 0 counts. So I don't know what's g
 As far as the IBDMix stuff goes, I'm backing up all of the files I've generated so I don't lose a few days to having to regenerate files again. 
 
 Alright. It's already 2:30pm. I just feel like the days skip straight to 2 now. I feel like I'm going to go to bed and wake up in my 50's one day. Damn. 
+
+### 03/05/2020
+
+Quick update: I am meeting with Rajiv to go over the IBDMix results (which I was able to "successfully", we'll see). 
+It's not clear to me yet if the ADAMTSL3 sQTL is in there. Rajiv is saying maybe there is. But there are multiple chromosomes which do not have any results, which is troubling.
+
+I need to figure out what to do regarding the NL isoform pipeline. Just a refresher, Steph and I were trying to create a graph where we were going to count the number of samples where the number of samples that had zero counts was greater than zero and then for each tick on the X-axis, show how that number declines for each increasing value of the number of samples where the number of counts for each transcript is greater than 0 where `HH>0`. This is confusing for me to even write so here is the code in `plotCountCounts.R`:
+
+```
+## make it so that the cutoff value includes the sum of the unique transcripts for cut off values below it
+for(i in 0:10) {
+  if (i == 0){
+  otherdt[i + 1] <- sum(dataset[HH0 > 0 & `HH>0` == i & `HN>0` > 0 & HN0 == 0][, .(n=.N), by=.(transcript_id)][order(n),]$n)
+  }
+  else {
+  otherdt[i + 1] <- sum(sum(dataset[HH0 > 0 & `HH>0` == i & `HN>0` > 0 & HN0 == 0][, .(n=.N), by=.(transcript_id)][order(n),]$n), otherdt[i])
+  }
+}
+```
+
+The resulting table, when we look and examine the results, has way more counts than 43 which Steph discovered where `HH0 > 0` and `HH>0 == 0`. Her recommendation was that we reinvestigate the pipeline to make sure it's free of any errors. 
