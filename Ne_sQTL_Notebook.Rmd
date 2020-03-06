@@ -477,4 +477,49 @@ for(i in 0:10) {
 }
 ```
 
-The resulting table, when we look and examine the results, has way more counts than 43 which Steph discovered where `HH0 > 0` and `HH>0 == 0`. Her recommendation was that we reinvestigate the pipeline to make sure it's free of any errors. 
+The resulting table, when we look and examine the results, has way more counts than 43 which Steph discovered where `HH0 > 0` and `HH>0 == 0`. Her recommendation was that we reinvestigate the pipeline to make sure it's free of any errors.
+
+Rajiv is saying that we need a way to map SNPs to haploytypes, which is something SPrime did but not IBDMix.
+
+Split up the GTEx VCF after `plink` and feed that into `generate_gt`.
+
+Meeting with Rajiv:
+  Find a way to map SNPs onto haplotypes
+    - Raise it as a question on the IBDMix Github page
+    - or do it ourselves downstream
+  
+  Go SNP by SNP and ask what is this snps freq on and off NL haplotypes?
+  
+  Set a thresold of confidence for a SNP on a NL haplotype to say if it's a NL snp
+  
+  Is that allele of the SNP only observed in individuals with haplotypes that are called as NL introgressed?
+  
+  Is the NL allele only observed in individuals with the NL-introgressed haplotype?
+  
+  Can we figure out which snps define these introgressed haplotype? haplotypes are snps in LD
+  
+```
+library(tidyverse)
+library(data.table)
+file_list <- list.files(path = "~/Downloads", pattern = "_countCounts.txt", full.names = TRUE)
+f_dowle2 = function(DT) {
+  for (i in names(DT))
+    DT[is.na(get(i)), (i):=0]
+}
+read_tissue_counts <- function(filename) {
+  dt_tissue <- fread(filename, header = TRUE) 
+  f_dowle2(dt_tissue)
+  tissue_name <- gsub("^([^_]*_[^_]*)_.*$", "\\1", filename)
+  tissue_name <- gsub("/Users/rajivmccoy/Downloads/", "", tissue_name)
+  dt_tissue[, tissue := tissue_name]
+  return(dt_tissue[!duplicated(transcript_id)])
+}
+dt <- do.call(rbind, lapply(file_list, function(x) read_tissue_counts(x)))
+ggplot(dt, aes(x = `HH>0`, y = `HN>0` + `NN>0`)) +
+  geom_bin2d() + 
+  scale_fill_gradient(name = "count", trans = "log10") +
+  facet_wrap(~ tissue)
+ggplot(dt, aes(x = `HH>0`, y = `HN>0` + `NN>0`)) +
+  geom_bin2d(bins = 100) + 
+  scale_fill_gradient(name = "count", trans = "log10")
+  ```

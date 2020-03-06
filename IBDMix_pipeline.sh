@@ -45,6 +45,8 @@ for i in {1..22}; do
   plink --vcf AltaiNea.hg38_1000g.${i}.LowQualRemoved.vcf --recode vcf --out altai_plink_recode_chr${i} --allow-extra-chr
 done
 
+## use plink to split GTEx VCF on chromosome 10 as a test case
+
 for i in {1..22}; do
   ../../generate_gt -a altai_plink_recode_chr${i}.vcf  -m ../gtex_plink_recode.vcf -o ../IBDMixOut/IBDMix_GT_chr${i}.vcf
 done
