@@ -523,3 +523,13 @@ ggplot(dt, aes(x = `HH>0`, y = `HN>0` + `NN>0`)) +
   geom_bin2d(bins = 100) + 
   scale_fill_gradient(name = "count", trans = "log10")
   ```
+  
+#### 03/06/2020
+
+The meeting with Rajiv yesterday was extremely informative. The above script is something he just came up with in a couple of hours. We generated a couple of images that demonstrate that there are a few variants that can be said to incorrectly cause expression in individuals homozygous for the human allele. Meeting w/ Steph to figure it out. 
+
+re: IBDMix, the goal is to split the VCF and test chromosome 10 on its own to see how it fares. 
+
+
+
+
