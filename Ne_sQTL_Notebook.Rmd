@@ -531,5 +531,13 @@ The meeting with Rajiv yesterday was extremely informative. The above script is 
 re: IBDMix, the goal is to split the VCF and test chromosome 10 on its own to see how it fares. 
 
 
+#### 03/10/2020
 
+Rajiv says we should stress that we were mostly found qunatitative changes as opposed to qualitative, and that the NL-specific transcripts did not have variation in splice sites.
+
+- how many sqtls did we find in different tissues which reflects that sqtls are a quantitative trait, the more samples you have the more sqtls you'll find
+- ask about enrichment or depletion of splicing effects compared to background set
+- plan to submit with sprime
+- annoying that we couldn't find ADAMTSL3
+- plot distro of sqtls along reason, interrogate chr17 phenomenon
 
