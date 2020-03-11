@@ -541,3 +541,18 @@ Rajiv says we should stress that we were mostly found qunatitative changes as op
 - annoying that we couldn't find ADAMTSL3
 - plot distro of sqtls along reason, interrogate chr17 phenomenon
 
+#### 03/11/2020
+
+Alright. We're talking about this paper like we're going to publish it soon. So let's go, baby. We got this.
+
+I need to:
+* Pull out introns at the "loosened restrictions" part of the plot (see the graphs in the repo)
+* What genes do the introns belong to?
+* sQTL boxplots for all tissues (one tissue per)
+* Chr17 stuff:
+  * Are all the transcripts for the same gene?
+  * Are sQTLs ????? in any regions of the gene (plot # by position)
+* Snakemake pipelines
+
+We are WFH because of Coronavirus.
+
