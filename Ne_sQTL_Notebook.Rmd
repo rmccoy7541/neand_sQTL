@@ -556,3 +556,7 @@ I need to:
 
 We are WFH because of Coronavirus.
 
+#### 03/17/2020
+A whole year has passed since the last week. We have the plots which Rajiv helped make, I just extracted the "loosened restrictions" part of our graph of transcripts graph. One thing I have not been doing for a while is continuously updating the Snakemake workflow, which will be a pain in the ass to do later but it seems like I'll have to do it eventually.
+
+Next question: What genes do the introns belong to? I'll have to use `loosenedRestrictions.txt`, I guess. 
