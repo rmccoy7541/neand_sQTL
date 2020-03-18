@@ -8,3 +8,6 @@ kg_dir: "/work-zfs/rmccoy22/resources/1kg-GRCh38"
 
 # merged archaic VCFs
 arch_vcf: "/scratch/groups/rmccoy22/aseyedi2/sQTLv8/spliceai"
+
+#gatk bin
+gatk: #insert here

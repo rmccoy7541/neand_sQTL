@@ -3,7 +3,6 @@ library(tidyverse)
 library(pbapply)
 library(ggrepel)
 library(annotate)
-library(org.Hs.eg.db)
 library(rtracklayer)
 
 count_sqtl <- function(tissue, summarize = FALSE) {
@@ -31,19 +30,21 @@ tissue_abbv <- c("ADPSBQ", "ADPVC", "ADRNLG", "ARTAORT", "ARTCRN", "ARTTBL", "BR
 names(tissue_names) <- tissue_abbv
 
 sqtl_counts_by_tissue <- do.call(rbind, lapply(tissue_names, function(x) count_sqtl(x, summarize=TRUE)))
-sqtl_counts_by_tissue[, n_samples := c(763,564,275,450,253,770,177,213,291,263,298,325,425,243,236,277,232,182,164,480,527,192,389,432,401,622,559,452,689,100,251,867,181,1132,722,195,360,301,262,638,849,193,260,381,406,812,166,173,3288)]
+sqtl_counts_by_tissue[, n_samples := c(581,469,233,387,213,584,129,147,194,175,209,205,175,165,170,202,170,126,114,396,483,147,318,368,330,497,465,372,386,73,208,515,144,706,532,167,305,237,221,517,605,174,227,324,322,574,129,141,670)]
+
 
 ### number of sQTLs per tissue
-png(filename = "sQTLs_per_tissue.png")
+# png(filename = "sQTLs_per_tissue.png")
 ggplot(data = sqtl_counts_by_tissue, aes(x = n_samples, y = n_sqtl, label = names(tissue_names), color = TISSUE)) +
   theme_bw() +
   geom_point() +
   ggrepel::geom_text_repel(force = 1) + # hjust = 0, nudge_x = 4, nudge_y = 2
-  xlim(0, 800) +
+  coord_cartesian(xlim = c(0, 900)) +
+  coord_cartesian(ylim = c(0,115)) +
   theme(panel.grid = element_blank(), legend.position = "none") +
   xlab("Number of Genotyped Samples") +
   ylab("Number of sQTLs")
-dev.off()
+# dev.off()
 ###
 
 tissue_gtp <-  do.call(rbind, lapply(tissue_names, function(x) count_sqtl(x, summarize = FALSE))) %>%

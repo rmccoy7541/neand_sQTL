@@ -2,7 +2,6 @@ library(data.table)
 library(tidyverse)
 library(qqman)
 library(qvalue)
-library(org.Hs.eg.db)
 library(annotate)
 library(rtracklayer)
 

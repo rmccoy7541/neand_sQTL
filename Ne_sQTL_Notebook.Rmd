@@ -1,0 +1,562 @@
+---
+title: "Ne_sQTLv2 Notebook"
+output: html_notebook
+---
+`#r format(Sys.time(), '%d %B, %Y')`
+
+### 01/15/2020
+
+Our present goal, as of the aforementioned date, is to find both splicing transcripts that are far more abundantly expressed in individuals who are at least heterozygous for the Neandertal allele where they have some (modest) transcript counts for the modern human allele (quantitative), and splicing transcripts that are altogether novel and uniquely expressed in individuals that are at least heterozygous for the Neandertal allele where they have 0 (zero) counts for the modern human allele. The findings from these two analyses will be presented in two different sections in the manuscript. 
+
+What we have so far is a merged table with columns representing `variant_id`, `transcript_id`, genotype (so `0`, `1`, or `2` for homozygous modern human, heterozygous, and homozygous archaic, respectively), and `counts`. We pursued an avenue where we consolidated rows with identical `variant_id`/`transcript_id` pairs, filtered the tables, then made them horizontal, then we went back and did the same thing without filtering, found the difference in average counts per sample between the `HH` and `NN` transcripts, and looked for transcripts where there are fewer than 100 counts for the homozygous modern human genotype and greater than 250 counts for the homozygous archaic genotype.
+
+Now, we are retooling our analysis. We're reconstructing our `merge_table` table to also include `sample_id`, so that we can filter instances where a homozygous modern human genotype results in the expression of 0 counts of a transcript **except** in one or two individuals who might have been misannotated, although, I'm not quite sure why we're doing that because we are going to discard those `variant_id`/`transcript_id` pairs anyway. But what we ultimately want is to
+
+  1. Isolate instances where there is a novel NL transcript resulting from an sQTL (so no human expression but even some heterozygous NL expression)
+  2. Isolate instances where there is a marked increase in gene expression in the NL genotypes
+
+### 01/21/2020
+
+From Steph:
+```
+I’m still trying to think of the best way to filter for interesting things in this data. I guess in the ideal situation we’d have:
+- All HH samples are 0
+- If a few HH samples are nonzero, their expression is very low
+- All heterozygous human samples have nonzero expression
+- All NLNL samples also have nonzero expression
+but probably it’ll be easiest to just filter by the first criteria to begin with
+```
+I was able to regenerate the tables to include the individual ID (e.g. `GTEX-XXXX`) for each tissue. 
+
+### 01/29/2020
+
+I've spent hours agonizing over how to get the GTEX ID for each row to show up in `merge_tables.R` before realizing that it's not important right now. I'm going back to the horizontalized tables (pre-difference, I hope any of this makes sense when you read it) and I'm filtering for cases where all HH = 0 for any particular `variant_id` and `transcript_id` pair. Man I'm hungry right now.
+
+Here's the path for the directory that is important and I should focus on: `/work-zfs/rmccoy22/aseyedi2/tempData/merge/old_attempt/final_iso/horizontal`
+
+### 01/30/2020
+
+Finally found those doggone Neandertal-specific isoforms. They're in `NoHHIsoforms.txt`. The code is in `test.R`. The names are bad, I know, but I just had to put down something because I have to go to the lab. We found over 16k sQTLs with 0 human transcripts and more than 0 Neandertal transcripts. This should be interesting. 
+
+### 02/04/2020
+
+Rajiv has asked me to use a software tool developed by Dr. Joshua Akey that does not require an outgroup population, unlike SPrime, as far as I can tell. In order to prep the GTEx VCF, I need to remove indels and multiallelic SNPs, which I will do using `vcftools`:
+
+```
+vcftools 
+  --vcf {input} \
+  --max-alleles 2 \
+  --remove-indels \
+  --recode \
+  --out {output}
+```
+
+This is for the admixed MH VCF. I need to find the archaic VCF, but in order to do that, I have to find out more about it as an input into IBDMix.
+
+In order to download the Neandertal VCF, I have to do the following:
+```
+ml vcftools 
+
+for i in {1..22}; do
+  wget "http://cdna.eva.mpg.de/neandertal/altai/AltaiNeandertal/VCF/AltaiNea.hg19_1000g.${i}.mod.vcf.gz"
+done
+
+for i in {1..22}; do
+  gunzip AltaiNea.hg19_1000g.${i}.mod.vcf.gz
+done
+
+vcf-concat -f concatList.txt > AltaiNea.hg19_100g.concat.vcf
+
+# now liftover the vcf
+wget http://hgdownload.cse.ucsc.edu/goldenpath/hg19/liftOver/hg19ToHg38.over.chain.gz
+
+vcftools --vcf AltaiNea.hg19_1000g.concat.vcf --remove-filtered "LowQual" --out AltaiNea.hg19_1000g.concat.LowQualRemoved
+
+java -jar ~/work/progs/gatk-4.0.12.0/gatk-package-4.0.12.0-local.jar LiftoverVcf -I AltaiNea.hg19_1000g.concat.vcf -O AltaiNea.hg38_1000g.concat.vcf -C hg19ToHg38.over.chain.gz -R hg38.fa.gz --REJECT rejectedRecords.txt
+
+```
+
+Steph and I are also meeting with Rajiv later to discuss the results of the NL-specific sQTLs that we found. Apparently the results do not open an interesting line of inquiry according to Steph. We will see.
+
+### 02/06/2020
+Okay, I am working on the Josh Akey IBDMix pipeline, but now I have to liftover the archaic genomes which I now have over to `hg38`, and I'm realizing that in our pipeline we have an over_chain rule which downloads hg38 -> hg19 chain file:
+
+```
+rule over_chain:
+    output:
+        "metadata/hg38ToHg19.over.chain"
+    params:
+        url="https://hgdownload.soe.ucsc.edu/goldenPath/hg38/liftOver/hg38ToHg19.over.chain.gz"
+    shell:
+        "wget {params.url} metadata/;"
+        "gunzip {output}.gz"
+```
+
+Not sure why that is and I can't remember why I included this rule. That's a bit of a bad sign. EDIT: okay now I am realizing that the reason I converted hg38 to hg19 is because I was converting the GTEx VCF to an earlier version to compare the SPrime results to hg19. I am pretty sure.
+
+But now, as you can see in the previous entry (`02/04/2020`), I am working on a way to prepare the archaic genome for use with GTEx. This way makes the most sense. I'm going to use `gatk` again to produce a new hg38 Neandertal VCF.
+
+### 02/07/2020
+
+Okay I made some progress but I've hit another snag:
+
+```
+java -jar ~/work/progs/gatk-4.0.12.0/gatk-package-4.0.12.0-local.jar LiftoverVcf -I AltaiNea.hg19_1000g.concat.vcf -O AltaiNea.hg38_1000g.concat.vcf -C hg19ToHg38.over.chain -R hg38.fa --REJECT rejectedRecords.txt
+
+Exception in thread "main" java.lang.IllegalArgumentException: Output format type is not set, or could not be inferred from the output path. If a path was used, does it have a valid VCF extension (.vcf, .vcf.gz, .bcf)?
+        at htsjdk.variant.variantcontext.writer.VariantContextWriterBuilder.build(VariantContextWriterBuilder.java:462)
+        at htsjdk.variant.variantcontext.writer.VariantContextWriterBuilder.build(VariantContextWriterBuilder.java:415)
+        at picard.vcf.LiftoverVcf.doWork(LiftoverVcf.java:355)
+        at picard.cmdline.CommandLineProgram.instanceMain(CommandLineProgram.java:305)
+        at picard.cmdline.PicardCommandLine.instanceMain(PicardCommandLine.java:103)
+        at picard.cmdline.PicardCommandLine.main(PicardCommandLine.java:113)
+```
+
+I submitted a post on the GATK website after trying this with both GATK and Picard so we will see what they say. No idea what this error means.
+
+#### update
+Okay, I just found out it is because the `--REJECT` flag needs to be in `vcf` format
+
+But now I'm getting a different problem:
+
+```
+java.lang.IllegalStateException: Key LowQual found in VariantContext field FILTER at 1:10014 but this key isn't defined in the VCFHeader.  We require all VCFs to have complete VCF headers by default.
+```
+
+The variant is messed up. I'm going to have to do something about it. Not sure what. I have a suspicion this has something to do with the fact that I concatenated the Neandertal VCFs. I'm going to try to run this on one chromosome individually.
+
+```
+java -jar ~/work/progs/gatk-4.0.12.0/gatk-package-4.0.12.0-local.jar LiftoverVcf -I vcfChrom/AltaiNea.hg19_1000g.17.mod.vcf -O AltaiNea.hg38_1000g.Chrom1.vcf -C hg19ToHg38.over.chain -R hg38.fa --REJECT rejectedRecords.vcf
+```
+
+Okay, nothing I do works, I have no idea why. I have to recreate the VCF. I'll talk to Rajiv about this next Monday.
+
+### 02/10/2020
+
+It's amazing what some time off can do. So the `FILTER` column have either `LowQual` values or `.` values. I want to remove all rows that have `LowQual` values.
+
+I can use the following unix command: `sed -i '/LowQual/d' ./infile` but I'm going to try to use VCFtools, which is not working for some reason:
+
+```
+[aseyedi2@jhu.edu@rmccoy22-dev archaicGenomes]$ vcftools --vcf AltaiNea.hg19_1000g.concat.vcf --removed-filtered-all --out AltaiNea.hg19_1000g.concat.LowQualRemoved
+
+
+Error: Unknown option: --removed-filtered-all0
+```
+
+lol I just realized as I pasted this that I spelled it `removed` and not `remove`:
+
+`vcftools --vcf AltaiNea.hg19_1000g.concat.vcf --remove-filtered "LowQual" --out AltaiNea.hg19_1000g.concat.LowQualRemoved`
+
+This is where it should be by now:
+
+```
+ml vcftools 
+
+for i in {1..22}; do
+  wget "http://cdna.eva.mpg.de/neandertal/altai/AltaiNeandertal/VCF/AltaiNea.hg19_1000g.${i}.mod.vcf.gz"
+done
+
+for i in {1..22}; do
+  gunzip AltaiNea.hg19_1000g.${i}.mod.vcf.gz
+done
+
+vcf-concat -f concatList.txt > AltaiNea.hg19_100g.concat.vcf
+
+# now liftover the vcf
+wget http://hgdownload.cse.ucsc.edu/goldenpath/hg19/liftOver/hg19ToHg38.over.chain.gz
+
+#vcftools --vcf AltaiNea.hg19_1000g.concat.vcf --remove-filtered "LowQual" --out AltaiNea.hg19_1000g.concat.LowQualRemoved
+
+sed '/LowQual/d' ./AltaiNea.hg38_1000g.concat.vcf > AltaiNea.hg19_1000g.concat.LowQualRemoved.vcf
+
+java -jar ~/work/progs/gatk-4.0.12.0/gatk-package-4.0.12.0-local.jar LiftoverVcf -I AltaiNea.hg19_1000g.concat.LowQualRemoved.vcf -O AltaiNea.hg38_1000g.concat.LowQualRemoved.vcf -C hg19ToHg38.over.chain -R hg38.fa --REJECT rejectedRecords.vcf
+```
+
+So I'm using `vcftools` to filter out non-PASS values now.
+
+Okay, that didn't work for no good reason. The error message says:
+```
+After filtering, kept 1 out of 1 Individuals
+After filtering, kept -1612752079 out of a possible -1611057532 Sites
+File does not contain any sites
+Run Time = 5418.00 seconds
+```
+This makes no sense and is insane to me. There are two types of values in the filter, one is `LowQual` but the other is `.`, which I understand to be "unknown." I think my problem has something to do with this. I'm going to try to fix it but I might just use Unix if I can't do it with VCFtools just to save time.
+
+Here is the Unix command I would use: `sed '/LowQual/d' ./AltaiNea.hg38_1000g.concat.vcf > AltaiNea.hg19_1000g.concat.LowQualRemoved.vcf`
+
+Okay. I'm still getting trouble. This time it's this:
+```
+[Mon Feb 10 14:36:03 EST 2020] Executing as aseyedi2@jhu.edu@rmccoy22-dev on Linux 3.10.0-862.14.4.el7.x86_64 amd64; OpenJDK 64-Bit Server VM 1.8.0_181-b13; Deflater: Intel; Inflater: Intel; Provider GCS is available; Picard version: Version:4.0.12.0
+INFO    2020-02-10 14:36:03     LiftoverVcf     Loading up the target reference genome.
+INFO    2020-02-10 14:36:16     LiftoverVcf     Lifting variants over and sorting (not yet writing the output file.)
+
+[Mon Feb 10 14:59:31 EST 2020] picard.vcf.LiftoverVcf done. Elapsed time: 23.50 minutes.
+Runtime.totalMemory()=7414480896
+To get help, see http://broadinstitute.github.io/picard/index.html#GettingHelp
+java.lang.IllegalStateException: Key . found in VariantContext field INFO at 1:121387974 but this key isn't defined in the VCFHeader.  We require all VCFs to have complete VCF headers by default.
+        at htsjdk.variant.vcf.VCFEncoder.fieldIsMissingFromHeaderError(VCFEncoder.java:202)
+        at htsjdk.variant.vcf.VCFEncoder.write(VCFEncoder.java:141)
+        at htsjdk.variant.variantcontext.writer.VCFWriter.add(VCFWriter.java:248)
+        at picard.vcf.LiftoverVcf.rejectVariant(LiftoverVcf.java:456)
+        at picard.vcf.LiftoverVcf.doWork(LiftoverVcf.java:357)
+        at picard.cmdline.CommandLineProgram.instanceMain(CommandLineProgram.java:295)
+        at org.broadinstitute.hellbender.cmdline.PicardCommandLineProgramExecutor.instanceMain(PicardCommandLineProgramExecutor.java:25)
+        at org.broadinstitute.hellbender.Main.runCommandLineProgram(Main.java:160)
+        at org.broadinstitute.hellbender.Main.mainEntry(Main.java:203)
+        at org.broadinstitute.hellbender.Main.main(Main.java:289)
+```
+So now it's saying in the "INFO" field there is a dot but the dot isn't defined and that's a problem. I don't agree. I don't think it's necessarily a problem.
+
+### 02/11/2020
+
+Just figured out w Rajiv that we need to use the tag `--ALLOW_MISSING_FIELDS_IN_HEADER`. It was in the documentation. I should have looked at the documentation before posting about it, but oh well.
+```
+java -jar ~/work/progs/gatk-4.0.12.0/gatk-package-4.0.12.0-local.jar LiftoverVcf -I AltaiNea.hg19_1000g.concat.LowQualRemoved.vcf -O AltaiNea.hg38_1000g.concat.LowQualRemoved.vcf -C hg19ToHg38.over.chain -R hg38.fa --REJECT rejectedRecords.vcf --ALLOW_MISSING_FIELDS_IN_HEADER
+```
+
+Also, for finding the NL-specific isoforms with Steph, we are going back to square 1 again. This time, our goal is going to be to sum all of the samples where, for each transcript/variant pair's genotype, count = 0, and all of the samples where count is > 0. If this doesn't make sense, touch base again with Steph. It's something like that. But we're basically trying to find instances where +HH = 1 or 2 and -HH = 500 (so the number of individuals who have this transcript/variant pair and have the homozygous modern human genotype is less than 5 and the number of individuals who have this transcript/variant pair and something else is a bunch). I'm just going to work on this tomorrow when I'm a bit more fresh.
+
+Okay, so I think I to alter the "merge_tables.R" file, that's how I am going to get what I want. Actually I already have something like that, but I'm not sure how I got it. I do not remember. It was only a couple of weeks ago. Alright. I think I will figure it outwhen I can. So the files I need to mess with are in `/scratch/groups/rmccoy22/aseyedi2/NL_sQTL_iso/merge/tables_with_sample_id`
+
+btw `test.R` takes in a bunch of different files into one data table.
+
+### 02/12/2020
+
+GATK LiftoverVcf worked but also didn't work. Here is a sample of the output:
+
+```
+INFO    2020-02-11 11:50:04     LiftoverVcf     Loading up the target reference genome.
+INFO    2020-02-11 11:50:19     LiftoverVcf     Lifting variants over and sorting (not yet writing the output file.)
+INFO    2020-02-11 20:19:55     LiftoverVcf     Processed 2682215217 variants.
+INFO    2020-02-11 20:19:55     LiftoverVcf     2682215217 variants failed to liftover.
+INFO    2020-02-11 20:19:55     LiftoverVcf     0 variants lifted over but had mismatching reference alleles after lift over.
+INFO    2020-02-11 20:19:55     LiftoverVcf     100.0000% of variants were not successfully lifted over and written to the output.
+INFO    2020-02-11 20:19:55     LiftoverVcf     liftover success by source contig:
+```
+
+Rajiv is saying I should try using GRCh37 over chain instead. The URL is below:
+
+`https://raw.githubusercontent.com/broadinstitute/gatk/master/scripts/funcotator/data_sources/gnomAD/b37ToHg38.over.chain`
+
+So we are trying it again, but this time we are using the command:
+```
+java -jar ~/work/progs/gatk-4.0.12.0/gatk-package-4.0.12.0-local.jar LiftoverVcf -I AltaiNea.hg19_1000g.concat.LowQualRemoved.vcf -O AltaiNea.hg38_1000g.concat.LowQualRemoved.vcf -C b37ToHg38.over.chain -R hg38.fa --REJECT rejectedRecords.vcf --ALLOW_MISSING_FIELDS_IN_HEADER
+```
+
+### 02/13/2020
+
+It's still not working and now I am getting an indecipherable error message, something having to do with "not enough storage space," but that (a) seems unlikely because we have infinite storage space on `~/work`, but also (b) I can't be sure of that because the rest of the error message got cut off. So I'm going to run the command again but this time write the stdout to file, which I should have done in the first place.
+
+Just to be safe, I am moving the original unedited concatenated Neandertal VCF to `~/data` to free up some space (500Gb). Hope that works.
+
+```
+java -jar ~/work/progs/gatk-4.0.12.0/gatk-package-4.0.12.0-local.jar LiftoverVcf -I AltaiNea.hg19_1000g.concat.LowQualRemoved.vcf -O AltaiNea.hg38_1000g.concat.LowQualRemoved.vcf -C b37ToHg38.over.chain -R hg38.fa --REJECT rejectedRecords.vcf --ALLOW_MISSING_FIELDS_IN_HEADER &> liftOver.log
+```
+
+### 02/14/2020
+
+Still getting insufficient storage space error. I found a temporary directory flag which I should be using. Going to try again but stay in `~/work`, actually, because I didn't consider setting the temp dir. 
+
+```
+java -jar ~/work/progs/gatk-4.0.12.0/gatk-package-4.0.12.0-local.jar LiftoverVcf \
+  -I AltaiNea.hg19_1000g.concat.LowQualRemoved.vcf \
+  -O AltaiNea.hg38_1000g.concat.LowQualRemoved.vcf \
+  -C b37ToHg38.over.chain \
+  -R hg38.fa \
+  --REJECT rejectedRecords.vcf \
+  --ALLOW_MISSING_FIELDS_IN_HEADER \
+  --TMP_DIR /scratch/groups/rmccoy22/aseyedi2/NL_sQTL_iso/IBDmix/archaicGenomes/tempdir \
+  &> liftOver_wTempDir.log
+```
+
+### 02/17/2020
+
+After 1,543.56 minutes or ~25 hours, liftover worked. We now have a Neandertal genome in hg38 at the following path: 
+`/scratch/groups/rmccoy22/aseyedi2/NL_sQTL_iso/IBDmix/archaicGenomes/AltaiNea.hg38_1000g.concat.LowQualRemoved.vcf`
+
+Now it's time to actually use IBDMix. I also have to work on the thing I told Steph I'd work on. I have the feeling it would be easier to do so on my home workstation, which is what I am planning to do. I am currently working from home but I think I am going to head over to the lab for a bit.
+
+So now we have to filter all non-biallelic sites as well as indels. I'm going to use the following `bcftools` command:
+
+```
+# -m min alleles -M max alleles -v only snps --threads 23 threads -O output type uncompressed vcf
+bcftools view -m 2 -M 2 -v snps --threads 23 -O v -o GTExWGSGenotypeMatrixBiallelicOnly_v8.vcf.gz /scratch/groups/rmccoy22/aseyedi2/sQTLv8/data/vcf/GTEx_Analysis_2017-06-05_v8_WholeGenomeSeq_838Indiv_Analysis_Freeze.vcf.gz
+```
+If this looks familiar, it's because I used it for the v7 iteration of our pipeline. I next have to index this puppy, who is not really a puppy at all but rather a 500 pound gigantic dog, like the kind that my friend's Greek mob-boss-esque produce-shipping-company owner dad had on his property to viciously murder and maim any intruders. 
+
+I just texted and asked him what breed that dog is and he said American Atika.
+
+### 02/18/2020
+
+`bcftools` finished preparing the VCF. I called IBDMix's `generate_gt` using the following command:
+
+```
+generate_gt -a AltaiNea.hg38_1000g.concat.LowQualRemoved.vcf -m GTExWGSGenotypeMatrixBiallelicOnly_v8.vcf -o IBDMix_GT.txt
+```
+
+The result was an `8.8k` file with only header information, nothing else. To be honest, I'm not sure exactly what is supposed to be in the file or what this file is supposed to look like, since all the documentation said was "text file," but there is no way it's supposed to be completely barren. I'm going to consult Rajiv on this.
+
+`/scratch/groups/rmccoy22/aseyedi2/NL_sQTL_iso/IBDmix/archaicGenomes`
+
+### 02/20/2020
+
+02202020. What a date. So Rajiv was able to figure out what the problem is. 
+
+```
+
+Rajiv McCoy  9:16 AM
+Re: IBDmix…
+
+
+
+
+
+9:16
+“minimizing” the VCF with plink seemed to work
+9:16
+plink --vcf gtex_test.vcf --recode vcf --out gtex_test_plink
+9:16
+plink --vcf altai_test.vcf --recode vcf --out altai_test_plink
+9:17
+IBDmix/generate_gt -a altai_test_plink.vcf -m gtex_test_plink.vcf -o gt_test.out
+9:17
+[rmccoy22@jhu.edu@rmccoy22-dev scratch]$ head gt_test.out | cut -f1-10
+chrom   pos     ref     alt     AltaiNea_AltaiNea       GTEX-1117F_GTEX-1117F   GTEX-111CU_GTEX-111CU   GTEX-111FC_GTEX-111FC   GTEX-111VG_GTEX-111VG   GTEX-111YS_GTEX-111YS
+1       10231   C       A       1       0       0       0       0       0
+1       10234   C       T       1       0       0       0       0       0
+1       10235   T       A       1       0       0       0       0       0
+1       10248   A       T       1       0       0       0       0       0
+1       10255   A       T       1       0       0       0       0       0
+1       10273   T       C       1       0       0       0       0       0
+1       10327   T       C       1       0       0       0       0       0
+1       10351   C       T       1       0       0       0       0       0
+1       10352   T       A       1       0       0       0       0       0
+9:18
+the original VCFs apparently contained some extraneous metadata that generate_gt couldn’t handle
+9:22
+easiest way to run things is to just edit their Snakemake config file, though
+```
+
+So there you have it. I'm gonna take a better look at their Snakemake config file and see what I need. If I already did many of the steps manually, then I'll just use PLink to recode the vcf. 
+
+Never mind, the SM file is completely opaque to me and I just feel like we did some of those steps anyway. I'm just going to forge ahead with PLink and see if that changes anything.
+
+Also I should consider doing this over again but without concatting the different files. It actually makes it take longer because you can't parallelize and doesn't necessarily make more sense. I just like to think of VCFs as containing all of the chromosomes in one neat little file.
+
+Okay, I submitted the following two lines to `rmccoy22-dev` and `rmccoy22-dev02`:
+```
+plink --vcf GTExWGSGenotypeMatrixBiallelicOnly_v8.vcf --recode vcf --out gtex_plink_recode
+
+plink --vcf AltaiNea.hg38_1000g.concat.LowQualRemoved.vcf --recode vcf --out altai_plink_recode
+```
+I will check back in a bit to see what happened.
+
+#### update
+
+Bizarre, I got the following error:
+```
+[aseyedi2@jhu.edu@rmccoy22-dev02 archaicGenomes]$ plink --vcf AltaiNea.hg38_1000g.concat.LowQualRemoved.vcf --recode vcf --out altai_plink_recode
+PLINK v1.90b6.4 64-bit (7 Aug 2018)
+Options in effect:
+  --out altai_plink_recode
+  --recode vcf
+  --vcf AltaiNea.hg38_1000g.concat.LowQualRemoved.vcf
+
+Hostname: rmccoy22-dev02
+Working directory: /scratch/groups/rmccoy22/aseyedi2/NL_sQTL_iso/IBDmix/archaicGenomes
+Start time: Thu Feb 20 11:29:03 2020
+
+Random number seed: 1582216143
+772249 MB RAM detected; reserving 386124 MB for main workspace.
+
+Error: Invalid chromosome code 'chr14_GL000009v2_random' on line 800457902 of
+.vcf file.
+(Use --allow-extra-chr to force it to be accepted.)
+
+End time: Thu Feb 20 11:34:33 2020
+```
+I don't know what to do about it so I'm going to add that extra flag, `--allow-extra-chr`, and see if that fixes it. If not, I'll just delete that line or something.
+
+Now I am getting this error:
+
+```
+PLINK v1.90b6.4 64-bit (7 Aug 2018)            www.cog-genomics.org/plink/1.9/
+(C) 2005-2018 Shaun Purcell, Christopher Chang   GNU General Public License v3
+Logging to altai_plink_recode.log.
+Options in effect:
+  --allow-extra-chr
+  --out altai_plink_recode
+  --recode vcf
+  --vcf AltaiNea.hg38_1000g.concat.LowQualRemoved.vcf
+
+772249 MB RAM detected; reserving 386124 MB for main workspace.
+--vcf: altai_plink_recode-temporary.bed + altai_plink_recode-temporary.bim +
+altai_plink_recode-temporary.fam written.
+Error: PLINK does not support more than 2^31 - 3 variants.  We recommend other
+software, such as PLINK/SEQ, for very deep studies of small numbers of genomes.
+```
+
+I guess I have to process the files split up.
+
+### 02/24/2020
+
+(Re)submitting the following:
+
+```
+for i in {1..22}; do
+  java -jar ~/work/progs/gatk-4.0.12.0/gatk-package-4.0.12.0-local.jar LiftoverVcf \
+    -I AltaiNea.hg19_1000g.${i}.LowQualRemoved.vcf \
+    -O AltaiNea.hg38_1000g.${i}.LowQualRemoved.vcf \
+    -C ../b37ToHg38.over.chain \
+    -R ../hg38.fa \
+    --REJECT rejectedRecords_chr${i}.vcf \
+    --ALLOW_MISSING_FIELDS_IN_HEADER \
+    --TMP_DIR /scratch/groups/rmccoy22/aseyedi2/NL_sQTL_iso/IBDmix/archaicGenomes/tempdir \
+    &> liftOver_wTempDir_chr${i}.log
+done
+```
+
+### 02/26/2020
+
+Parallelzing it was a bad idea, so I am just doing it in the dev node, like before. I have one more chromosome left. (That sounds like I have a medical disorder).
+
+I'm going to have to figure out how to make it so that for each transcript sQTL pair, there is the sum of all combos where HH == 0, and HH > 0, HN == 0, etc.
+
+#### update
+
+my genius mind accidentally `rm`'d everything in the archaic genome directory so I have to start over again. I need to use `rm -I` everytime from now on.
+
+On the bright side, re: the isos, I made got a script from stack overflow called `countCounts.R` which I've included in the project directory, which is an absolute s-show that I need to organize.
+
+### 02/26/2020
+
+I had to resubmit both the IBDMix stuff as well as the countCounts script. Fortunately the countCounts script is already done. It has `NA`s instead of 0s.
+
+### 02/27/2020
+
+The IBDMix is still going on. I talked to Steph and basically we have to figure out what's going on with the transcripts. Why aren't the NL-specific transcripts showing up. 
+
+### 02/28/2020
+
+I talked to Steph and this is what she said.
+
+>hmmmm, weird. IDK how much work this will be, but maybe you could look for a transcript that appears in your larger dataset but not in the 43 that we initially found, and manually check to see if it actually has 0 counts for all the HH samples? as like a sanity check
+
+So I went ahead and looked for the following transcript: chr2_3769142_3769310
+
+This transcript doesn't have 0 counts for all of the HH samples. For example:
+```
+# var_id, trans_id, genotype, sample, counts, disregard
+Testis_NL_isos.txt:chr2_3768715_A_G_b38 chr2_3769142_3769310    0       GTEX-1QP2A      1       1
+```
+
+That was the only line I found with more than 0 counts. So I don't know what's going on and this sanity check has failed (`-30 sanity points`). Not sure what to do now. I can go back and make sure everything I've done so far is good. So I guess here I should have someone review the code that I've used so far to get the list variant transcript pairs with the counts according to genotype. The problem is those scripts are stored locally on my home computer, which is where I came from. So I'm going to have to go back.
+
+As far as the IBDMix stuff goes, I'm backing up all of the files I've generated so I don't lose a few days to having to regenerate files again. 
+
+Alright. It's already 2:30pm. I just feel like the days skip straight to 2 now. I feel like I'm going to go to bed and wake up in my 50's one day. Damn. 
+
+### 03/05/2020
+
+Quick update: I am meeting with Rajiv to go over the IBDMix results (which I was able to "successfully", we'll see). 
+It's not clear to me yet if the ADAMTSL3 sQTL is in there. Rajiv is saying maybe there is. But there are multiple chromosomes which do not have any results, which is troubling.
+
+I need to figure out what to do regarding the NL isoform pipeline. Just a refresher, Steph and I were trying to create a graph where we were going to count the number of samples where the number of samples that had zero counts was greater than zero and then for each tick on the X-axis, show how that number declines for each increasing value of the number of samples where the number of counts for each transcript is greater than 0 where `HH>0`. This is confusing for me to even write so here is the code in `plotCountCounts.R`:
+
+```
+## make it so that the cutoff value includes the sum of the unique transcripts for cut off values below it
+for(i in 0:10) {
+  if (i == 0){
+  otherdt[i + 1] <- sum(dataset[HH0 > 0 & `HH>0` == i & `HN>0` > 0 & HN0 == 0][, .(n=.N), by=.(transcript_id)][order(n),]$n)
+  }
+  else {
+  otherdt[i + 1] <- sum(sum(dataset[HH0 > 0 & `HH>0` == i & `HN>0` > 0 & HN0 == 0][, .(n=.N), by=.(transcript_id)][order(n),]$n), otherdt[i])
+  }
+}
+```
+
+The resulting table, when we look and examine the results, has way more counts than 43 which Steph discovered where `HH0 > 0` and `HH>0 == 0`. Her recommendation was that we reinvestigate the pipeline to make sure it's free of any errors.
+
+Rajiv is saying that we need a way to map SNPs to haploytypes, which is something SPrime did but not IBDMix.
+
+Split up the GTEx VCF after `plink` and feed that into `generate_gt`.
+
+Meeting with Rajiv:
+  Find a way to map SNPs onto haplotypes
+    - Raise it as a question on the IBDMix Github page
+    - or do it ourselves downstream
+  
+  Go SNP by SNP and ask what is this snps freq on and off NL haplotypes?
+  
+  Set a thresold of confidence for a SNP on a NL haplotype to say if it's a NL snp
+  
+  Is that allele of the SNP only observed in individuals with haplotypes that are called as NL introgressed?
+  
+  Is the NL allele only observed in individuals with the NL-introgressed haplotype?
+  
+  Can we figure out which snps define these introgressed haplotype? haplotypes are snps in LD
+  
+```
+library(tidyverse)
+library(data.table)
+file_list <- list.files(path = "~/Downloads", pattern = "_countCounts.txt", full.names = TRUE)
+f_dowle2 = function(DT) {
+  for (i in names(DT))
+    DT[is.na(get(i)), (i):=0]
+}
+read_tissue_counts <- function(filename) {
+  dt_tissue <- fread(filename, header = TRUE) 
+  f_dowle2(dt_tissue)
+  tissue_name <- gsub("^([^_]*_[^_]*)_.*$", "\\1", filename)
+  tissue_name <- gsub("/Users/rajivmccoy/Downloads/", "", tissue_name)
+  dt_tissue[, tissue := tissue_name]
+  return(dt_tissue[!duplicated(transcript_id)])
+}
+dt <- do.call(rbind, lapply(file_list, function(x) read_tissue_counts(x)))
+ggplot(dt, aes(x = `HH>0`, y = `HN>0` + `NN>0`)) +
+  geom_bin2d() + 
+  scale_fill_gradient(name = "count", trans = "log10") +
+  facet_wrap(~ tissue)
+ggplot(dt, aes(x = `HH>0`, y = `HN>0` + `NN>0`)) +
+  geom_bin2d(bins = 100) + 
+  scale_fill_gradient(name = "count", trans = "log10")
+  ```
+  
+#### 03/06/2020
+
+The meeting with Rajiv yesterday was extremely informative. The above script is something he just came up with in a couple of hours. We generated a couple of images that demonstrate that there are a few variants that can be said to incorrectly cause expression in individuals homozygous for the human allele. Meeting w/ Steph to figure it out. 
+
+re: IBDMix, the goal is to split the VCF and test chromosome 10 on its own to see how it fares. 
+
+
+#### 03/10/2020
+
+Rajiv says we should stress that we were mostly found qunatitative changes as opposed to qualitative, and that the NL-specific transcripts did not have variation in splice sites.
+
+- how many sqtls did we find in different tissues which reflects that sqtls are a quantitative trait, the more samples you have the more sqtls you'll find
+- ask about enrichment or depletion of splicing effects compared to background set
+- plan to submit with sprime
+- annoying that we couldn't find ADAMTSL3
+- plot distro of sqtls along reason, interrogate chr17 phenomenon
+
+#### 03/11/2020
+
+Alright. We're talking about this paper like we're going to publish it soon. So let's go, baby. We got this.
+
+I need to:
+* Pull out introns at the "loosened restrictions" part of the plot (see the graphs in the repo)
+* What genes do the introns belong to?
+* sQTL boxplots for all tissues (one tissue per)
+* Chr17 stuff:
+  * Are all the transcripts for the same gene?
+  * Are sQTLs ????? in any regions of the gene (plot # by position)
+* Snakemake pipelines
+
+We are WFH because of Coronavirus.
+
+#### 03/17/2020
+A whole year has passed since the last week. We have the plots which Rajiv helped make, I just extracted the "loosened restrictions" part of our graph of transcripts graph. One thing I have not been doing for a while is continuously updating the Snakemake workflow, which will be a pain in the ass to do later but it seems like I'll have to do it eventually.
+
+Next question: What genes do the introns belong to? I'll have to use `loosenedRestrictions.txt`, I guess. 
