@@ -1,0 +1,33 @@
+library(data.table)
+library(GenomicRanges)
+library(stringr)
+
+
+dt <- fread("loosenedRestrictions.txt", header = T)
+
+coords <- as.data.table(str_split_fixed(dt$transcript_id, "_", 3))
+
+names(coords) <- c("chr", "start", "stop")
+  
+
+
+
+geneRanges <-
+  function(db, column = "ENTREZID")
+  {
+    g <- genes(db, columns = column)
+    col <- mcols(g)[[column]]
+    genes <- granges(g)[rep(seq_along(g), elementLengths(col))]
+    mcols(genes)[[column]] <- as.character(unlist(col))
+    genes
+  }
+
+splitColumnByOverlap <-
+  function(query, subject, column = "ENTREZID", ...)
+  {
+    olaps <- findOverlaps(query, subject, ...)
+    f1 <- factor(subjectHits(olaps),
+                 levels = seq_len(subjectLength(olaps)))
+    splitAsList(mcols(query)[[column]][queryHits(olaps)], f1)
+  }
+
