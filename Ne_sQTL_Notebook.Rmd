@@ -565,3 +565,7 @@ Next question: What genes do the introns belong to? I'll have to use `loosenedRe
 I am now going to map genes to the list of introns that are found almost exclusively in humans with the NL variant at a given sQTL with some loosened restrictions: these introns are found in less than 10 people that are homozygous for the modern human allele. I think that should be good enough. Remember to check in with Steph and/or Rajiv to make sure that the list of loosened restriction introns are correct. 
 
 Okay, got it. They are in a file called `loosenedRestrictionsGenes.txt` in `results/` I should make sure that my pipeline is correct but if so that should be it.
+
+Now I need to generate boxplots for all the tissues and design the SM pipeline. Also ask some serious questions about Chr17. Also have Steph/Rajiv look over my code to see if there are any inconsistencies.
+
+Honestly don't know if there is any chance of this paper being published during what could be the worst economic downturn of the century, but might as well go for it.
