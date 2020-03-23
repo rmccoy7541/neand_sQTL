@@ -560,3 +560,8 @@ We are WFH because of Coronavirus.
 A whole year has passed since the last week. We have the plots which Rajiv helped make, I just extracted the "loosened restrictions" part of our graph of transcripts graph. One thing I have not been doing for a while is continuously updating the Snakemake workflow, which will be a pain in the ass to do later but it seems like I'll have to do it eventually.
 
 Next question: What genes do the introns belong to? I'll have to use `loosenedRestrictions.txt`, I guess. 
+
+#### 03/23/2020
+I am now going to map genes to the list of introns that are found almost exclusively in humans with the NL variant at a given sQTL with some loosened restrictions: these introns are found in less than 10 people that are homozygous for the modern human allele. I think that should be good enough. Remember to check in with Steph and/or Rajiv to make sure that the list of loosened restriction introns are correct. 
+
+Okay, got it. They are in a file called `loosenedRestrictionsGenes.txt` in `results/` I should make sure that my pipeline is correct but if so that should be it.
