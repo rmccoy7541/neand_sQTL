@@ -76,6 +76,7 @@ rule dl_files:
     shell:
         "wget {params.sqtl}; wget {params.phen}"
 
+
 rule decomp:
     input:
         sqtl="GTEx_Analysis_v8_sQTL.tar",
@@ -135,15 +136,6 @@ rule count_sQTL:
     script:
         "src/analysis/count_sqtl.R"
 
-# TODO
-# rule manhattan:
-#     input:
-#         expand("{tissue}_permutation_table_NE.txt", tissue=TISSUES),
-#         "metadata/sprime_calls.txt"
-#     output:
-
-# TODO: at least put it the documentation that the user must procure this file on their own
-
 # 1. Change header of GTEx VCF
 rule get_vcf_header:
     input:
@@ -178,10 +170,9 @@ rule extract_SPrime:
     shell:
         "cat {input} | grep -v \"CHROM\" | cut -f 4 > {output}"
 
-rule subset_introgressed:
-    input:
-        ""
-
+# rule subset_introgressed:
+#     input:
+#         ""
 
 rule dl_intronCounts:
     output:

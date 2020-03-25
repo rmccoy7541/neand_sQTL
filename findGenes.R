@@ -1,7 +1,6 @@
 library(data.table)
 library(GenomicRanges)
 library(stringr)
-library(biomaRt)
 library(annotate)
 library(rtracklayer)
 library(dplyr)
@@ -17,7 +16,7 @@ gene_list <- gene_list[type == "gene" & gene_type == "protein_coding"]
 gene_list[, subjectHits := .I]
 
 # read coords for NL-specificish introns
-dt <- fread("results/loosenedRestrictions.txt", header = T)
+dt <- fread("C:/Users/artas/Documents/GitHub/neand_sQTL/results/loosenedRestrictions.txt", header = T)
 
 coords <- as.data.table(str_split_fixed(dt$transcript_id, "_", 3))
 
@@ -36,7 +35,7 @@ dt <- dt[olaps, on = "queryHits", nomatch = 0]
 
 dt <- dt[gene_list, on = "subjectHits", nomatch = 0]
 
-dt <- select(dt, c(transcript_id, seqnames, start, end, gene_name, n))
+dt <- dplyr::select(dt, c(transcript_id, seqnames, start, end, gene_name, n))
 
 write.table(dt,
             file = paste0("loosenedRestrictionsGenes.txt"),

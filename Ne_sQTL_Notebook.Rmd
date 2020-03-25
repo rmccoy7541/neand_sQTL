@@ -569,3 +569,21 @@ Okay, got it. They are in a file called `loosenedRestrictionsGenes.txt` in `resu
 Now I need to generate boxplots for all the tissues and design the SM pipeline. Also ask some serious questions about Chr17. Also have Steph/Rajiv look over my code to see if there are any inconsistencies.
 
 Honestly don't know if there is any chance of this paper being published during what could be the worst economic downturn of the century, but might as well go for it.
+
+#### 03/24/2020
+Look in `results/`. I have two new text files and a couple of images that I (we) have generated, `loosenedRestrictions.txt` and `loosenedRestrictionsGenes.txt`. The following is what's left to do:
+
+* sQTL boxplots for all tissues (one tissue per)
+  * number of NL-introgressed sQTLs per tissue
+  * maybe something else too, think about it
+* Chr17 stuff:
+  * Are all the transcripts for the same gene?
+  * Are sQTLs ????? in any regions of the gene (plot # by position)
+* **Snakemake pipelines**
+  * Figure out which scripts are obsolete
+  * determine the flow of the new scripts
+  
+  
+I met with Steph. We had a problem: the list of loosened restriction sQTLs were all coming out with unique transcripts (`loosenedRestrictions.txt`). She asked me what the input files were and if we used `unique()` earlier in the pipeline and while I'm pretty sure we didn't, I'm actually not positive, and I realized the extent to which I actually don't really remember what this pipeline looks like or what happened when. Steph brought up another potential issue: in finding overlaps of introns in genes, we are actually running the risk of an intron being found within multiple genes. Does our method account for this? I'm not totally sure but I said that's something we can bring up to Rajiv. I'm tabling this step for now. 
+
+I think the best thing for me to do is straigten this pipeline out and write it into Snakemake. This is going to be hard because I've neglected doing so for so long. I'm going to prepare things with the idea that I'm going to present them to Rajiv and solicit him for feedback.

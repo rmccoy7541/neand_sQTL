@@ -1,6 +1,7 @@
 library(data.table)
 library(tidyverse)
 library(ggplot2)
+library(dplyr)
 
 setwd("C:/Users/artas/Desktop/countCounts/")
 # countCounts
@@ -30,10 +31,12 @@ dataset[is.na(dataset)] <- 0
 
 # transcripts where the number of individuals with the HH not expressing the transcript is greater than zero and the
 # number of individuals expressing the transcript with the same genotype is less than 10
-loosened <- dataset[HH0 > 0 & `HH>0`< 10][, .(n=.N), by=.(transcript_id)][order(n),]
+loosened <- dataset[HH0 > 0 & `HH>0` < 10 & `HN>0` > 0][, .(n=.N), by=.(transcript_id)][order(n),]
+
+df_uniq <- unique(loosened$transcript_id)
 
 write.table(loosened,
-            file = "loosenedRestrictions.txt",
+            file = "C:/Users/artas/Documents/GitHub/neand_sQTL/results/loosenedRestrictions.txt",
             sep = "\t",
             row.names = F,
             quote = FALSE)
