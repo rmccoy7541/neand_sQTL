@@ -3,10 +3,10 @@ vcf: "/scratch/groups/rmccoy22/aseyedi2/sQTLv8/data/vcf/GTEx_Analysis_2017-06-05
 
 sprime_dir: "/scratch/groups/rmccoy22/aseyedi2/sprime_sm_test"
 
-# 1kg project direcotry (1kg-hs37d5/)
+# 1kg project direcotry (1kg-hs37d5/) - sprime
 kg_dir: "/work-zfs/rmccoy22/resources/1kg-GRCh38"
 
-# merged archaic VCFs
+# merged archaic VCFs - sprime
 arch_vcf: "/scratch/groups/rmccoy22/aseyedi2/sQTLv8/spliceai"
 
 #gatk bin

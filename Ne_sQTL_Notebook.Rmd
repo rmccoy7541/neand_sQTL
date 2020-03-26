@@ -592,3 +592,12 @@ I think the best thing for me to do is straigten this pipeline out and write it 
 I met with Daniel who showed me how to install Conda and Intel dist Python on my computer for Snakemake. I only wanted it so I could get syntax highlighting on PyCharm.
 
 My goal right now is to organize the pipeline, make our Snakemake workflow work, and prune parts of our workflow that ended up not making it. 
+
+#### 03/26/2020
+We had to delete all of our old files in MARCC and some of the stuff I need for my pipeline went along with some of the stuff deleted. So now I'm both deleting some old stuff as well as trying to recover some resources.
+
+`wget -rkpN -e robots=off http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/supporting/GRCh38_positions/`
+
+This is the command I'm using to get GRCh38 1k genomes VCFs, which we need for the SPrime pipeline, I believe. 
+
+
