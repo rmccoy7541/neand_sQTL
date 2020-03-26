@@ -587,3 +587,8 @@ Look in `results/`. I have two new text files and a couple of images that I (we)
 I met with Steph. We had a problem: the list of loosened restriction sQTLs were all coming out with unique transcripts (`loosenedRestrictions.txt`). She asked me what the input files were and if we used `unique()` earlier in the pipeline and while I'm pretty sure we didn't, I'm actually not positive, and I realized the extent to which I actually don't really remember what this pipeline looks like or what happened when. Steph brought up another potential issue: in finding overlaps of introns in genes, we are actually running the risk of an intron being found within multiple genes. Does our method account for this? I'm not totally sure but I said that's something we can bring up to Rajiv. I'm tabling this step for now. 
 
 I think the best thing for me to do is straigten this pipeline out and write it into Snakemake. This is going to be hard because I've neglected doing so for so long. I'm going to prepare things with the idea that I'm going to present them to Rajiv and solicit him for feedback.
+
+#### 03/25/2020
+I met with Daniel who showed me how to install Conda and Intel dist Python on my computer for Snakemake. I only wanted it so I could get syntax highlighting on PyCharm.
+
+My goal right now is to organize the pipeline, make our Snakemake workflow work, and prune parts of our workflow that ended up not making it. 

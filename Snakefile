@@ -170,10 +170,6 @@ rule extract_SPrime:
     shell:
         "cat {input} | grep -v \"CHROM\" | cut -f 4 > {output}"
 
-# rule subset_introgressed:
-#     input:
-#         ""
-
 rule dl_intronCounts:
     output:
         "GTEx_Analysis_2017-06-05_v8_STARv2.5.3a_junctions.gct.gz"
