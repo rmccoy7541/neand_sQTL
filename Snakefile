@@ -67,8 +67,8 @@ TISSUES = ["Adipose_Subcutaneous", # 763
 rule all:
     input:
         "sQTLs_per_tissue.png",
-        "TopGenes_PermPass_All.csv",
-        expand("{tissue}_NL_isos.txt", tissue=TISSUES)
+        "TopGenes_PermPass_All.csv"#,
+        # expand("{tissue}_NL_isos.txt", tissue=TISSUES)
 
 
 rule dl_files:
