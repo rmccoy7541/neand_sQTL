@@ -7,7 +7,7 @@
 # snakemake --dag -n | dot -Tsvg > dag.svg
 
 # Force
-# snakemake --dag -n -F | dot -Tsvg > dag.svg
+# snakemake --dag -n -Ft | dot -Tsvg > dag.svg
 
 configfile: "config.yaml"
 
@@ -67,8 +67,8 @@ TISSUES = ["Adipose_Subcutaneous", # 763
 rule all:
     input:
         "sQTLs_per_tissue.png",
-        "TopGenes_PermPass_All.csv"#,
-        # expand("{tissue}_NL_isos.txt", tissue=TISSUES)
+        "TopGenes_PermPass_All.csv",
+        expand("{tissue}_NL_isos.txt", tissue=TISSUES)
 
 
 rule dl_files:
@@ -141,75 +141,75 @@ rule count_sQTL:
         "TopGenes_PermPass_All.csv"
     script:
         "src/analysis/count_sqtl.R"
-#
-# # 1. Change header of GTEx VCF
-# rule get_vcf_header:
-#     input:
-#         "GTEx_Analysis_2017-06-05_v8_WholeGenomeSeq_838Indiv_Analysis_Freeze.vcf.gz"
-#     output:
-#         "new_gtex_header.hdr"
-#     shell:
-#         "bcftools view -h {input} > {output};"
-#
-# rule change_vcf_header:
-#     input:
-#         rules.get_vcf_header.output
-#     output:
-#         "GTEx_v8_reheader.vcf.gz"
-#     shell:
-#         "bcftools reheader -h {input} -o {output} GTEx_Analysis_2017-06-05_v8_WholeGenomeSeq_838Indiv_Analysis_Freeze.vcf.gz"
-#
-# rule tabix_new_vcf:
-#     input:
-#         rules.change_vcf_header.output
-#     output:
-#         "GTEx_v8_reheader.vcf.gz.tbi"
-#     shell:
-#         "tabix -p vcf {input}"
-#
-# # 2. Subset VCF to contain only variants that were called as introgressed by sprime
-# rule extract_SPrime:
-#     input:
-#         "metadata/sprime_calls.txt"
-#     output:
-#         "sprime_variants.list"
-#     shell:
-#         "cat {input} | grep -v \"CHROM\" | cut -f 4 > {output}"
-#
-# rule dl_intronCounts:
-#     output:
-#         "GTEx_Analysis_2017-06-05_v8_STARv2.5.3a_junctions.gct.gz"
-#     params:
-#         introns="https://storage.googleapis.com/gtex_analysis_v8/rna_seq_data/GTEx_Analysis_2017-06-05_v8_STARv2.5.3a_junctions.gct.gz"
-#     shell:
-#         "wget {params.introns}"
-#
-# rule process_introns:
-#     input:
-#         "GTEx_Analysis_2017-06-05_v8_STARv2.5.3a_junctions.gct.gz"
-#     output:
-#         "GTEx_v8_junctions_nohead.gct.gz"
-#     shell:
-#         "zcat {input} | grep -v \"#1.2\" | grep -v '357746'$'\t''17382 > GTEx_v8_junctions_nohead.gct;"
-#         "bgzip GTEx_v8_junctions_nohead.gct"
-#
-# rule splitIntronCounts:
-#     input:
-#         introns="GTEx_v8_junctions_nohead.gct.gz",
-#         tistab="metadata/tissue_key.csv"
-#     output:
-#         "{tissue}_intronCounts.txt"
-#     script:
-#         "src/analysis/preprocess_intronCounts.R"
-#
-# rule find_NL_introns:
-#     input:
-#         introns=expand("{tissue}_intronCounts.txt", tissue=TISSUES),
-#         perm=expand("{sQTLs}/{tissue}.v8.sqtl_signifpairs.txt.gz", tissue=TISSUES, sQTLs=config["sQTLs"]),
-#         vcf_merge="vcf_for_merge.txt.gz",
-#     output:
-#         "{tissue}_NL_isos.txt"
-#     script:
-#         "src/analysis/merge_tables.R"
+
+# 1. Change header of GTEx VCF
+rule get_vcf_header:
+    input:
+        "GTEx_Analysis_2017-06-05_v8_WholeGenomeSeq_838Indiv_Analysis_Freeze.vcf.gz"
+    output:
+        "new_gtex_header.hdr"
+    shell:
+        "bcftools view -h {input} > {output};"
+
+rule change_vcf_header:
+    input:
+        rules.get_vcf_header.output
+    output:
+        "GTEx_v8_reheader.vcf.gz"
+    shell:
+        "bcftools reheader -h {input} -o {output} GTEx_Analysis_2017-06-05_v8_WholeGenomeSeq_838Indiv_Analysis_Freeze.vcf.gz"
+
+rule tabix_new_vcf:
+    input:
+        rules.change_vcf_header.output
+    output:
+        "GTEx_v8_reheader.vcf.gz.tbi"
+    shell:
+        "tabix -p vcf {input}"
+
+# 2. Subset VCF to contain only variants that were called as introgressed by sprime
+rule extract_SPrime:
+    input:
+        "metadata/sprime_calls.txt"
+    output:
+        "sprime_variants.list"
+    shell:
+        "cat {input} | grep -v \"CHROM\" | cut -f 4 > {output}"
+
+rule dl_intronCounts:
+    output:
+        "GTEx_Analysis_2017-06-05_v8_STARv2.5.3a_junctions.gct.gz"
+    params:
+        introns="https://storage.googleapis.com/gtex_analysis_v8/rna_seq_data/GTEx_Analysis_2017-06-05_v8_STARv2.5.3a_junctions.gct.gz"
+    shell:
+        "wget {params.introns}"
+
+rule process_introns:
+    input:
+        "GTEx_Analysis_2017-06-05_v8_STARv2.5.3a_junctions.gct.gz"
+    output:
+        "GTEx_v8_junctions_nohead.gct.gz"
+    shell:
+        "zcat {input} | grep -v \"#1.2\" | grep -v '357746'$'\t''17382 > GTEx_v8_junctions_nohead.gct;"
+        "bgzip GTEx_v8_junctions_nohead.gct"
+
+rule splitIntronCounts:
+    input:
+        introns="GTEx_v8_junctions_nohead.gct.gz",
+        tistab="metadata/tissue_key.csv"
+    output:
+        "{tissue}_intronCounts.txt"
+    script:
+        "src/analysis/preprocess_intronCounts.R"
+
+rule find_NL_introns:
+    input:
+        introns=expand("{tissue}_intronCounts.txt", tissue=TISSUES),
+        perm=expand("{sQTLs}/{tissue}.v8.sqtl_signifpairs.txt.gz", tissue=TISSUES, sQTLs=config["sQTLs"]),
+        vcf_merge="vcf_for_merge.txt.gz",
+    output:
+        "{tissue}_NL_isos.txt"
+    script:
+        "src/analysis/merge_tables.R"
 
 
