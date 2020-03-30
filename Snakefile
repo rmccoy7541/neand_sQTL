@@ -102,6 +102,7 @@ rule over_chain:
         "wget {params.url} metadata/;"
         "gunzip {output}.gz"
 
+# Result of Snakemake Pipeline
 rule sprime_R:
     input:
         results=expand("{sprime_dir}/output/results.chr{z}.score", sprime_dir=config["sprime_dir"], z=range(1,23)),

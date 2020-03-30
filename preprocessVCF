@@ -35,13 +35,12 @@ rule annotate_vars:
         "bcftools annotate -O z -o {output} -a sprime_calls_minimal.txt.gz -c CHROM,POS,-,INFO/ARCHAIC_ALLELE -h sprime.hdr {rules.subset_VCF.output}"
 
 rule annotate_gts:
-    ## TODO: Fill Later
     input:
-        "blank"
+        rules.annotate_vars.output
     output:
         "GTEx_v8_ArchaicGTAnn.vcf"
     script:
-        "annotate_gts.py"
+        "src/analysis/annotate_gts.py"
 
 rule fix_ann_gts:
     input:
