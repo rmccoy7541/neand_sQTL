@@ -1,6 +1,9 @@
 # v8 VCF, GTEx_Analysis_2017-06-05_v8_WholeGenomeSeq_838Indiv_Analysis_Freeze.vcf.gz
 vcf: "/scratch/groups/rmccoy22/aseyedi2/sQTLv8/data/vcf/GTEx_Analysis_2017-06-05_v8_WholeGenomeSeq_838Indiv_Analysis_Freeze.vcf.gz"
 
+# GTEx sQTLs
+sQTLs: "/scratch/groups/rmccoy22/aseyedi2/NL_sQTL_iso/GTEx_Analysis_v8_sQTL"
+
 sprime_dir: "/scratch/groups/rmccoy22/aseyedi2/sprime_sm_test"
 
 # 1kg project direcotry (1kg-hs37d5/) - sprime

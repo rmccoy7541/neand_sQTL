@@ -119,7 +119,7 @@ rule dl_gtf:
 rule neand_sQTL:
     input:
         chk=".decomp.chkpnt",
-        perm=expand("GTEx_Analysis_v8_sQTL/{tissue}.v8.sqtl_signifpairs.txt.gz", tissue=TISSUES),
+        perm=expand("{sQTLs}/{tissue}.v8.sqtl_signifpairs.txt.gz", sQTLs=config["sQTLs"], tissue=TISSUES),
         sprime="metadata/sprime_calls.txt",
         gtf="gencode.v26.GRCh38.genes.gtf"
     output:
