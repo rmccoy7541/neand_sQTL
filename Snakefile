@@ -6,6 +6,9 @@
 
 # snakemake --dag -n | dot -Tsvg > dag.svg
 
+# Force run
+# snakemake --dag -n -R | dot -Tsvg > dag.svg
+
 configfile: "config.yaml"
 
 include: "sprime_run_Snakemake"
@@ -64,7 +67,8 @@ TISSUES = ["Adipose_Subcutaneous", # 763
 rule all:
     input:
         "sQTLs_per_tissue.png",
-        "TopGenes_PermPass_All.csv"
+        "TopGenes_PermPass_All.csv",
+        expand("{tissue}_NL_isos.txt", tissue=TISSUES)
 
 rule dl_files:
     params:
