@@ -440,7 +440,7 @@ The IBDMix is still going on. I talked to Steph and basically we have to figure 
 
 ### 02/28/2020
 
-I talked to Steph and this is what she said.
+I talked to Steph and this is what she said:
 
 >hmmmm, weird. IDK how much work this will be, but maybe you could look for a transcript that appears in your larger dataset but not in the 43 that we initially found, and manually check to see if it actually has 0 counts for all the HH samples? as like a sanity check
 
@@ -456,7 +456,7 @@ That was the only line I found with more than 0 counts. So I don't know what's g
 
 As far as the IBDMix stuff goes, I'm backing up all of the files I've generated so I don't lose a few days to having to regenerate files again. 
 
-Alright. It's already 2:30pm. I just feel like the days skip straight to 2 now. I feel like I'm going to go to bed and wake up in my 50's one day. Damn. 
+Alright. It's already 2:30pm. I just feel like the days skip straight to 2pm now. I feel like I'm going to go to bed and wake up in my 50's one day. Damn. 
 
 ### 03/05/2020
 
@@ -530,7 +530,6 @@ The meeting with Rajiv yesterday was extremely informative. The above script is 
 
 re: IBDMix, the goal is to split the VCF and test chromosome 10 on its own to see how it fares. 
 
-
 #### 03/10/2020
 
 Rajiv says we should stress that we were mostly found qunatitative changes as opposed to qualitative, and that the NL-specific transcripts did not have variation in splice sites.
@@ -600,4 +599,8 @@ We had to delete all of our old files in MARCC and some of the stuff I need for 
 
 This is the command I'm using to get GRCh38 1k genomes VCFs, which we need for the SPrime pipeline, I believe. 
 
+#### 03/30/2020
+I straightened out the Snakemake workflow a little bit today. I'm going to keep working on it; my main problem right now is that I can't get all of the SPrime rules to show up in the DAG which I keep generating. Good news is that I can get the NL_iso workflow to show up in the DAG. I'm guessing it has something to do with the fact that the SPrime workflow files aren't all there anymore, so I got to regenerate them or something. 
+
+It's making me feel a bit nuts. But I still also need to find out why we're not getting multiple sQTLs associated with each transcript. In other words, was there an earlier step that removed duplicates? Who knows.
 

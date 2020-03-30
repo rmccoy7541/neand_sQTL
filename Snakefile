@@ -107,7 +107,6 @@ rule over_chain:
 rule sprime_R:
     input:
         results=expand("{sprime_dir}/output/results.chr{z}.score", sprime_dir=config["sprime_dir"], z=range(1,23)),
-        arch_vcf=config["arch_vcf"],
         over_chain=rules.over_chain.output
     output:
         "metadata/sprime_calls.txt"

@@ -8,7 +8,7 @@ library(rtracklayer)
 # to archaic genome VCFs. The tag "notcomp" refers to cases where a confident archaic genotype
 # could not be assigned due to coverage, mapping, or other quality issues.
 
-args = commandArgs(trailingOnly = TRUE)
+# args = commandArgs(trailingOnly = TRUE)
 # snakemake@input[[1]] is results.score file (the output of SPrime), 
 # snakemake@input[[2]] is directory containing merged archaic VCFs ("/scratch/users/rmccoy22@jhu.edu/archaic_splicing/spliceai/")
 sprime <- fread(snakemake@input[["results"]])
