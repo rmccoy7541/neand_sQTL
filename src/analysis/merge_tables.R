@@ -20,7 +20,7 @@ sqtl_sep <- separate(sqtl, phenotype_id, c("chrom","start","end","cluster_id","E
 # read in VCF file
 vcf <- fread(snakemake@input["vcf_merge"], stringsAsFactors=FALSE, header=TRUE)
 
-tissue_name <- snakemake@input["tisname"]
+tissue_name <- sub("\\_intronCounts.txt.*", "", snakemake@input["introns"])
 
 dt <- inner_join(inner_join(sqtl_sep, introns, by=c("ENSEMBL_ID"="Description")), vcf, by=c("variant_id"="ID"))
 
