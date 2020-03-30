@@ -204,7 +204,7 @@ rule splitIntronCounts:
 rule find_NL_introns:
     input:
         introns=expand("{tissue}_intronCounts.txt", tissue=TISSUES),
-        perm=expand("GTEx_Analysis_v8_sQTL/{tissue}.v8.sqtl_signifpairs.txt.gz", tissue=TISSUES),
+        perm=expand("{sQTLs}/{tissue}.v8.sqtl_signifpairs.txt.gz", tissue=TISSUES, sQTLs=config["sQTLs"]),
         vcf_merge="vcf_for_merge.txt.gz",
         tisname=expand("{tissue}", tissue=TISSUES)
     output:
