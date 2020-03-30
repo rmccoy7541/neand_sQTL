@@ -68,7 +68,8 @@ rule all:
     input:
         "sQTLs_per_tissue.png",
         "TopGenes_PermPass_All.csv",
-        expand("{tissue}_NL_isos.txt", tissue=TISSUES)
+        expand("{tissue}_NL_isos.txt", tissue=TISSUES),
+        "metadata/sprime_calls.txt"
 
 rule dl_files:
     params:
