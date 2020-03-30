@@ -5,7 +5,6 @@ rule get_header:
          config["vcf"]
     output:
           "GTEx_v8_reheader.vcf.gz"
-    shadow: shallow
     shell:
          "bcftools view -h {input} > new_gtex_header.hdr;"
          "bcftools reheader -h new_gtex_header.hdr -o {output} {input};"
