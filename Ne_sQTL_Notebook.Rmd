@@ -604,3 +604,15 @@ I straightened out the Snakemake workflow a little bit today. I'm going to keep 
 
 It's making me feel a bit nuts. But I still also need to find out why we're not getting multiple sQTLs associated with each transcript. In other words, was there an earlier step that removed duplicates? Who knows.
 
+#### 04/02/2020
+As far as I can tell, there are no steps prior to the output of `loosenedRestrictions.txt` that narrows results to one sQTL per transcript. So what do we do? I guess we could meet with Rajiv to pick his brain about it. Of course, there could always be a problem with my code, and it's a good idea to share it with others to make sure it passes the test. 
+
+Otherwise, I'm still working on the Snakemake workflow. The DAG for the SPrime stuff isn't showing up and I think it's because all of the requisite files aren't there. I'm trying to restore them.
+
+Other than that I should probably read that Mol. Pop. Gen. book.
+
+For at least my own sake, I should make note that the order of operations for finding NL sQTLs goes as follows:
+
+`preprocess_intronCounts.R` > `merge_tables.R` > `countCounts.R` > `getRelevantTranscripts.R` > `findGenes.R`
+
+`*_countCounts.txt` are the files that are the inputs to the final two steps, which are pretty similar and could in fact be consolidated (note to self), but doing a simple `head` on them reveals that there are, in fact, duplicate values in that first column, but `sort -k 1,1n Whole_Blood_countCounts.txt | uniq -d` does not confirm that observation, despite being what is to me the correct command.
