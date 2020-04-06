@@ -616,3 +616,8 @@ For at least my own sake, I should make note that the order of operations for fi
 `preprocess_intronCounts.R` > `merge_tables.R` > `countCounts.R` > `getRelevantTranscripts.R` > `findGenes.R`
 
 `*_countCounts.txt` are the files that are the inputs to the final two steps, which are pretty similar and could in fact be consolidated (note to self), but doing a simple `head` on them reveals that there are, in fact, duplicate values in that first column, but `sort -k 1,1n Whole_Blood_countCounts.txt | uniq -d` does not confirm that observation, despite being what is to me the correct command.
+
+#### 04/06/2020
+I was finally able to make the DAG work. It's in the project directory. 
+
+Now I have to go through all of the scripts and make sure that it's written to the appropriate output i.e. `snakemake@output[["name"]]` to make sure they're written in the right directory. Hope that helps.

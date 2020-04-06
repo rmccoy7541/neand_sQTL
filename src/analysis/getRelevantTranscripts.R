@@ -3,7 +3,7 @@ library(tidyverse)
 library(ggplot2)
 library(dplyr)
 
-setwd("C:/Users/artas/Desktop/countCounts/")
+setwd(snakemake@input["wd"])
 # countCounts
 file_list <- list.files(pattern = "*.txt")
 
@@ -36,7 +36,7 @@ loosened <- dataset[HH0 > 0 & `HH>0` < 10 & `HN>0` > 0][, .(n=.N), by=.(transcri
 df_uniq <- unique(loosened$transcript_id)
 
 write.table(loosened,
-            file = "C:/Users/artas/Documents/GitHub/neand_sQTL/results/loosenedRestrictions.txt",
+            file = "loosenedRestrictions.txt",
             sep = "\t",
             row.names = F,
             quote = FALSE)

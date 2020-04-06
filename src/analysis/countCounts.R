@@ -2,9 +2,8 @@ library(data.table)
 library(tidyverse)
 
 #args[1] is the final iso table
-args = commandArgs(trailingOnly=TRUE)
 
-dt <- fread(args[1], header = T)
+dt <- fread(snakemake@input["finalIso"], header = T)
 
 tissue_name <- gsub("^([^_]*_[^_]*)_.*$", "\\1", args[2])
 

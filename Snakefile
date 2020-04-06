@@ -68,7 +68,7 @@ rule all:
     input:
         "sQTLs_per_tissue.png",
         "TopGenes_PermPass_All.csv",
-        expand("{tissue}_NL_isos.txt", tissue=TISSUES),
+        expand("results/finalIsos/{tissue}_NL_isos.txt", tissue=TISSUES),
         "metadata/sprime_calls.txt"
 
 rule dl_files:
@@ -128,13 +128,13 @@ rule neand_sQTL:
         sprime="metadata/sprime_calls.txt",
         gtf="gencode.v26.GRCh38.genes.gtf"
     output:
-        "{tissue}_permutation_table_NE.txt"
+        "results/perms/{tissue}_permutation_table_NE.txt"
     script:
         "src/analysis/NE_sQTL.R"
 
 rule count_sQTL:
     input:
-        expand("{tissue}_permutation_table_NE.txt", tissue=TISSUES)
+        expand("results/perms/{tissue}_permutation_table_NE.txt", tissue=TISSUES)
     output:
         "sQTLs_per_tissue.png",
         "TopGenes_PermPass_All.csv"
@@ -197,18 +197,25 @@ rule splitIntronCounts:
         introns="GTEx_v8_junctions_nohead.gct.gz",
         tistab="metadata/tissue_key.csv"
     output:
-        "{tissue}_intronCounts.txt"
+        "results/IC/{tissue}_intronCounts.txt"
     script:
         "src/analysis/preprocess_intronCounts.R"
 
 rule find_NL_introns:
     input:
-        introns=expand("{tissue}_intronCounts.txt", tissue=TISSUES),
+        introns=expand("results/IC/{tissue}_intronCounts.txt", tissue=TISSUES),
         perm=expand("{sQTLs}/{tissue}.v8.sqtl_signifpairs.txt.gz", tissue=TISSUES, sQTLs=config["sQTLs"]),
         vcf_merge="vcf_for_merge.txt.gz",
     output:
-        "{tissue}_NL_isos.txt"
+        "results/finalIsos/{tissue}_NL_isos.txt"
     script:
         "src/analysis/merge_tables.R"
 
+rule countCounts:
+    input:
+         finalISO=expand("results/finalIsos/{tissue}_NL_isos.txt", tissue=TISSUES)
+    output:
+        "results/countCounts/{tissues}_countCounts.txt"
+    script:
+        "src/analysis/countCounts.R"
 
