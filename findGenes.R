@@ -6,7 +6,7 @@ library(rtracklayer)
 library(dplyr)
 
 # use this file which contains information about all of the sequences in hg38
-gene_list <- rtracklayer::import("C:/Users/artas/Downloads/gencode.v26.GRCh38.genes.gtf") %>%
+gene_list <- rtracklayer::import(snakemake@input[["gtf"]]) %>%
   makeGRangesFromDataFrame(., keep.extra.columns = T) %>%
   as.data.table()
 
@@ -16,7 +16,7 @@ gene_list <- gene_list[type == "gene" & gene_type == "protein_coding"]
 gene_list[, subjectHits := .I]
 
 # read coords for NL-specificish introns
-dt <- fread("C:/Users/artas/Documents/GitHub/neand_sQTL/results/loosenedRestrictions.txt", header = T)
+dt <- fread(snakemake@input[["relScripts"]], header = T)
 
 coords <- as.data.table(str_split_fixed(dt$transcript_id, "_", 3))
 
@@ -38,7 +38,7 @@ dt <- dt[gene_list, on = "subjectHits", nomatch = 0]
 dt <- dplyr::select(dt, c(transcript_id, seqnames, start, end, gene_name, n))
 
 write.table(dt,
-            file = paste0("loosenedRestrictionsGenes.txt"),
+            file = paste0("results/loosenedRestrictionsGenes.txt"),
             sep = "\t",
             row.names = F,
             quote = FALSE)

@@ -4,12 +4,12 @@ library(data.table)
 
 introns <-
   fread(
-    snakemake@input["introns"],
+    snakemake@input[["introns"]],
     stringsAsFactors = FALSE,
     header = TRUE
   )
 
-tistab <- fread(snakemake@input["tistab"])
+tistab <- fread(snakemake@input[["tistab"]])
 
 sites <- with(tistab, split(SAMPID, TISSUE))
 

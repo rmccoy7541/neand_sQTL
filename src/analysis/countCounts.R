@@ -3,7 +3,7 @@ library(tidyverse)
 
 #args[1] is the final iso table
 
-dt <- fread(snakemake@input["finalIso"], header = T)
+dt <- fread(snakemake@input[["finalIso"]], header = T)
 
 tissue_name <- gsub("^([^_]*_[^_]*)_.*$", "\\1", args[2])
 
@@ -26,7 +26,7 @@ dt <- dt %>%
 
 
 write.table(dt,
-            file = paste0(tissue_name, "_countCounts.txt"),
+            file = paste0("results/countCounts/", tissue_name, "_countCounts.txt"),
             sep = "\t",
             row.names = F,
             quote = FALSE)

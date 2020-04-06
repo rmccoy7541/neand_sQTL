@@ -68,8 +68,10 @@ rule all:
     input:
         "sQTLs_per_tissue.png",
         "TopGenes_PermPass_All.csv",
-        expand("results/finalIsos/{tissue}_NL_isos.txt", tissue=TISSUES),
-        "metadata/sprime_calls.txt"
+        "metadata/sprime_calls.txt",
+        "results/SeparateTissues.png",
+        "results/AllTissuesNLIso.png",
+        "results/loosenedRestrictionsGenes.txt"
 
 rule dl_files:
     params:
@@ -136,15 +138,15 @@ rule count_sQTL:
     input:
         expand("results/perms/{tissue}_permutation_table_NE.txt", tissue=TISSUES)
     output:
-        "sQTLs_per_tissue.png",
-        "TopGenes_PermPass_All.csv"
+        "results/sQTLs_per_tissue.png",
+        "results/TopGenes_PermPass_All.csv"
     script:
         "src/analysis/count_sqtl.R"
 
-# 1. Change header of GTEx VCF
+# 1. Change header of GTEx VCF - shadow rule? place the output somewhere else?
 rule get_vcf_header:
     input:
-        "GTEx_Analysis_2017-06-05_v8_WholeGenomeSeq_838Indiv_Analysis_Freeze.vcf.gz"
+        vcf=config["vcf"]
     output:
         "new_gtex_header.hdr"
     shell:
@@ -152,11 +154,12 @@ rule get_vcf_header:
 
 rule change_vcf_header:
     input:
-        rules.get_vcf_header.output
+        header=rules.get_vcf_header.output,
+        vcf=rules.get_vcf_header.input
     output:
         "GTEx_v8_reheader.vcf.gz"
     shell:
-        "bcftools reheader -h {input} -o {output} GTEx_Analysis_2017-06-05_v8_WholeGenomeSeq_838Indiv_Analysis_Freeze.vcf.gz"
+        "bcftools reheader -h {input.header} -o {output} {input.vcf}"
 
 rule tabix_new_vcf:
     input:
@@ -203,7 +206,7 @@ rule splitIntronCounts:
 
 rule find_NL_introns:
     input:
-        introns=expand("results/IC/{tissue}_intronCounts.txt", tissue=TISSUES),
+        introns=expand("results/IC/{tissue}_intronCounts.txt", tiss ue=TISSUES),
         perm=expand("{sQTLs}/{tissue}.v8.sqtl_signifpairs.txt.gz", tissue=TISSUES, sQTLs=config["sQTLs"]),
         vcf_merge="vcf_for_merge.txt.gz",
     output:
@@ -218,4 +221,30 @@ rule countCounts:
         "results/countCounts/{tissues}_countCounts.txt"
     script:
         "src/analysis/countCounts.R"
+
+rule plotCountCounts:
+    input:
+        countCountsDir="results/countCounts/"
+    output:
+        "results/SeparateTissues.png",
+        "results/AllTissuesNLIso.png"
+    script:
+        "src/analysis/plot_countCounts.R"
+
+rule getRelScripts:
+    input:
+        wd="results/countCounts/"
+    output:
+        "results/loosenedRestrictions.txt"
+    script:
+        "src/analysis/getRelevantTranscripts.R"
+
+rule findGenes:
+    input:
+        relScripts=rules.getRelScripts.output,
+        gtf="gencode.v26.GRCh38.genes.gtf"
+    output:
+        "results/loosenedRestrictionsGenes.txt"
+    script:
+        "src/analysis/findGenes.R"
 

@@ -2,6 +2,8 @@ library(data.table)
 library(tidyverse)
 library(ggplot2)
 
+setwd(snakemake@input[["countCountsDir"]])
+
 file_list <- list.files(pattern = "_countCounts.txt", full.names = TRUE)
 f_dowle2 = function(DT) {
   for (i in names(DT))
@@ -17,11 +19,14 @@ read_tissue_counts <- function(filename) {
 }
 dt <- do.call(rbind, lapply(file_list, function(x) read_tissue_counts(x)))
 
+png(filename = "results/SeparateTissues.png")
 ggplot(dt, aes(x = `HH>0`, y = `HN>0` + `NN>0`)) +
   geom_bin2d() + 
   scale_fill_gradient(name = "count", trans = "log10") +
   facet_wrap(~ tissue)
+def.off()
 
+png(filename = "results/AllTissuesNLIso.png")
 ggplot(dt, aes(x = `HH>0`, y = `HN>0` + `NN>0`)) +
   geom_bin2d(bins = 100) + 
   scale_fill_gradient(name = "count", trans = "log10")

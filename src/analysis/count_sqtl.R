@@ -34,7 +34,7 @@ sqtl_counts_by_tissue[, n_samples := c(581,469,233,387,213,584,129,147,194,175,2
 
 
 ### number of sQTLs per tissue
-# png(filename = "sQTLs_per_tissue.png")
+png(filename = "results/sQTLs_per_tissue.png")
 ggplot(data = sqtl_counts_by_tissue, aes(x = n_samples, y = n_sqtl, label = names(tissue_names), color = TISSUE)) +
   theme_bw() +
   geom_point() +
@@ -44,7 +44,7 @@ ggplot(data = sqtl_counts_by_tissue, aes(x = n_samples, y = n_sqtl, label = name
   theme(panel.grid = element_blank(), legend.position = "none") +
   xlab("Number of Genotyped Samples") +
   ylab("Number of sQTLs")
-# dev.off()
+dev.off()
 ###
 
 tissue_gtp <-  do.call(rbind, lapply(tissue_names, function(x) count_sqtl(x, summarize = FALSE))) %>%
@@ -53,4 +53,4 @@ tissue_gtp <-  do.call(rbind, lapply(tissue_names, function(x) count_sqtl(x, sum
 topGenes <- dplyr::select(tissue_gtp, phenotype_id, variant_id, TISSUE_ID, pval_nominal, pval_beta, gene_name) %>%
   unique(.)
 
-write.csv(topGenes, file = "TopGenes_PermPass_All.csv", eol = "\r\n", row.names = F)
+write.csv(topGenes, file = "results/TopGenes_PermPass_All.csv", eol = "\r\n", row.names = F)

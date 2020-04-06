@@ -8,17 +8,17 @@ library(data.table)
 # args = commandArgs(trailingOnly=TRUE)
 
 # read in intron counts file for one specific tissue
-introns <- fread(snakemake@input["introns"],stringsAsFactors=FALSE,header=TRUE)
+introns <- fread(snakemake@input[["introns"]],stringsAsFactors=FALSE,header=TRUE)
 
 
 # read in sQTL file for one specific tissue
-sqtl <- fread(snakemake@input["perm"], stringsAsFactors=FALSE, header=TRUE)
+sqtl <- fread(snakemake@input[["perm"]], stringsAsFactors=FALSE, header=TRUE)
 
 # separate intron cluster field to get ENSEMBL ID
 sqtl_sep <- separate(sqtl, phenotype_id, c("chrom","start","end","cluster_id","ENSEMBL_ID"), sep=":", remove=TRUE)
 
 # read in VCF file
-vcf <- fread(snakemake@input["vcf_merge"], stringsAsFactors=FALSE, header=TRUE)
+vcf <- fread(snakemake@input[["vcf_merge"]], stringsAsFactors=FALSE, header=TRUE)
 
 tissue_name <- sub("\\_intronCounts.txt.*", "", snakemake@input["introns"])
 
@@ -55,7 +55,7 @@ final <- as.data.table(dplyr::full_join(xcrips, nl_iso, by = c("transcript_id", 
   as.data.table()
 
 write.table(final,
-            file = paste0(tissue_name, "_NL_isos.txt"),
+            file = paste0("results/finalIsos/", tissue_name, "_NL_isos.txt"),
             sep = "\t",
             row.names = F,
             quote = FALSE)

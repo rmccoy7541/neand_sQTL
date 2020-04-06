@@ -9,7 +9,7 @@ library(rtracklayer)
 
 # "perm" is GTEx perm pass result, "gtf" is gencode.v26.GRCh38.genes.gtf, "sprime" is sprime_calls.txt
 #########
-gene_list <- rtracklayer::import(snakemake@input["gtf"]) %>%
+gene_list <- rtracklayer::import(snakemake@input[["gtf"]]) %>%
   makeGRangesFromDataFrame(., keep.extra.columns = T) %>%
   as.data.table()
 
@@ -18,11 +18,11 @@ gene_list <- gene_list[type == "gene" & gene_type == "protein_coding"]
 gene_list[, subjectHits := .I]
 
 # Perm Pass QTLTOOLS
-gtp <- fread(snakemake@input["perm"]) %>%
+gtp <- fread(snakemake@input[["perm"]]) %>%
   setorder(., pval_nominal)
 
 # Not TAGSNPS but SPRIME
-neand <- fread(snakemake@input["sprime"])[vindija_match == "match" | altai_match == "match"] %>%
+neand <- fread(snakemake@input[["sprime"]])[vindija_match == "match" | altai_match == "match"] %>%
   mutate(., var_id_1 = paste(CHROM, POS, REF, ALT, "b38", sep = "_")) %>%
   as.data.table()
 
@@ -55,5 +55,5 @@ table <- gtp[is_neand == TRUE & pval_nominal == min_pval_nominal]
 
 tis_name <- strsplit(snakemake@input["perm"], split = "[.]")[[1]][1]
 
-write.table(table, paste0(tis_name, "_permutation_table_NE.txt"), row.names=F, quote=F, sep="\t")
+write.table(table, paste0("results/PermutationTable/",tis_name, "_permutation_table_NE.txt"), row.names=F, quote=F, sep="\t")
 
