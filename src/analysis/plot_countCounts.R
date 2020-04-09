@@ -30,3 +30,4 @@ png(filename = "results/AllTissuesNLIso.png")
 ggplot(dt, aes(x = `HH>0`, y = `HN>0` + `NN>0`)) +
   geom_bin2d(bins = 100) + 
   scale_fill_gradient(name = "count", trans = "log10")
+def.off()
