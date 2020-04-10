@@ -31,7 +31,7 @@ dataset[is.na(dataset)] <- 0
 
 # transcripts where the number of individuals with the HH not expressing the transcript is greater than zero and the
 # number of individuals expressing the transcript with the same genotype is less than 10
-loosened <- dataset[HH0 > 0 & `HH>0` < 10 & `HN>0` > 0][, .(n=.N), by=.(transcript_id)][order(n),]
+loosened <- dataset[HH0 > 0 & `HH>0` < 10 & `HN>0` > 0]
 
 df_uniq <- unique(loosened$transcript_id)
 
