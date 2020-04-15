@@ -4,6 +4,8 @@ output: html_notebook
 ---
 `#r format(Sys.time(), '%d %B, %Y')`
 
+**Scroll to the bottom for the most recent (dumb, i know)**
+
 ### 01/15/2020
 
 Our present goal, as of the aforementioned date, is to find both splicing transcripts that are far more abundantly expressed in individuals who are at least heterozygous for the Neandertal allele where they have some (modest) transcript counts for the modern human allele (quantitative), and splicing transcripts that are altogether novel and uniquely expressed in individuals that are at least heterozygous for the Neandertal allele where they have 0 (zero) counts for the modern human allele. The findings from these two analyses will be presented in two different sections in the manuscript. 
@@ -632,6 +634,57 @@ She says she'll work on splice site stuff and I'll find the fxnl categories for 
 
 Write up what we've done in the document.
 
-Whip up some genotype boxplots. 1 per transript, use sQTL with the lowest p-value.
+Whip up some genotype boxplots. 1 per transcript, use sQTL with the lowest p-value.
 
 look in `~/work/aseyedi2/`.
+
+#### 04/10/2020
+
+See below, this was included as a comment in `geneGOTerms.R`. Maybe I should focus on finding some genotype boxplots. Or I could make some progress on finding GO terms without trying to do the whole thing at once, which I think is what I was *trying* to do.
+
+>this is basically unapproachably challenging for me because 
+a) the number of items in res[[1]] (res>listData>query) is 392 even though the number of gene_names in test is 384 AND the number of unique items in both is 144. 
+I don't know what is going on there.
+b) I need, within res, each list element in go.BP to be matched to the corresponding gene symbol in query, and then those queries to be matched to the corresponding 
+transcripts in test. And I don't know how to do that. I don't even know how to really articulate how to do this to someone who doesn't have the files I'm talking about.
+So this might be another one for Rajiv. Although I could probably figure out how to do this if I just tried to psychically bend the spoon hard enough, I think I would
+rather tackle easier things first and then address this later, possibly with Rajiv.
+
+There has to be an easier way to do this, right? Like I just imagined conjuring a column of semi-colon separated BP terms directly adjacent to the column of gene names. This seems like such a convoluted way to do this. Maybe I will do what I always do and ask around online for help.
+
+#### 04/13/2020
+
+I used DAVID (by just copying and pasting the list of genes) to find functional annotation categories for the 144 unique genes we found for our Neandertal-specific isoforms. I took the results at face value and did not apply any real scrutiny to the parameters of the analysis, and I put them in `results/NL_iso_GOTerms_DAVID.csv`. Looks like there is an enrichment for genes dealing with both DNA repair and adaptive immunity. This might be an overly-simplistic way to do this so I might bring this up to someone to see what they think. 
+
+I want to use DAVID's R package but you need an institutional email to sign up, and I signed up and I've received no response since then. I was also using an R package called `myGene` or something like that, but that produced a totally unwieldly and unmanageable R "object" that presented a nightmare scenario of having to go into this list of lists of data frames of lists and parse the GO terms. I'd rather use DAVID. 
+
+#### 04/14/2020
+
+I just submitted a help query on DAVID. I guess right now I can work on generating genotype box plots.
+
+#### 04/15/2020
+
+Steph:
+>basically, you need this info for each sQTL-transcript pair and tissue you want to make a boxplot for:
+- Genotype at that sQTL for each individual
+- Counts of that transcript for each individual
+you should be able to get the sQTL genotypes from the GTEx VCF, and the transcript counts from the original intron counts file
+
+>this data is actually basically identical to the final raw data file that you ended up generating for this subproject, the one that had transcript counts and archaic/human genotype for every sample. So you could probably just use that file if it would be easier, and we can just convert archaic/human genotype to actual nucleotide genotype at some point down the line
+
+RDAVIDWebService apparently works for me according to the admin so I'm going to summon the functional annotations programmatically.
+
+Okay, it still doesn't work for me. Before, I was concerned that my registration didn't go through. Now, I get the following error:
+```
+david <- DAVIDWebService$new(email='aseyedi2@jhu.edu')
+Error in .jcall(stub, "S", "authenticate", email) : 
+  org.apache.axis2.AxisFault: Transport error: 301 Error: Moved Permanently
+```
+
+I'm going to move onto figuring out this box plot situation.
+
+Okay, so I got a response from the DAVID people who told me that the key to using their tool was manually setting the URL (see `geneGOTerms.R`) so I did that, but apparently their tool doesn't accept gene symbols (which works with thier browser tool), so I tried to extract the ensembl IDs from the GTF in `findGenes.R`, but apparently none of those IDs work... so... I'm at a bit of a loss. I'm right now trying to convert the gene symbols in-browser on their website. Let's see where that takes us.
+
+Okay, after converting the gene names to entrez IDs (something that the R package does not do automatically), and after following the "vignette", I was able to get somewhere and generate some graphs or whatever. The problem is, I don't know if this is a valid approach or really what the hell I'm doing. I also don't know if, from the perspective of having a reproducible project, this is a feasible way to do this sort of analysis. I am not sure even what this analysis totally says, other than, in "cluster 1" of the gene set that I gave them, there is an enrichment of the "immune system process" GO term.
+
+I'll talk to Steph and/or Rajiv about this. I think Rajiv is too busy, though.

@@ -59,3 +59,5 @@ analysis/PermPassResults/\.Rhistory
 src/analysis/gencode.v31.annotation.gtf
 
 src/analysis/Whole_Blood.v8.sqtl_signifpairs.txt
+
+Whole_Blood_NL_isos.txt

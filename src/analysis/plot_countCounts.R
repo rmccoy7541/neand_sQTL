@@ -13,7 +13,7 @@ read_tissue_counts <- function(filename) {
   dt_tissue <- fread(filename, header = TRUE) 
   f_dowle2(dt_tissue)
   tissue_name <- gsub("^([^_]*_[^_]*)_.*$", "\\1", filename)
-  tissue_name <- gsub("/Users/rajivmccoy/Downloads/", "", tissue_name)
+  tissue_name <- gsub(snakemake@input[["countCountsDir"]], "", tissue_name)
   dt_tissue[, tissue := tissue_name]
   return(dt_tissue[!duplicated(transcript_id)])
 }
