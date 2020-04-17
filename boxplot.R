@@ -4,6 +4,5 @@ library(data.table)
 
 wholeblood <- fread("Whole_Blood_NL_isos.txt")
 
-install.packages("mlmm.gwas")
 library("mlmm.gwas")
 data("mlmm.gwas.AD")

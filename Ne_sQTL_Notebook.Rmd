@@ -688,3 +688,14 @@ Okay, so I got a response from the DAVID people who told me that the key to usin
 Okay, after converting the gene names to entrez IDs (something that the R package does not do automatically), and after following the "vignette", I was able to get somewhere and generate some graphs or whatever. The problem is, I don't know if this is a valid approach or really what the hell I'm doing. I also don't know if, from the perspective of having a reproducible project, this is a feasible way to do this sort of analysis. I am not sure even what this analysis totally says, other than, in "cluster 1" of the gene set that I gave them, there is an enrichment of the "immune system process" GO term.
 
 I'll talk to Steph and/or Rajiv about this. I think Rajiv is too busy, though.
+
+#### 04/17/2020
+
+I'm gonna work on making some box plots. 
+
+So, in order to do this, I would be using data from each variant-transcript pair across the 0, 1 and 2 genotypes. We also have counts (n), nrows, and individual. So I think we will be collapsing this data on variant/transcript pair and plotting aggregated counts. Another thing is that I will need to devise a way to narrow down which variant/transcript pairs get boxplotted. I think I can do this by degree to which the counts across all individuals change across genotypes (delta).
+
+To-do list to keep myself organized:
+- Narrow var/trans to those which change the most (maybe top 20 genes? (out of a bajillion))
+- Collapse across all tissues according to var/trans pair
+- (((plot counts of each genotype) for each individual) for each narrowed-down var/trans pair)
