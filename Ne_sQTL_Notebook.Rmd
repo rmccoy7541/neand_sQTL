@@ -699,3 +699,15 @@ To-do list to keep myself organized:
 - Narrow var/trans to those which change the most (maybe top 20 genes? (out of a bajillion))
 - Collapse across all tissues according to var/trans pair
 - (((plot counts of each genotype) for each individual) for each narrowed-down var/trans pair)
+
+#### 04/20/2020
+
+I talked to Brad Sherman from DAVID and he told me that RDAVID does not support gene symbols because of ambiguity and he also told me the reason the Ensembl IDs weren't working was because they have version numbers at the end of them, which he removed for me. The version with no version numbers is in `results/`. I should be able to use that to find the functional categories.
+
+#### 04/21/2020
+
+I made a rudiementary way of finding "enrichment" for "functional annotation categories" in `geneGOTerms.R` but the problem is, I have no idea if this is enough or not (my money is not). But I have something which is important and good.
+
+Going back to last Thursday, I already wrote a script that would find the difference between number of counts between the different genotypes. I just have to reuse that but for much larger files. I guess I also have to horizontalize them. Not sure if I should collapse across all tissues, though, since they're not really comparable like that AFAIK. I have a big brain for statistics.
+
+`merge_tables.R` makes the `*_NL_isos.txt` files, so I guess I have to make them horizontal and then find the difference again.
