@@ -711,3 +711,33 @@ I made a rudiementary way of finding "enrichment" for "functional annotation cat
 Going back to last Thursday, I already wrote a script that would find the difference between number of counts between the different genotypes. I just have to reuse that but for much larger files. I guess I also have to horizontalize them. Not sure if I should collapse across all tissues, though, since they're not really comparable like that AFAIK. I have a big brain for statistics.
 
 `merge_tables.R` makes the `*_NL_isos.txt` files, so I guess I have to make them horizontal and then find the difference again.
+
+#### 04/22/2020
+
+Let's go, baby. It's Wednesday.
+
+#### 04/28/2020
+
+I met with Steph yesterday. Her notes were the following:
+
+> 1. maybe find a way to find the % of genes that are involved in immune function
+2. find the difference between homo human and hetero HN
+3. use the the horizontal files you already have
+4. ~400 unique transcripts, see if the number of variants for the transcript I'm looking at matches the number of variants in the loosenedRestrictions file
+ 
+ I should just generate a new batch of NL isoform files just to be safe. Then, I can horizontalize them like last time and then find the difference between homozygous human vs heterozygous counts for each sQTL + transcript combo across all tissues.
+ 
+ In other news, Rajiv asked me to test out our dev node's new `rstudio-server-start` function, which allows us to use our dev node to develop code in RStudio on our computers, which is a godsend. His instructions are below:
+ 
+>1. Login to one of the dev nodes as usual. rmccoy22-dev or rmccoy22-dev02
+2. Load the R module using module load R.
+3. Fake a SLURM job ID by entering export SLURM_JOBID=001.
+4. Next run the command rstudio-server-start and follow the onscreen instructions. These involve copying and pasting an ssh command into a separate terminal, then opening an http://localhost:<number_here>/ link in your web browser.
+5. Sign into the Rstudio cloud session in your browser using your usual MARCC username (<jhed>@jhu.edu) and password.
+6. Use pbmclapply and set the  mc.cores argument to parallelize your apply functions and speed up your analysis, for example.
+
+The problem is, however, that I get no response to step #4 when I `ssh` in a new terminal, and the website doesn't work. I emailed MARCC help about this. Let's see what they say. If they don't respond, I might try again or reach out to them again.
+
+I was able to generate a list of genes in the "top DAVID cluster," all of which were tagged as having some sort of immune system function. They're in `results/NL_Iso_TopGenes_List.txt`. We can't really do any sort of "in-depth" analysis on this list other than to take the names and point at them and say we found a few guys that have been linked to some sort of immune system process, like I said before. We can use this for the paper, is all I'm saying.
+
+Next, I need to figure out the deal with the boxplots. I'll try to do that after fixing RStudio server to make the process a bit easier.

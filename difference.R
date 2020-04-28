@@ -16,7 +16,7 @@ tissue_name <- gsub("^([^_]*_[^_]*)_.*$", "\\1", "Whole_Blood_NL_isos.txt")
 
 colnames(dt) <- c("variant_id", "transcript_id", "individual", "HH", "HN", "NN")
 
-dt <- dt %>%
+qt <- dt %>%
   na.omit() %>%
   mutate_at(vars(HH:NN), list(ratio = ~str_split(., ";") )) %>%
   mutate_at(vars(HH_ratio:NN_ratio), list(~map_dbl(., ~as.numeric(.x) %>%
@@ -34,3 +34,4 @@ write.table(dt,
             sep = "\t",
             row.names = F,
             quote = FALSE)
+
