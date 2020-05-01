@@ -741,3 +741,36 @@ The problem is, however, that I get no response to step #4 when I `ssh` in a new
 I was able to generate a list of genes in the "top DAVID cluster," all of which were tagged as having some sort of immune system function. They're in `results/NL_Iso_TopGenes_List.txt`. We can't really do any sort of "in-depth" analysis on this list other than to take the names and point at them and say we found a few guys that have been linked to some sort of immune system process, like I said before. We can use this for the paper, is all I'm saying.
 
 Next, I need to figure out the deal with the boxplots. I'll try to do that after fixing RStudio server to make the process a bit easier.
+
+#### 04/29/2020
+Matthew from MARCC-help got back to me about my email. Here are his recommendations:
+
+```
+0. ssh rmccoy22-dev
+1. screen -ls    # to check any preexisting rstudio screens. Attach and kill as needed. (pkill screen)
+2. ml restore    # clean up module environment
+3. ml -emacs    # the emacs module causes problems with rstudio
+4. ml R/3.6.1    # or any R you would like to use
+5. export SLURM_JOBID=001    # fake a slurm job ID in case of complaints
+6. rstudio_server_start    # wait for instructions. After receiving them, you can Ctrl-c to get out
+7. screen -ls     # to confirm that the rstudio screen session is working
+
+On your local machine now:
+1. Open a terminal and use the instructions where #### is the port number from the instructions:
+     ssh -N -L ####:rmccoy22-dev:#### username@school.edu@login.marcc.jhu.edu
+2. After typing your 2FA and password, put the following in a browser:
+     http://localhost:####/ 
+  2a.You must use your full email address, with @jhu.edu
+  2b. If you are experiencing issues, try another browser. I had to use Microsoft Edge.
+
+Clean up your screen at the end:
+1. screen -ls
+2. screen -a
+3. Ctrl-a, then hit 'k' for kill, 'y' to confirm.
+```
+
+Well, I almost got it to work, and then I broke it by entering my log in info into RStudio server without the `@jhu.edu` at the end. So I let Matt know and now he's working on it. Hopefully it'll be all fixed up soon.
+
+#### 05/01/2020
+
+R studio server works now. Huzzah.
