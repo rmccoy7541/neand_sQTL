@@ -5,8 +5,6 @@ library(qvalue)
 library(annotate)
 library(rtracklayer)
 
-
-
 # "perm" is GTEx perm pass result, "gtf" is gencode.v26.GRCh38.genes.gtf, "sprime" is sprime_calls.txt
 #########
 gene_list <- rtracklayer::import(snakemake@input[["gtf"]]) %>%

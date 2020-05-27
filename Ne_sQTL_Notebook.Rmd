@@ -773,4 +773,50 @@ Well, I almost got it to work, and then I broke it by entering my log in info in
 
 #### 05/01/2020
 
-R studio server works now. Huzzah.
+R studio server works now.
+
+#### 05/04/2020
+
+RStudio Server's packages don't work. I sent an email to MARCC help desk. Let's see what they say.
+
+Apart from that, I submitted a job to find the differences in counts between heterozygous human/NL and homozygous human transcript counts for each variant/transcript combo. It's currently in queue on MARCC, 
+
+#### 05/07/2020
+
+I met w Steph, she said I gotta make a box plot of this sQTL:
+
+```
+transcript: chr2_3769142_3769310
+sQTL: chr2_3769143_C_T_b38
+tissue: testis
+```
+
+#### 05/11/2020
+
+I found the differences I was looking for as mentioned two entries ago. Now I need to figure out how to make box plots of some of the highest difference sQTL/transcripts.
+
+#### 05/15/2020
+
+After a fiasco this past Tuesday involving Chinese hackers compromosing MARCC and me getting kicked off and having to reset my password 5 times, I'm finally back. I've made a chart of sorts. Best to assume it's inadequate.
+
+MARCC is being insanely slow at processing jobs. 
+
+#### 05/18/2020
+
+We need not the averages but a box plot which shows each individual as a point on the graph. So we need to go back and use a different format of file.
+
+#### 05/19/2020
+
+IBDMix apparently added a feature that reports introgressed SNPs so Rajiv went ahead a called Neandertal-introgressed SNPs, and was able to find the sQTL for ADAMTSL3, which is good for the scientific integrity of this paper.
+
+```
+[rmccoy22@jhu.edu@rmccoy22-dev02 ibdmix_summary]$ cat gtex_ibdmix_chr15_50000_lod4.txt | tr ',' '\t' | grep -w 84037709 | wc -l
+90
+```
+
+I saved Rajiv's code in a file called `IBDMix.sh`. He said:
+> I'll work on reformatting this as a simple list of introgressed SNPs--i.e., the generate_gt file, but restricted to these positive LOD-score SNPs that define significant introgressed haplotypes. 
+
+#### 05/20/2020
+
+I was offered a position in another lab and my current position ends next Friday so this log is done and I will be collecting all of the relevant information 

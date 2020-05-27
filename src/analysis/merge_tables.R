@@ -10,7 +10,6 @@ library(data.table)
 # read in intron counts file for one specific tissue
 introns <- fread(snakemake@input[["introns"]],stringsAsFactors=FALSE,header=TRUE)
 
-
 # read in sQTL file for one specific tissue
 sqtl <- fread(snakemake@input[["perm"]], stringsAsFactors=FALSE, header=TRUE)
 
