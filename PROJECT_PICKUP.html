@@ -411,11 +411,12 @@ summary {
 <div id="base-directory-files" class="section level4">
 <h4>Base directory files</h4>
 <p>I saved the best for last. I’ll try to make this short.</p>
-<p>Scripts * <code>geneGOTerms.R</code> is the script I used to query DAVID for functional categories and then write them to file. The reason they’re in the base directory is because I didn’t know if it was going to be part of the workflow or not. I don’t think it will be so you’re free to get rid of it.</p>
+<p>Scripts</p>
 <ul>
+<li><p><code>geneGOTerms.R</code> is the script I used to query DAVID for functional categories and then write them to file. The reason they’re in the base directory is because I didn’t know if it was going to be part of the workflow or not. I don’t think it will be so you’re free to get rid of it.</p></li>
 <li><p><code>IBDMix.sh</code> is the script Rajiv wrote very recently after he discovered he could make IBDMix work. I’ve done nothing with it other than stick it in the repo.</p></li>
 <li><p><code>liftover_batch.sh</code> lifts over the Neandertal genome from hg19 to hg38. In fact, it was part of the IBDMix pipeline that I worked on when we first considered switching from SPrime to IBDMix, but I deleted the IBDMix files except for this one. Interesting.</p></li>
-<li><p><code>preprocessVCF</code>, <code>*Snakefile</code>, <code>config.yaml</code>, <code>sf_wrap.sh</code> are all for Snakemake. <code>DAG.svg</code> is a visual representation of the workflow I’ve been able to build using Snakemake so far. I can’t really explain it to you and I didn’t really do a great job of annotating the scripts with comments but I can walk you through it if you need me to at some point.</p></li>
+<li><p><code>preprocessVCF</code>, <code>*Snakefile</code>, <code>config.yaml</code>, <code>sf_wrap.sh</code> are all for Snakemake. <code>DAG.svg</code> is a visual representation of the workflow I’ve been able to build using Snakemake so far. I can’t really explain it all to you here and I didn’t really do a great job of annotating the scripts with comments but I can walk you through it if you need me to at some point.</p></li>
 <li><p><code>sqtl_notebook.html</code> is the Rmd file that Steph (quite possibly you) made for me when explaining how were going to get the Neandertal-specific isoforms.</p></li>
 <li><p><code>Ne_sQTL_Notebook.Rmd</code> is a new-ish log that I started in January 2020 plotting my progress and regular work.</p></li>
 <li><p><code>log.md</code> is an old markdown log I started almost 2 years ago.</p></li>
@@ -428,8 +429,15 @@ summary {
 <p>You can always email <a href="mailto:marcc-help@marcc.jhu.edu" class="email">marcc-help@marcc.jhu.edu</a> for MARCC-related help, but I was lucky enough to have regular contact with Ryan Bradley <a href="mailto:ryanbradley@jhu.edu" class="email">ryanbradley@jhu.edu</a> who was kind enough to even meet with me when I needed help.</p>
 <p>For Snakemake, all you need to do is post on Stackoverflow with the tag <code>snakemake</code> and there’s reliably a handful of experts who answer Snakemake questions that show up on Stack Overflow. In fact, I would just ask most questions on Stack Overflow.</p>
 <p>Of course, you can always email me, and I assume you know how to reach me unless the person reading this is someone I don’t know. Here’s my email address just in case: <a href="mailto:arta.seyedian@gmail.com" class="email">arta.seyedian@gmail.com</a></p>
-<p>#Conclusion Good luck</p>
 </div>
+<div id="misc" class="section level2">
+<h2>Misc</h2>
+<p>For Snakemake, you should use the PyCharm IDE and download the Snakemake library as well as the extension for Pycharm itself. Makes using it much easier.</p>
+</div>
+</div>
+<div id="conclusion" class="section level1">
+<h1>Conclusion</h1>
+<p>Good luck</p>
 </div>
 
 
