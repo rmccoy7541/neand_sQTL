@@ -39,7 +39,7 @@ I'm devoting a separate section to `src/` for the simple reason that this is whe
 
 `analysis/` is our most important subdirectory since that contains the most active code. `sprime/` comes in second although I believe Rajiv wants to use IBDMix instead so you may end up scrapping that. The other two subdirectories (`splice_site_annotation/` and `sqtl_enrichment/`) I never worked with and could be tossed, as they are dead-ends as far as I know.
 
-Let's go through each script in `analsys/`
+Let's go through each script in `analysis/`
 
 * `annotate_gts.py`: This is for the preprocessing of the GTEx v8 VCF (see `preprocessVCF` in the base-level directory for added context)
 
@@ -66,16 +66,33 @@ There's not much to explain about `sprime/` other than there is a copy of the wh
 I saved the best for last. I'll try to make this short. 
 
 Scripts
+
 * `geneGOTerms.R` is the script I used to query DAVID for functional categories and then write them to file. The reason they're in the base directory is because I didn't know if it was going to be part of the workflow or not. I don't think it will be so you're free to get rid of it.
 
 * `IBDMix.sh` is the script Rajiv wrote very recently after he discovered he could make IBDMix work. I've done nothing with it other than stick it in the repo.
 
 * `liftover_batch.sh` lifts over the Neandertal genome from hg19 to hg38. In fact, it was part of the IBDMix pipeline that I worked on when we first considered switching from SPrime to IBDMix, but I deleted the IBDMix files except for this one. Interesting. 
 
-* `preprocessVCF`, `*Snakefile`, `config.yaml`, `sf_wrap.sh` are all for Snakemake. `DAG.svg` is a visual representation of the workflow I've been able to build using Snakemake so far. I can't really explain it to you and I didn't really do a great job of annotating the scripts with comments but I can walk you through it if you need me to at some point. 
+* `preprocessVCF`, `*Snakefile`, `config.yaml`, `sf_wrap.sh` are all for Snakemake. `DAG.svg` is a visual representation of the workflow I've been able to build using Snakemake so far. I can't really explain it all to you here and I didn't really do a great job of annotating the scripts with comments but I can walk you through it if you need me to at some point. 
 
 * `sqtl_notebook.html` is the Rmd file that Steph (quite possibly you) made for me when explaining how were going to get the Neandertal-specific isoforms.
 
 * `Ne_sQTL_Notebook.Rmd` is a new-ish log that I started in January 2020 plotting my progress and regular work.
 
-* `log.md` is an old markdown log I started almost 2 years ago. Damn.
+* `log.md` is an old markdown log I started almost 2 years ago.
+
+## Contacts
+
+You can always email <marcc-help@marcc.jhu.edu> for MARCC-related help, but I was lucky enough to have regular contact with Ryan Bradley <ryanbradley@jhu.edu> who was kind enough to even meet with me when I needed help.
+
+For Snakemake, all you need to do is post on Stackoverflow with the tag `snakemake` and there's reliably a handful of experts who answer Snakemake questions that show up on Stack Overflow. In fact, I would just ask most questions on Stack Overflow.
+
+Of course, you can always email me, and I assume you know how to reach me unless the person reading this is someone I don't know. Here's my email address just in case: <arta.seyedian@gmail.com>
+
+## Misc
+
+For Snakemake, you should use the PyCharm IDE and download the Snakemake library as well as the extension for Pycharm itself. Makes using it much easier. 
+
+# Conclusion
+
+Good luck
