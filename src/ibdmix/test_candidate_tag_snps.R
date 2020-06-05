@@ -191,12 +191,39 @@ chain_input <- import.chain("/work-zfs/rmccoy22/resources/panTro6/hg38.panTro6.a
 
 fasta_path <- "/work-zfs/rmccoy22/resources/panTro6/panTro6.fa.gz"
 
-chimp_alleles <- pbmclapply(37:40, 
-                        function(x) get_pan_tro(chain = chain_input, 
-                                                fasta_file = fasta_path, 
-                                                input_snps = candidate_archaic_snps, 
-                                                index = x), 
-                        mc.cores = getOption("mc.cores", 24L))
+chimp_alleles <- pbmclapply(1:nrow(candidate_archaic_snps),
+                            function(x) tryCatch({get_pan_tro(chain = chain_input, 
+                                                              fasta_file = fasta_path, 
+                                                              input_snps = candidate_archaic_snps, 
+                                                              index = x)}, 
+                                                 error = function(e) NA), 
+                            mc.cores = getOption("mc.cores", 24L))
 
 candidate_archaic_snps[, chimp_allele := unlist(chimp_alleles)]
+candidate_archaic_snps[, neand_1 := as.character(NA)]
+candidate_archaic_snps[, neand_2 := as.character(NA)]
+candidate_archaic_snps[AltaiNea_AltaiNea == 0, neand_1 := ref]
+candidate_archaic_snps[AltaiNea_AltaiNea == 0, neand_2 := ref]
+candidate_archaic_snps[AltaiNea_AltaiNea == 1, neand_1 := ref]
+candidate_archaic_snps[AltaiNea_AltaiNea == 1, neand_2 := alt]
+candidate_archaic_snps[AltaiNea_AltaiNea == 2, neand_1 := alt]
+candidate_archaic_snps[AltaiNea_AltaiNea == 2, neand_2 := alt]
 
+
+candidate_archaic_snps[, neand_is_derived := !is.na(chimp_allele) &
+                         (chimp_allele == ref | chimp_allele == alt) & 
+                         (neand_1 != chimp_allele | neand_2 != chimp_allele)]
+
+candidate_archaic_snps[, is_archaic_snp := FALSE]
+candidate_archaic_snps[neand_1 == alt & neand_2 == alt &
+                         neand_is_derived == TRUE & fisher_p < 5e-8 & mean_lod > 0 &
+                         (int_ac / int_an) > (non_ac / non_an),
+                       is_archaic_snp := TRUE]
+candidate_archaic_snps[neand_1 == ref & neand_2 == ref &
+                         neand_is_derived == TRUE & fisher_p < 5e-8 & mean_lod > 0 &
+                         (int_ac / int_an) < (non_ac / non_an),
+                       is_archaic_snp := TRUE]
+
+ggplot(data = candidate_archaic_snps[is_archaic_snp == TRUE], aes(x = daf)) +
+  geom_histogram() +
+  theme_classic()
